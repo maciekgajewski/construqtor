@@ -17,53 +17,27 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef PHYSICALOBJECT_H
-#define PHYSICALOBJECT_H
+#ifndef POLYGONTRIANGULATOR_H
+#define POLYGONTRIANGULATOR_H
 
-#include <QObject>
+#include <QList>
 #include <QPolygonF>
 
-class b2Body;
-class b2BodyDef;
-class b2ShapeDef;
-class b2PolyDef;
-
-class World;
-
 /**
-	Qt wrapper around Box2D's body.
+	Utility class which splits polygon into trinagles.
 	
 	@author Maciek Gajewski <maciej.gajewski0@gmail.com>
 */
-class PhysicalObject : public QObject
+class PolygonTriangulator
 {
-	Q_OBJECT
 public:
-	PhysicalObject( const QPolygonF& shape, World* pWorld );
-	PhysicalObject( const PhysicalObject& t );
-	~PhysicalObject();
+    
+	PolygonTriangulator();
+	~PolygonTriangulator();
 	
-	PhysicalObject& operator=( const PhysicalObject& t );
+	/// does it's job
+	QList< QPolygonF > triangulate( const QPolygonF& polygon );
 
-	// properties
-	QPolygonF outline() const;
-
-private:
-
-	/// Created b2d object
-	void createBody( const QPointF& position );
-
-	/// Creates shape for body based on polygon
-	static QList<b2ShapeDef*> createShape( QPolygonF shape );
-	/// Creates polygonal b2ShapeDef, based on three points
-	static b2PolyDef* createTriangleB2Shape( const QPointF& a, const QPointF& b, const QPointF& c );
-	/// Calculates cross product of two vectors
-	static double product( const QPointF& a, const QPointF& b );
-	
-	QPolygonF	_outline;			///< Object's visual shape
-	b2Body*		_pBody;				///< box2d body reference
-	World*		_pWorld;			///< Parent world
-	
 };
 
 #endif
