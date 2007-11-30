@@ -57,5 +57,3 @@ TEMPLATE = lib
 CONFIG += debug \
 warn_on \
 dll
-DESTDIR = ../bin
-

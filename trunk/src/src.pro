@@ -2,7 +2,8 @@ SOURCES += main.cpp \
 drawwindow.cpp \
 drawwidget.cpp \
 world.cpp \
-physicalobject.cpp
+physicalobject.cpp \
+polygontriangulator.cpp
 TEMPLATE = app
 CONFIG += warn_on \
 	  thread \
@@ -10,21 +11,25 @@ CONFIG += warn_on \
 	  opengl \
 	  x11 \
 	  debug
-TARGET = ../bin/physics
-
 FORMS += drawwindow.ui
 
 HEADERS += drawwindow.h \
 drawwidget.h \
 world.h \
-physicalobject.h
+physicalobject.h \
+polygontriangulator.h
 QT += opengl
 
+DISTFILES += ../README
+
+TARGET = ../bin/qrayon
+
 INCLUDEPATH += ../box2d \
+../gpc \
 ../box2d/Dynamics/ \
 ../box2d/Common/
-LIBS += -L../bin \
+LIBS += -L../box2d \
 -lbox2d \
--L/home/maciek/projekty/physics/bin
-TARGETDEPS += ../bin/libbox2d.so
-
+../gpc/libgpc.a
+TARGETDEPS += ../box2d/libbox2d.so \
+../gpc/libgpc.a
