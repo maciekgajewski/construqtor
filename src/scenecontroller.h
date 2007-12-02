@@ -17,62 +17,61 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef DRAWWIDGET_H
-#define DRAWWIDGET_H
+#ifndef SCENECONTROLLER_H
+#define SCENECONTROLLER_H
 
-#include <QGLWidget>
+#include <QObject>
 
-#include "scenecontroller.h"
+#include "world.h"
 
 /**
+	This is a controller (yikes!) which controlls behavior of game scene.
+	It holds the wortld object.
+
 	@author Maciek Gajewski <maciej.gajewski0@gmail.com>
 */
-class DrawWidget : public QGLWidget
+class SceneController : public QObject
 {
-Q_OBJECT
+	Q_OBJECT
 public:
+
+	/// Tools (work modes )
+	enum Tool
+	{
+		ToolPaintObject			///< Paint (create) new object
+		// TODO other tools here
+	};
+
+	// construction / destruction
+	SceneController( QObject *parent = 0 );
+	~SceneController();
 	
-	DrawWidget(QWidget *parent = 0);
-	~DrawWidget();
+	// operation
+	void setTool( Tool tool );			///< Sets tool used
+	Tool tool() const { return _tool; }	///< Gets current tool
 	
-	void setController( SceneController* pCtrl );	///< Sets world
+	/// World object
+	const World* world() const { return &_world; };
+	
+public slots:
+	// inputs from view
+	void pointDrawed( const QPointF& point );
+	void shapeDrawed( const QPolygonF& polygon );
 
 signals:
 
-	// signals for controller
-	void pointDrawed( const QPointF& point );	///< Point was drawed
-	void shapeDrawed( const QPolygonF& shape );	///< Shap[e was drawed
+	void toolChanged();			///< Signal yo views: tool changed
 	
-protected slots:
-
-	// infor from controller
-	void ctrlToolChanged();
-	
-	
-protected:
-
-	// event handlers
-	virtual void paintEvent ( QPaintEvent * event );
-	virtual void mousePressEvent ( QMouseEvent * event );
-	virtual void mouseReleaseEvent ( QMouseEvent * event );
-	virtual void mouseMoveEvent ( QMouseEvent * event ) ;
-
 private:
 
-	void newPolygonDrawed();			///< Creates new scene polygon from drawed
-	
-	// debug painting collision shape
-	void debugDrawShape( QPainter& painter, const PhysicalObject& object );
-	
-	QPolygonF		_drawedPolygon;		///< polygon being drawed
-	bool			_drawing;			///< flag: drawinf with mouse
-	
-	QMatrix 	_transformation;		///< Transformation pixels->meters
-	QMatrix		_phys2pixel;			///< Cached inverted transofrmation meters->pixel
-	
-	/// Scene controller
-	SceneController*	_pCtrl;
+	World	_world;		///< Game world
+	Tool	_tool;		///< Current tool
 	
 };
 
-#endif
+#endif // SCENECONTROLLER_H
+
+
+// EOF
+
+

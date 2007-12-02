@@ -71,6 +71,7 @@ void World::addObject( const QPolygonF& outline )
 }
 
 // ================== simplify polygon ===========
+// TODO remove the method from here
 QPolygonF World::simplifyPolygon( const QPolygonF& input )
 {
 	// params: max acceptable angle

@@ -26,6 +26,8 @@
 #include <QMouseEvent>
 
 #include "drawwidget.h"
+#include "world.h"
+
 
 // ==================== constructor =================
 DrawWidget::DrawWidget(QWidget *parent)
@@ -36,7 +38,7 @@ DrawWidget::DrawWidget(QWidget *parent)
 	_transformation.translate( 0.0, 6.0 );
 	_transformation.scale( 0.01, -0.01 ); // 100pixels/meter
 	_phys2pixel = _transformation.inverted();
-	_pWorld 	= NULL;
+	_pCtrl 	= NULL;
 }
 
 
@@ -67,10 +69,12 @@ void DrawWidget::paintEvent( QPaintEvent* pEvent )
 	}
 	
 	// paint scene polygons
-	if ( _pWorld )
+	if ( _pCtrl )
 	{
+		const World* pWorld = _pCtrl->world();
+		
 		painter.setPen( QPen( Qt::blue, 5 ) );
-		const QList<PhysicalObject>& objects = _pWorld->objects();
+		const QList<PhysicalObject>& objects = pWorld->objects();
 		for( int i = 0; i < objects.size(); i++ )
 		{
 			const PhysicalObject& object = objects[ i ];
@@ -85,7 +89,6 @@ void DrawWidget::paintEvent( QPaintEvent* pEvent )
 	QPointF zero = _phys2pixel.map( QPointF(0, 0) );
 	painter.setPen( QPen( Qt::green, 5 ) );
 	painter.drawLine( QPointF( 0, zero.y() ), QPointF( width(), zero.y() ) );
-	qDebug("zero y: %lf", zero.y() );
 	
 	
 	painter.end();
@@ -140,20 +143,17 @@ void DrawWidget::mousePressEvent ( QMouseEvent * pEvent )
 	// start painting with left button
 	if ( pEvent->button() == Qt::LeftButton )
 	{
-		// initiate drawing
-		_drawing = true;
-		_drawedPolygon.clear();
-		
-		/* TODO test code -creates test triangle on mouse click 
-		QPolygonF p;
-		p.append( QPointF( 0.0, 0.0 ) );
-		p.append( QPointF( 200.0, 0.0 ) );
-		p.append( QPointF( 0.0, 200.0 ) );
-		p.translate( pEvent->pos() );
-		
-		_drawedPolygon = p;
-		newPolygonDrawed();
-		*/
+		if ( _pCtrl) switch ( _pCtrl->tool() )
+		{
+			// drawing tools
+			case SceneController::ToolPaintObject:
+				// initiate drawing
+				_drawing = true;
+				_drawedPolygon.clear();
+				break;
+				
+			//TODO support others here
+		}
 	}
 	
 }
@@ -191,30 +191,39 @@ void DrawWidget::mouseMoveEvent ( QMouseEvent * pEvent )
 /// Turns _drawedPolygon into QPolygon, adds to scene
 void DrawWidget::newPolygonDrawed()
 {
-	// ignore empty
-	if ( _drawedPolygon.size() < 2 )
-	{
-		return;
-	}
-	
-	// addpolygon to world
-	if ( _pWorld )
-	{
-		_pWorld->addObject( _transformation.map( _drawedPolygon ) );
-	}
-		
-		
+	QPolygonF shape = _transformation.map( _drawedPolygon );
+	emit shapeDrawed( shape );
 	repaint();
 }
 
-// ===================== sets wortld ================
-void DrawWidget::setWorld( World* world )
+// ===================== sets controller ================
+void DrawWidget::setController( SceneController* pCtrl )
 {
-	_pWorld = world;
-	
-	if ( _pWorld )
+	if ( pCtrl )
 	{
-		connect( _pWorld, SIGNAL(animated()), SLOT(repaint() ) );
+		// disconnect
+		if ( _pCtrl )
+		{
+			disconnect( _pCtrl, NULL, this, NULL );
+			disconnect( _pCtrl->world(), NULL, this, NULL );
+		}
+		disconnect( SIGNAL( pointDrawed( const QPointF&  ) ) );
+		disconnect( SIGNAL( shapeDrawed( const QPolygonF&  ) ) );
+	
+		const World* pWorld = pCtrl->world();
+	
+		connect( pWorld, SIGNAL(animated()), SLOT(repaint() ) );
+		connect( pCtrl, SIGNAL( toolChanged() ), SLOT( ctrlToolChanged() ) );
+		connect( this, SIGNAL( pointDrawed( const QPointF&  ) ), pCtrl, SLOT(pointDrawed(const QPointF&)));
+		connect( this, SIGNAL( shapeDrawed( const QPolygonF&  ) ), pCtrl, SLOT(shapeDrawed( const QPolygonF&  )));
+	
+		_pCtrl = pCtrl;
 	}
+}
+
+// =================== tool changed =======================
+void DrawWidget::ctrlToolChanged()
+{
+	// TODO add some visual clue what happened
 }
 
