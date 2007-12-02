@@ -47,6 +47,8 @@ public:
 
 	// properties
 	QPolygonF outline() const;
+	b2Body* b2body() { return _pBody; }
+	const b2Body* b2body() const { return _pBody; }
 
 private:
 

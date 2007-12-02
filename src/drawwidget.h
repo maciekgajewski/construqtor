@@ -49,10 +49,14 @@ private:
 
 	void newPolygonDrawed();			///< Creates new scene polygon from drawed
 	
+	// debug painting collision shape
+	void debugDrawShape( QPainter& painter, const PhysicalObject& object );
+	
 	QPolygonF		_drawedPolygon;		///< polygon being drawed
 	bool			_drawing;			///< flag: drawinf with mouse
 	
 	QMatrix 	_transformation;		///< Transformation pixels->meters
+	QMatrix		_phys2pixel;			///< Inverted transofrmation meters->pixel
 	
 	World*	_pWorld;					///< Reference to world
 	
