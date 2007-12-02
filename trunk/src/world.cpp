@@ -41,7 +41,7 @@ World::World(QObject *parent)
 	
 	// create ground
 	b2BoxDef groundBoxDef;
-	groundBoxDef.extents.Set(50.0, 10.0);
+	groundBoxDef.extents.Set(100.0, 5.0);
 	groundBoxDef.density = 0.0;
 	
 	b2BodyDef groundBodyDef;

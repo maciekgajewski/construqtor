@@ -13,8 +13,8 @@
     <projectname>physics</projectname>
     <projectdirectory>.</projectdirectory>
     <absoluteprojectpath>false</absoluteprojectpath>
-    <description></description>
-    <defaultencoding></defaultencoding>
+    <description/>
+    <defaultencoding/>
   </general>
   <kdevfileview>
     <groups>
@@ -65,7 +65,7 @@
       <includePaths>.;</includePaths>
     </codecompletion>
     <creategettersetter>
-      <prefixGet></prefixGet>
+      <prefixGet/>
       <prefixSet>set</prefixSet>
       <prefixVariable>m_,_</prefixVariable>
       <parameterName>theValue</parameterName>
@@ -121,16 +121,16 @@
   </kdevdoctreeview>
   <kdevdebugger>
     <general>
-      <dbgshell></dbgshell>
+      <dbgshell/>
       <breakpoints/>
       <programargs/>
       <gdbpath>/usr/bin/gdb</gdbpath>
       <breakonloadinglibs>true</breakonloadinglibs>
       <separatetty>false</separatetty>
       <floatingtoolbar>false</floatingtoolbar>
-      <configGdbScript></configGdbScript>
-      <runShellScript></runShellScript>
-      <runGdbScript></runGdbScript>
+      <configGdbScript/>
+      <runShellScript/>
+      <runGdbScript/>
     </general>
     <display>
       <staticmembers>false</staticmembers>
@@ -141,27 +141,30 @@
   </kdevdebugger>
   <kdevtrollproject>
     <run>
-      <mainprogram>/home/maciek/projekty/physics/./bin/physics</mainprogram>
-      <programargs></programargs>
+      <mainprogram>/home/maciek/projekty/qrayon/bin/qrayon</mainprogram>
+      <programargs/>
       <directoryradio>executable</directoryradio>
       <runarguments>
-        <physics></physics>
+        <physics/>
+        <qrayon/>
       </runarguments>
       <cwd>
         <physics>/home/maciek/projekty/physics</physics>
+        <qrayon>/home/maciek/projekty/qrayon</qrayon>
       </cwd>
       <debugarguments>
-        <physics></physics>
+        <physics/>
+        <qrayon/>
       </debugarguments>
-      <globaldebugarguments></globaldebugarguments>
-      <globalcwd>/home/maciek/projekty/physics</globalcwd>
-      <useglobalprogram>false</useglobalprogram>
+      <globaldebugarguments/>
+      <globalcwd>.</globalcwd>
+      <useglobalprogram>true</useglobalprogram>
       <terminal>false</terminal>
       <autocompile>false</autocompile>
       <autoinstall>false</autoinstall>
       <autokdesu>false</autokdesu>
       <envvars>
-        <envvar value="bin" name="LD_LIBRARY_PATH" />
+        <envvar value="box2d" name="LD_LIBRARY_PATH" />
       </envvars>
     </run>
     <general>
@@ -172,7 +175,7 @@
       <runmultiplejobs>false</runmultiplejobs>
       <numberofjobs>1</numberofjobs>
       <dontact>false</dontact>
-      <makebin></makebin>
+      <makebin/>
       <prio>0</prio>
       <envvars/>
     </make>
@@ -181,17 +184,19 @@
       <replacePaths>false</replacePaths>
       <disableDefaultOpts>true</disableDefaultOpts>
     </qmake>
+    <subclassing/>
   </kdevtrollproject>
   <workspace>
     <openfiles/>
   </workspace>
   <kdevfilecreate>
+    <filetypes/>
     <useglobaltypes>
       <type ext="ui" />
+      <type ext="qrc" />
       <type ext="cpp" />
       <type ext="h" />
       <type ext="ts" />
-      <type ext="qrc" />
     </useglobaltypes>
   </kdevfilecreate>
   <kdevdocumentation>
