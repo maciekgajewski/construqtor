@@ -22,15 +22,15 @@
 #include <QApplication>
 
 #include "drawwidget.h"
-#include "world.h"
+#include "scenecontroller.h"
 
 int main(int argc, char *argv[])
 {
 	QApplication app(argc, argv);
 	DrawWidget window;
-	World world;
+	SceneController ctrl;
 	
-	window.setWorld( &world );
+	window.setController( &ctrl );
 	window.show();
 	
 	return app.exec();

@@ -17,62 +17,54 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef DRAWWIDGET_H
-#define DRAWWIDGET_H
-
-#include <QGLWidget>
-
 #include "scenecontroller.h"
 
-/**
-	@author Maciek Gajewski <maciej.gajewski0@gmail.com>
-*/
-class DrawWidget : public QGLWidget
+// ========================= constructor ====================
+SceneController::SceneController(QObject *parent)
+ : QObject(parent)
 {
-Q_OBJECT
-public:
-	
-	DrawWidget(QWidget *parent = 0);
-	~DrawWidget();
-	
-	void setController( SceneController* pCtrl );	///< Sets world
+	_tool = ToolPaintObject;
+}
 
-signals:
+// ========================= destructor ====================
+SceneController::~SceneController()
+{
+}
 
-	// signals for controller
-	void pointDrawed( const QPointF& point );	///< Point was drawed
-	void shapeDrawed( const QPolygonF& shape );	///< Shap[e was drawed
-	
-protected slots:
+// ========================= set tool ====================
+void SceneController::setTool( Tool tool )
+{
+	if ( tool != _tool )
+	{
+		_tool = tool;
+		emit toolChanged();
+	}
+}
 
-	// infor from controller
-	void ctrlToolChanged();
-	
-	
-protected:
+// ========================= point drawed ====================
+void SceneController::pointDrawed( const QPointF& point )
+{
+	// TODO
+}
 
-	// event handlers
-	virtual void paintEvent ( QPaintEvent * event );
-	virtual void mousePressEvent ( QMouseEvent * event );
-	virtual void mouseReleaseEvent ( QMouseEvent * event );
-	virtual void mouseMoveEvent ( QMouseEvent * event ) ;
+// ========================= shape drawed ====================
+void SceneController::shapeDrawed( const QPolygonF& polygon )
+{
+	// TODO handle different tools here
+	
+	// ignore empty
+	if ( polygon.size() < 2 )
+	{
+		// TODO hanlde these somehow
+		return;
+	}
+	
+	// TODO move simplification here
+	
+	// add polygon to world
+	_world.addObject( polygon);
+}
 
-private:
+// EOF
 
-	void newPolygonDrawed();			///< Creates new scene polygon from drawed
-	
-	// debug painting collision shape
-	void debugDrawShape( QPainter& painter, const PhysicalObject& object );
-	
-	QPolygonF		_drawedPolygon;		///< polygon being drawed
-	bool			_drawing;			///< flag: drawinf with mouse
-	
-	QMatrix 	_transformation;		///< Transformation pixels->meters
-	QMatrix		_phys2pixel;			///< Cached inverted transofrmation meters->pixel
-	
-	/// Scene controller
-	SceneController*	_pCtrl;
-	
-};
 
-#endif

@@ -3,7 +3,8 @@ drawwindow.cpp \
 drawwidget.cpp \
 world.cpp \
 physicalobject.cpp \
-polygontriangulator.cpp
+polygontriangulator.cpp \
+scenecontroller.cpp
 TEMPLATE = app
 CONFIG += warn_on \
 	  thread \
@@ -17,7 +18,8 @@ HEADERS += drawwindow.h \
 drawwidget.h \
 world.h \
 physicalobject.h \
-polygontriangulator.h
+polygontriangulator.h \
+scenecontroller.h
 QT += opengl
 
 DISTFILES += ../README
@@ -33,3 +35,9 @@ LIBS += -L../box2d \
 ../gpc/libgpc.a
 TARGETDEPS += ../box2d/libbox2d.so \
 ../gpc/libgpc.a
+OBJECTS_DIR = .obj
+
+UI_DIR = .ui
+
+MOC_DIR = .moc
+
