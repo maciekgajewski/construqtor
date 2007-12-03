@@ -21,13 +21,13 @@
 
 #include <QApplication>
 
-#include "drawwidget.h"
+#include "drawwindow.h"
 #include "scenecontroller.h"
 
 int main(int argc, char *argv[])
 {
 	QApplication app(argc, argv);
-	DrawWidget window;
+	DrawWindow window;
 	SceneController ctrl;
 	
 	window.setController( &ctrl );

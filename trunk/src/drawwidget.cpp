@@ -73,15 +73,29 @@ void DrawWidget::paintEvent( QPaintEvent* pEvent )
 	{
 		const World* pWorld = _pCtrl->world();
 		
-		painter.setPen( QPen( Qt::blue, 5 ) );
 		const QList<PhysicalObject>& objects = pWorld->objects();
 		for( int i = 0; i < objects.size(); i++ )
 		{
 			const PhysicalObject& object = objects[ i ];
+			
+			// select color
+			if ( object.material().type == Material::Steel )
+			{
+				painter.setPen( QPen( Qt::blue, 5 ) );
+			}
+			else if ( object.material().type == Material::Wood )
+			{
+				painter.setPen( QPen( Qt::darkRed, 5 ) );
+			}
+			else
+			{
+				painter.setPen( QPen( Qt::black, 5 ) );
+			}
+			
 			QPolygonF polygon = _phys2pixel.map( object.outline() );
 			painter.drawPolygon( polygon );
 			// debug
-			debugDrawShape( painter, object );
+			//debugDrawShape( painter, object );
 		}
 	}
 	
@@ -156,6 +170,14 @@ void DrawWidget::mousePressEvent ( QMouseEvent * pEvent )
 		}
 	}
 	
+	// emit signal on right button
+	else if ( pEvent->button() == Qt::RightButton )
+	{
+		QPointF point = _transformation.map( pEvent->pos() );
+		emit pointRightClicked( point );
+		repaint();
+	}
+	
 }
 
 // ==================== release event =================
@@ -209,6 +231,7 @@ void DrawWidget::setController( SceneController* pCtrl )
 		}
 		disconnect( SIGNAL( pointDrawed( const QPointF&  ) ) );
 		disconnect( SIGNAL( shapeDrawed( const QPolygonF&  ) ) );
+		disconnect( SIGNAL( pointRightClicked( const QPointF&  ) ) );
 	
 		const World* pWorld = pCtrl->world();
 	
@@ -216,6 +239,7 @@ void DrawWidget::setController( SceneController* pCtrl )
 		connect( pCtrl, SIGNAL( toolChanged() ), SLOT( ctrlToolChanged() ) );
 		connect( this, SIGNAL( pointDrawed( const QPointF&  ) ), pCtrl, SLOT(pointDrawed(const QPointF&)));
 		connect( this, SIGNAL( shapeDrawed( const QPolygonF&  ) ), pCtrl, SLOT(shapeDrawed( const QPolygonF&  )));
+		connect( this, SIGNAL( pointRightClicked( const QPointF&  ) ), pCtrl, SLOT(pointRightClicked(const QPointF&)));
 	
 		_pCtrl = pCtrl;
 	}

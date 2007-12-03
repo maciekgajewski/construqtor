@@ -27,10 +27,69 @@ DrawWindow::DrawWindow(QWidget *parent)
 {
 	// duty
 	setupUi( this );
-	// create child OpenGL widget - TEST
-	QGLWidget* pGL = new QGLWidget( this );
-	pGL->setFixedSize( 100, 100 );
 	
+	_pCtrl = NULL;
+}
+
+// ======================== set controller ==============
+void DrawWindow::setController( SceneController* pCtrl )
+{
+	_pCtrl = pCtrl;
+	drawWidget->setController( _pCtrl );
+}
+
+// ======================== button start ===============
+void DrawWindow::on_buttonStart_clicked()
+{
+	if ( _pCtrl )
+	{
+		_pCtrl->startSimulation();
+	}
+}
+
+// ======================== button stop ===============
+void DrawWindow::on_buttonStop_clicked()
+{
+	if ( _pCtrl )
+	{
+		_pCtrl->stopSimulation();
+	}
+}
+
+// ======================== button steel ===============
+void DrawWindow::on_buttonSteel_clicked()
+{
+	if ( _pCtrl )
+	{
+		_pCtrl->setMaterial( Material::steel() );
+	}
+}
+
+// ======================== button rubber ===============
+void DrawWindow::on_buttonRubber_clicked()
+{
+	if ( _pCtrl )
+	{
+		_pCtrl->setMaterial( Material::rubber() );
+	}
+}
+
+// ======================== button wood ===============
+void DrawWindow::on_buttonWood_clicked()
+{
+	if ( _pCtrl )
+	{
+		_pCtrl->setMaterial( Material::wood() );
+	}
+}
+
+
+void DrawWindow::on_buttonNail_clicked()
+{
+}
+
+void DrawWindow::on_buttonBolt_clicked()
+{
 }
 
 // EOF

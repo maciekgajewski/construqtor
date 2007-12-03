@@ -27,12 +27,14 @@
 #include "physicalobject.h"
 #include "polygontriangulator.h"
 
-PhysicalObject::PhysicalObject( const QPolygonF& shape, World* pWorld )
+PhysicalObject::PhysicalObject( const QPolygonF& shape, World* pWorld
+	, const Material& material )
  : QObject(pWorld)
 {
 	Q_ASSERT( pWorld );
 	
 	_pWorld = pWorld;
+	_material = material;
 	
 	// TODO simplified - used boundoing box as box
 	QRectF boxRect = shape.boundingRect();
@@ -56,19 +58,22 @@ void PhysicalObject::createBody( const QPointF& position )
 	QList< b2ShapeDef* > shapes = createShape( outline );
 	
 	qDebug("shape consists of %d triangles", shapes.size() ); // TODO remove
-	// TODO mke sure there is no more than 64 (use defined condstant) triangles
+	// TODO make sure there is no more than 64 (use defined condstant) triangles
 	
 	// add shapes to body
 	foreach( b2ShapeDef* pShape, shapes )
 	{
 		// body-wide material definition
-		pShape->density = 1.0f;
-		pShape->friction = 0.3f;
+		pShape->density		= _material.density;
+		pShape->friction	= _material.friction;
+		pShape->restitution	= _material.restitution;
 	
 		bodyDef.AddShape( pShape );
 	}
-	// set position
-	//bodyDef.position.Set( position.x(), position.y() );
+	
+	// attach pointer to self to the box2d body
+	bodyDef.userData = this;
+	
 	// create body
 	_pBody = _pWorld->b2world()->CreateBody(&bodyDef);
 	
@@ -90,6 +95,7 @@ PhysicalObject::PhysicalObject( const PhysicalObject& t )
 	: QObject( t.parent() )
 	, _outline( t._outline )
 	, _pBody( t._pBody )
+	, _material( t._material )
 {
 }
 
@@ -103,6 +109,19 @@ PhysicalObject& PhysicalObject::operator=( const PhysicalObject& t )
 // ===================== destructor ===========
 PhysicalObject::~PhysicalObject()
 {
+	destroyBody();
+}
+
+// ===================== destroy body ===========
+void PhysicalObject::destroyBody()
+{
+	/* TODO not, not here!
+	if ( _pWorld && _pBody )
+	{
+		_pWorld->b2world()->DestroyBody( _pBody );
+		_pBody = NULL;
+	}
+	*/
 }
 
 // ========================= return object outline in physical space ===
@@ -135,7 +154,7 @@ QList<b2ShapeDef*> PhysicalObject::createShape( QPolygonF shape )
 {
 	QList<b2ShapeDef*> list;
 	// triangles below this product will be discarded as irrelevant to geometry
-	const double MIN_PRODUCT	= 0.01;
+	const double MIN_PRODUCT	= 0.002;
 	
 	PolygonTriangulator triangulator;
 	QList< QPolygonF > triangles = triangulator.triangulate( shape );
@@ -187,4 +206,9 @@ double PhysicalObject::product( const QPointF& a, const QPointF& b )
 	return a.x()*b.y() - a.y()*b.x();
 }
 
+// ============================== detach ==================
+void PhysicalObject::detach()
+{
+	_pBody = NULL;
+}
 

@@ -42,6 +42,7 @@ signals:
 	// signals for controller
 	void pointDrawed( const QPointF& point );	///< Point was drawed
 	void shapeDrawed( const QPolygonF& shape );	///< Shap[e was drawed
+	void pointRightClicked( const QPointF& point );	///< Point was right-clicked
 	
 protected slots:
 
