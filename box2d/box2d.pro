@@ -56,4 +56,4 @@ TEMPLATE = lib
 
 CONFIG += debug \
 warn_on \
-dll
+staticlib
