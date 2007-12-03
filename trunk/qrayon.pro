@@ -1,6 +1,8 @@
-SUBDIRS += src \
+SUBDIRS += \
 box2d \
-gpc
+gpc\
+src
+
 TEMPLATE = subdirs 
 CONFIG += warn_on \
           qt \

@@ -33,7 +33,7 @@ INCLUDEPATH += ../box2d \
 LIBS += -L../box2d \
 -lbox2d \
 ../gpc/libgpc.a
-TARGETDEPS += ../box2d/libbox2d.so \
+TARGETDEPS += ../box2d/libbox2d.a \
 ../gpc/libgpc.a
 OBJECTS_DIR = .obj
 
