@@ -28,6 +28,7 @@ class b2BodyDef;
 class b2ShapeDef;
 class b2PolyDef;
 
+#include "material.h"
 class World;
 
 /**
@@ -39,7 +40,7 @@ class PhysicalObject : public QObject
 {
 	Q_OBJECT
 public:
-	PhysicalObject( const QPolygonF& shape, World* pWorld );
+	PhysicalObject( const QPolygonF& shape, World* pWorld, const Material& material );
 	PhysicalObject( const PhysicalObject& t );
 	~PhysicalObject();
 	
@@ -49,6 +50,11 @@ public:
 	QPolygonF outline() const;
 	b2Body* b2body() { return _pBody; }
 	const b2Body* b2body() const { return _pBody; }
+	
+	const Material& material() const { return _material; }
+	
+	// operations
+	void detach();		///< detaches from box2d body
 
 private:
 
@@ -62,9 +68,13 @@ private:
 	/// Calculates cross product of two vectors
 	static double product( const QPointF& a, const QPointF& b );
 	
+	
+	void destroyBody();				///< Destroys associated body
+	
 	QPolygonF	_outline;			///< Object's visual shape
 	b2Body*		_pBody;				///< box2d body reference
 	World*		_pWorld;			///< Parent world
+	Material	_material;			///< Material
 	
 };
 

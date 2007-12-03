@@ -20,12 +20,34 @@
 #ifndef DRAWWINDOW_H
 #define DRAWWINDOW_H
 
+#include "scenecontroller.h"
+
 #include "ui_drawwindow.h"
 
-class DrawWindow: public QWidget, public Ui::DrawWindow {
-Q_OBJECT
+class DrawWindow: public QWidget, public Ui::DrawWindow
+{
+	Q_OBJECT
 public:
-    DrawWindow(QWidget *parent = 0);
+	DrawWindow(QWidget *parent = 0);
+	
+	void setController( SceneController* pCtrl );	///< Sets scene controler
+	
+protected slots:
+
+	// button handlers
+	void on_buttonStart_clicked();
+	void on_buttonStop_clicked();
+	
+	void on_buttonSteel_clicked();
+	void on_buttonRubber_clicked();
+	void on_buttonWood_clicked();
+	
+	void on_buttonNail_clicked();
+	void on_buttonBolt_clicked();
+
+private:
+
+	SceneController* _pCtrl;					///< Scene controller
 };
 
 #endif

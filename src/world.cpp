@@ -52,7 +52,6 @@ World::World(QObject *parent)
 	
 	// animate timer
 	connect( &animateTimer, SIGNAL(timeout()), SLOT(animate() ) );
-	animateTimer.start( 100 );
 }
 
 // ======================== destructor ===============
@@ -61,12 +60,12 @@ World::~World()
 }
 
 // ========================= add object =================
-void World::addObject( const QPolygonF& outline )
+void World::addObject( const QPolygonF& outline, const Material& material  )
 {
 	// step one: simplify outline
 	QPolygonF simplified = simplifyPolygon( outline );
 	
-	PhysicalObject object( simplified, this );
+	PhysicalObject object( simplified, this, material );
 	_objects.append( object );
 }
 
@@ -140,6 +139,69 @@ void World::animate()
 	}
 	
 	emit animated();
+}
+
+// ======================== start simulation ==========
+void World::startSimulation()
+{
+	animateTimer.start( 100 );
+}
+
+// ======================== stop simulation ==========
+void World::stopSimulation()
+{
+	animateTimer.stop();
+}
+
+// ======================== is started ==========
+bool World::isSimulationStarted() const
+{
+	return animateTimer.isActive();
+}
+
+// ======================== destroy bodies at point ==========
+void World::destroyBodiesAtPoint( const QPointF& point )
+{
+	// get shapes under point
+	b2AABB aabb;
+	double prec = 0.01; // one dm precision
+	
+	aabb.minVertex.Set( point.x() - prec, point.y() - prec );
+	aabb.maxVertex.Set( point.x() + prec, point.y() + prec );
+	
+	const int bufferSize = 10;
+	b2Shape *buffer[bufferSize];
+	
+	int count = _pWorld->Query(aabb, buffer, bufferSize);
+	
+	// build list of objects
+	QList< b2Body* > bodies;
+	for (int i = 0; i < count; i++)
+	{
+		b2Body* pBody = buffer[ i ]->GetBody();
+		if ( ! bodies.contains( pBody ) )
+		{
+			bodies.append( pBody );
+		}
+	}
+	
+	// remove appropriate physical objects from list
+	for ( QList< PhysicalObject >::iterator it = _objects.begin(); it != _objects.end(); )
+	{
+		// should be removed?
+		b2Body* pBody = (*it).b2body();
+		if ( bodies.contains( pBody ) )
+		{
+			bodies.removeAll( pBody );
+			it = _objects.erase( it );
+			_pWorld->DestroyBody( pBody );
+		}
+		else
+		{
+			++it;
+		}
+	}
+	
 }
 
 

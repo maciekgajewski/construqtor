@@ -23,7 +23,8 @@
 SceneController::SceneController(QObject *parent)
  : QObject(parent)
 {
-	_tool = ToolPaintObject;
+	_tool		= ToolPaintObject;
+	_material	= Material::rubber();
 }
 
 // ========================= destructor ====================
@@ -62,7 +63,14 @@ void SceneController::shapeDrawed( const QPolygonF& polygon )
 	// TODO move simplification here
 	
 	// add polygon to world
-	_world.addObject( polygon);
+	_world.addObject( polygon, _material );
+}
+
+// ========================= point right-clicked ====================
+void SceneController::pointRightClicked( const QPointF& point )
+{
+	// remove bodies under point
+	_world.destroyBodiesAtPoint( point );
 }
 
 // EOF

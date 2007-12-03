@@ -17,69 +17,6 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef WORLDQT_H
-#define WORLDQT_H
-
-#include <QObject>
-#include <QTimer>
-
-#include "b2World.h"
-
-#include "physicalobject.h"
 #include "material.h"
 
-/**
-	Wrapper around Box2d's world object
 
-	@author Maciek Gajewski <maciej.gajewski0@gmail.com>
-	
-*/
-class World : public QObject
-{
-	Q_OBJECT
-public:
-
-	World( QObject *parent = 0 );
-	~World();
-	
-	/// Adds object to the world
-	void addObject( const QPolygonF& outline, const Material& material );
-	
-	// tools
-	static QPolygonF simplifyPolygon( const QPolygonF& input );
-	
-	// proeprties
-	const QList< PhysicalObject >& objects() const { return _objects; }
-	b2World*  b2world(){ return _pWorld; }
-	
-	// simulation control
-	void startSimulation();
-	void stopSimulation();
-	bool isSimulationStarted() const;
-	
-	// operations
-	void destroyBodiesAtPoint( const QPointF& point );
-	
-private:
-
-	QList< PhysicalObject > _objects;				///< List of worl'd objects
-	
-	//. box2d object
-	b2World*	_pWorld;							///< Box2D's world
-	
-	// TODO tmporary, will be moved outside
-	QTimer		animateTimer;						///< Animate timer
-
-
-private slots:
-
-	void animate();								///< Aimate timer timeout
-
-signals:
-
-	void animated();								///< World was just animated
-};
-
-#endif // WORLDQT_H
-
-// EOF

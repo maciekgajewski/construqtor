@@ -17,72 +17,65 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef SCENECONTROLLER_H
-#define SCENECONTROLLER_H
-
-#include <QObject>
-
-#include "world.h"
-#include "material.h"
+#ifndef MATERIAL_H
+#define MATERIAL_H
 
 /**
-	This is a controller (yikes!) which controlls behavior of game scene.
-	It holds the wortld object.
+	Simple material definition
 
 	@author Maciek Gajewski <maciej.gajewski0@gmail.com>
 */
-class SceneController : public QObject
+class Material
 {
-	Q_OBJECT
 public:
 
-	/// Tools (work modes )
-	enum Tool
+	enum Type { Steel, Rubber, Wood, Custom };
+	
+	Type type;					/// Well known material type
+	
+	double friction;			///< Friction [0.0->1.0]
+	double restitution;			///< Restotution ("bounciness")[0.0->1.0]
+	double density;				///< Density [kg/m2]
+	
+	/// Rubber definiton
+	inline static Material rubber()
 	{
-		ToolPaintObject			///< Paint (create) new object
-		// TODO other tools here
-	};
+		Material m;
+		m.density		= 1.0;
+		m.friction		= 1.0;
+		m.restitution	= 0.5;
+		
+		m.type = Rubber;
+		
+		return m;
+	}
+	
+	/// Steel definition
+	inline static Material steel()
+	{
+		Material m;
+		m.density		= 5.0;
+		m.friction		= 0.2;
+		m.restitution	= 0.3;
+		
+		m.type = Steel;
+		
+		return m;
+	}
 
-	// construction / destruction
-	SceneController( QObject *parent = 0 );
-	~SceneController();
-	
-	// properties
-	void setTool( Tool tool );			///< Sets tool used
-	Tool tool() const { return _tool; }	///< Gets current tool
-	
-	/// Sets new material
-	void setMaterial( const Material& mat ) { _material = mat; }
-	
-	/// World object
-	const World* world() const { return &_world; };
-	
-	// simulation control
-	void startSimulation() { _world.startSimulation(); }
-	void stopSimulation() { _world.stopSimulation(); }
-	bool isSimulationStarted() const { return _world.isSimulationStarted(); }
-	
-public slots:
-	// inputs from view
-	void pointDrawed( const QPointF& point );
-	void shapeDrawed( const QPolygonF& polygon );
-	void pointRightClicked( const QPointF& point );
-
-signals:
-
-	void toolChanged();			///< Signal yo views: tool changed
-	
-private:
-
-	World		_world;		///< Game world
-	Tool		_tool;		///< Current tool
-	Material	_material;	///< Current material
-	
+	/// Wood definition
+	inline static Material wood()
+	{
+		Material m;
+		m.density		= 2.0;
+		m.friction		= 0.5;
+		m.restitution	= 0.1;
+		
+		m.type = Wood;
+		
+		return m;
+	}
 };
 
-#endif // SCENECONTROLLER_H
 
-
-// EOF
-
-
+#endif
