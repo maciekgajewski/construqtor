@@ -1,8 +1,8 @@
 SUBDIRS += \
 box2d \
 gpc\
-src
-
+src \
+construqtor
 TEMPLATE = subdirs 
 CONFIG += warn_on \
           qt \
