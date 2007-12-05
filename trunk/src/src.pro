@@ -28,18 +28,18 @@ DISTFILES += ../README
 
 TARGET = ../bin/qrayon
 
-INCLUDEPATH += ../box2d \
-../gpc \
-../box2d/Dynamics/ \
-../box2d/Common/
-LIBS += -L../box2d \
--lbox2d \
-../gpc/libgpc.a
-TARGETDEPS += ../box2d/libbox2d.so \
-../gpc/libgpc.a
 OBJECTS_DIR = .obj
 
 UI_DIR = .ui
 
 MOC_DIR = .moc
+
+INCLUDEPATH += ../box2d \
+../gpc \
+../box2d/Dynamics/ \
+../box2d/Common/
+LIBS += ../gpc/libgpc.a \
+-L../box2d \
+-lbox2d
+TARGETDEPS += ../gpc/libgpc.a
 
