@@ -17,49 +17,19 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef CQPHYSICALBOX_H
-#define CQPHYSICALBOX_H
+#ifndef CQITEMTYPES_H
+#define CQITEMTYPES_H
 
-// local
-#include "cqphysicalbody.h"
+///\file cqitemtypes.h Types ID's for QGraphicItems descendands
+
+#include <QGraphicsItem>
 
 
-/**
-	@author Maciek Gajewski <maciej.gajewski0@gmail.com>
-*/
-class CqPhysicalBox : public CqPhysicalBody
-{
-public:
-	
-	// construction / destruction
-	CqPhysicalBox(QGraphicsItem* parent, CqWorld* world = NULL);
-	CqPhysicalBox(CqWorld* world = NULL);
-	virtual ~CqPhysicalBox();
+#define CQ_BODY		(QGraphicsItem::UserType	+ 1)
+#define CQ_JOINT	(QGraphicsItem::UserType	+ 2)
 
-	
-	// properties
-	void setSize( const QSizeF& size );		///< Sets/ changes size
-	QSizeF size() const { return _size; };	///< Returns size
 
-	// operations 
-	virtual void paint
-		( QPainter * painter
-		, const QStyleOptionGraphicsItem * option
-		, QWidget * widget = 0 );
-		
-    virtual QRectF boundingRect() const;
-protected:
+#endif // CQITEMTYPES_H
 
-	// reimplementables
-	
-    virtual QList< b2ShapeDef* > createShape();
+// EOF
 
-private:
-
-	// data
-	
-	QSizeF	_size;		///< box's size
-
-};
-
-#endif

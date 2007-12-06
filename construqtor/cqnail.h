@@ -17,30 +17,25 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef CQPHYSICALBOX_H
-#define CQPHYSICALBOX_H
+#ifndef CQNAIL_H
+#define CQNAIL_H
 
-// local
-#include "cqphysicalbody.h"
-
+#include <cqrevolutejoint.h>
 
 /**
+	Nail is a simplest revolition joint: no motors, no limits.
+
 	@author Maciek Gajewski <maciej.gajewski0@gmail.com>
 */
-class CqPhysicalBox : public CqPhysicalBody
+class CqNail : public CqRevoluteJoint
 {
 public:
-	
+
 	// construction / destruction
-	CqPhysicalBox(QGraphicsItem* parent, CqWorld* world = NULL);
-	CqPhysicalBox(CqWorld* world = NULL);
-	virtual ~CqPhysicalBox();
-
+	CqNail( CqWorld* world = NULL );
+	CqNail( QGraphicsItem* parent, CqWorld* world = NULL );
+	virtual ~CqNail();
 	
-	// properties
-	void setSize( const QSizeF& size );		///< Sets/ changes size
-	QSizeF size() const { return _size; };	///< Returns size
-
 	// operations 
 	virtual void paint
 		( QPainter * painter
@@ -48,17 +43,6 @@ public:
 		, QWidget * widget = 0 );
 		
     virtual QRectF boundingRect() const;
-protected:
-
-	// reimplementables
-	
-    virtual QList< b2ShapeDef* > createShape();
-
-private:
-
-	// data
-	
-	QSizeF	_size;		///< box's size
 
 };
 

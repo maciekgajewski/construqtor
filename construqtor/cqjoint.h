@@ -17,49 +17,70 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef CQPHYSICALBOX_H
-#define CQPHYSICALBOX_H
+#ifndef CQJOINT_H
+#define CQJOINT_H
+
+// Qt
+#include <QGraphicsItem>
+#include <QPointer>
+
+// Box 2D
+class b2Joint;
 
 // local
-#include "cqphysicalbody.h"
-
+class CqPhysicalBody;
+class CqWorld;
 
 /**
+	Graphics item representign general Box 2D's joint
+
 	@author Maciek Gajewski <maciej.gajewski0@gmail.com>
 */
-class CqPhysicalBox : public CqPhysicalBody
+class CqJoint : public QGraphicsItem
 {
 public:
-	
-	// construction / destruction
-	CqPhysicalBox(QGraphicsItem* parent, CqWorld* world = NULL);
-	CqPhysicalBox(CqWorld* world = NULL);
-	virtual ~CqPhysicalBox();
+	// constrution / destruction
+	CqJoint( CqWorld* world = NULL );
+	CqJoint( QGraphicsItem* parent, CqWorld* world = NULL );
+	virtual ~CqJoint();
 
-	
 	// properties
-	void setSize( const QSizeF& size );		///< Sets/ changes size
-	QSizeF size() const { return _size; };	///< Returns size
-
-	// operations 
-	virtual void paint
-		( QPainter * painter
-		, const QStyleOptionGraphicsItem * option
-		, QWidget * widget = 0 );
-		
-    virtual QRectF boundingRect() const;
+	
+	void setConnectedBodies( CqPhysicalBody* pBody1, CqPhysicalBody* pBody2 );
+	const CqPhysicalBody* body1() const { return _pBody1; }
+	const CqPhysicalBody* body2() const { return _pBody2; }
+	CqPhysicalBody* body1(){ return _pBody1; }
+	CqPhysicalBody* body2(){ return _pBody2; }
+	
+	b2Joint* b2joint() { return _pJoint; }
+	const b2Joint* b2joint() const { return _pJoint; }
+	
+	// info from simulation
+	virtual void simulationStep();			///< Called after simulation step
+	void assureJointCreated();				///< Makes sure that body was created
+	
+	virtual int type() const;	///< RTTI
+	
 protected:
 
-	// reimplementables
+	// remplementables
 	
-    virtual QList< b2ShapeDef* > createShape();
+	virtual b2Joint* createJoint( CqWorld* pWorld ) = 0;
+	void destroyJoint( CqWorld* pWorld );
+
+	// data
 
 private:
 
+	// methods
+
+	void init();					///< Initializes
+	
 	// data
 	
-	QSizeF	_size;		///< box's size
-
+	b2Joint*	_pJoint;			///< Physical joint object
+	QPointer< CqWorld > _pWorld;		///< World object
+	CqPhysicalBody		*_pBody1, *_pBody2;	///< Bodies connected by joint
 };
 
 #endif

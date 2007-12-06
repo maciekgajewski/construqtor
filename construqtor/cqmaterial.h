@@ -17,49 +17,78 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef CQPHYSICALBOX_H
-#define CQPHYSICALBOX_H
+#ifndef CQMATERIAL_H
+#define CQMATERIAL_H
 
-// local
-#include "cqphysicalbody.h"
-
+// box 2d
+class b2ShapeDef;
 
 /**
+	Material description record.
+	
 	@author Maciek Gajewski <maciej.gajewski0@gmail.com>
 */
-class CqPhysicalBox : public CqPhysicalBody
+class CqMaterial
 {
 public:
 	
 	// construction / destruction
-	CqPhysicalBox(QGraphicsItem* parent, CqWorld* world = NULL);
-	CqPhysicalBox(CqWorld* world = NULL);
-	virtual ~CqPhysicalBox();
+	CqMaterial( double d = 1.0, double f = 0.5, double r = 0.5){ density = d; friction = f; restitution = r;}
+	~CqMaterial(){}
 
+	enum Type { Steel, Rubber, Wood, Custom };
 	
-	// properties
-	void setSize( const QSizeF& size );		///< Sets/ changes size
-	QSizeF size() const { return _size; };	///< Returns size
-
-	// operations 
-	virtual void paint
-		( QPainter * painter
-		, const QStyleOptionGraphicsItem * option
-		, QWidget * widget = 0 );
+	Type type;					/// Well known material type
+	
+	double friction;			///< Friction [0.0->1.0]
+	double restitution;			///< Restotution ("bounciness")[0.0->1.0]
+	double density;				///< Density [kg/m2]
+	
+	/// Copies material spec to shape
+	void copyToShapeDef( b2ShapeDef* pShape ) const;
+	
+	/// Rubber definiton
+	inline static CqMaterial rubber()
+	{
+		CqMaterial m;
+		m.density		= 1.0;
+		m.friction		= 1.0;
+		m.restitution	= 0.5;
 		
-    virtual QRectF boundingRect() const;
-protected:
-
-	// reimplementables
+		m.type = Rubber;
+		
+		return m;
+	}
 	
-    virtual QList< b2ShapeDef* > createShape();
+	/// Steel definition
+	inline static CqMaterial steel()
+	{
+		CqMaterial m;
+		m.density		= 5.0;
+		m.friction		= 0.2;
+		m.restitution	= 0.3;
+		
+		m.type = Steel;
+		
+		return m;
+	}
 
-private:
-
-	// data
-	
-	QSizeF	_size;		///< box's size
-
+	/// Wood definition
+	inline static CqMaterial wood()
+	{
+		CqMaterial m;
+		m.density		= 2.0;
+		m.friction		= 0.5;
+		m.restitution	= 0.1;
+		
+		m.type = Wood;
+		
+		return m;
+	}
 };
 
-#endif
+#endif // CQMATERIAL_H
+
+// EOF
+
+

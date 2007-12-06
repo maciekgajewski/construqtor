@@ -17,49 +17,50 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef CQPHYSICALBOX_H
-#define CQPHYSICALBOX_H
+
+// Qt
+#include <QPainter>
 
 // local
-#include "cqphysicalbody.h"
+#include "cqnail.h"
 
-
-/**
-	@author Maciek Gajewski <maciej.gajewski0@gmail.com>
-*/
-class CqPhysicalBox : public CqPhysicalBody
+// ========================= construction ======================
+CqNail::CqNail( CqWorld* world  )
+	: CqRevoluteJoint(world)
 {
-public:
+	// nope
+}
+
+// ========================= construction ======================
+CqNail::CqNail( QGraphicsItem* parent, CqWorld* world  )
+	:CqRevoluteJoint( parent, world )
+{
+	// nope
+}
+
+// ========================= destruction ======================
+CqNail::~CqNail()
+{
+	// nope
+}
+
+// ========================= paint ======================
+void CqNail::paint
+	( QPainter * painter
+	, const QStyleOptionGraphicsItem * option
+	, QWidget * widget)
+{
+	//painter->drawEllipse( QRectF( pos() - QPointF( 0.01, 0.01 ), QSizeF( 0.02, 0.02 ) ) );
+	painter->drawEllipse( QRectF( - QPointF( 0.01, 0.01 ), QSizeF( 0.02, 0.02 ) ) );
+}
 	
-	// construction / destruction
-	CqPhysicalBox(QGraphicsItem* parent, CqWorld* world = NULL);
-	CqPhysicalBox(CqWorld* world = NULL);
-	virtual ~CqPhysicalBox();
+// ========================= bounding rect ======================
+QRectF CqNail::boundingRect() const
+{
+	//return QRectF( pos() - QPointF( 0.2, 0.2 ), QSizeF( 0.4, 0.4 ) );
+	return QRectF( - QPointF( 0.2, 0.2 ), QSizeF( 0.4, 0.4 ) );
+}
 
-	
-	// properties
-	void setSize( const QSizeF& size );		///< Sets/ changes size
-	QSizeF size() const { return _size; };	///< Returns size
 
-	// operations 
-	virtual void paint
-		( QPainter * painter
-		, const QStyleOptionGraphicsItem * option
-		, QWidget * widget = 0 );
-		
-    virtual QRectF boundingRect() const;
-protected:
+// EOF
 
-	// reimplementables
-	
-    virtual QList< b2ShapeDef* > createShape();
-
-private:
-
-	// data
-	
-	QSizeF	_size;		///< box's size
-
-};
-
-#endif
