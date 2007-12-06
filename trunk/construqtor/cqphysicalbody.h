@@ -23,6 +23,8 @@
 // Qt
 #include <QGraphicsItem>
 #include <QPointer>
+#include <QPen>
+#include <QBrush>
 
 // box2d
 #include "b2Shape.h"
@@ -30,6 +32,7 @@ class b2Body;
 
 // local
 #include "cqworld.h"
+#include "cqmaterial.h"
 
 /**
 	This is a Graphics Scene item which has is physical alter-ego
@@ -56,7 +59,21 @@ public:
 	void setWorld ( CqWorld* pWorld );		///< Sets world
 	void setRotationRadians( double radians );	///< sets rotation in radians
 	double rotationRadians() const { return _rotation; } ///< Retuens rotation
+	
+	CqMaterial material() { return _material; }
+	void setMaterial( const CqMaterial& material ) {  _material = material; }
+	
+	void setPen( const QPen& pen ) { _pen = pen; }
+	QPen pen() const { return _pen; }
+	
+	void setBrush( const QBrush& brush ) { _brush = brush; }
+	QBrush brush() const { return _brush; }
 
+	b2Body* b2body() { return _pBody; }
+	const b2Body* b2body() const { return _pBody; }
+
+	virtual int type() const;	///< RTTI
+	
 	// signals from simulation
 	
 	void simulationStep();					///< Called after simulation step
@@ -90,6 +107,10 @@ private:
 	QPointer< CqWorld > _pWorld;		///< World object
 	b2Body*	_pBody;						///< Body itself
 	double	_rotation;					///< Body's rotation [radians]
+	CqMaterial	_material;				///< Material used
+	
+	QBrush		_brush;					///< Brush used to paint item
+	QPen		_pen;					///< Pen used to paint ite,
 };
 
 #endif

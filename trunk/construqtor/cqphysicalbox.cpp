@@ -58,8 +58,7 @@ QList< b2ShapeDef* > CqPhysicalBox::createShape()
 	b2BoxDef* pBox = new b2BoxDef;
 	pBox->extents.Set( _size.width() / 2.0, _size.height() / 2.0 );
 	
-	// TODO temp, use material
-	pBox->density = 1.0;
+	material().copyToShapeDef( pBox );
 	
 	QList< b2ShapeDef* > result;
 	result.append( pBox );
@@ -73,14 +72,35 @@ void CqPhysicalBox::paint
 	, const QStyleOptionGraphicsItem * pOption
 	, QWidget * pWidget )
 {
-	pPainter->drawRect( QRectF( QPointF( 0, 0), _size ) );
+	QTransform t;
+	t.rotateRadians( rotationRadians() );
+	
+	QRectF box = QRectF( QPointF( - _size.width()/2.0, - _size.height()/2.0), _size );
+	QPolygonF rotatedBox = t.map( QPolygonF( box ) );
+	
+	pPainter->setPen( pen() );
+	pPainter->setBrush( brush() );
+	pPainter->drawPolygon( rotatedBox );
 }
 
 
 // ======================== bounding rect  ==================
 QRectF CqPhysicalBox::boundingRect() const
 {
-	return QRectF( QPointF( 0, 0), _size );
+	QTransform t;
+	t.rotateRadians( rotationRadians() );
+	
+	// NOTE: adding double pen width to rect size
+	QRectF box = QRectF
+		( QPointF
+			( - _size.width()/2.0 - pen().width()
+			, - _size.height()/2.0 - pen().width()
+			)
+		, _size + QSizeF( pen().width(), pen().width() ) * 2
+		);
+	QPolygonF rotatedBox = t.map( QPolygonF( box ) );
+	
+	return rotatedBox.boundingRect();
 }
 
 // EOF

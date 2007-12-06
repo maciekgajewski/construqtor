@@ -23,6 +23,7 @@
 
 // local
 #include "cqphysicalbody.h"
+#include "cqitemtypes.h"
 
 // ========================== constructor =================================
 CqPhysicalBody::CqPhysicalBody( QGraphicsItem* parent, CqWorld* world )
@@ -174,9 +175,19 @@ void CqPhysicalBody::destroyBody( CqWorld* pWorld )
 // ======================= set rotation [radians] ==========================
 void CqPhysicalBody::setRotationRadians( double radians )
 {
-	_rotation = radians;
-	// TODO update here???
+	if ( fabs( _rotation - radians ) > 0.01 )
+	{
+		prepareGeometryChange();
+		_rotation = radians;
+	}
 }
+
+// =========================== type  ===================
+int CqPhysicalBody::type() const
+{
+	return CQ_BODY;
+}
+
 
 // EOF
 

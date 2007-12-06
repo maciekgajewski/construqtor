@@ -24,7 +24,8 @@
 
 // local
 #include "cqsimulation.h"
-#include "cqphysicalbox.h"
+#include "cqnail.h"
+#include "cqphysicalbox.h" 
 
 // constants
 static const int SIMULATION_INTERVAL	= 100;	// [ms]
@@ -74,11 +75,19 @@ void CqSimulation::simulationTimerTimeout()
 	
 	foreach( QGraphicsItem* pItem, items )
 	{
-		CqPhysicalBody* pBody = qgraphicsitem_cast<CqPhysicalBody*>( pItem );
+		// bodies
+		CqPhysicalBody* pBody = dynamic_cast<CqPhysicalBody*>( pItem );
 		
 		if ( pBody )
 		{
 			pBody->simulationStep();
+		}
+		// joints
+		CqJoint* pJoint = dynamic_cast<CqJoint*>( pItem );
+		
+		if ( pJoint )
+		{
+			pJoint->simulationStep();
 		}
 	}
 }
@@ -102,12 +111,27 @@ void CqSimulation::InitWorld()
 	// add sample objects
 	CqPhysicalBox* pBox = new CqPhysicalBox( NULL, _pPhysicalWorld );
 	pBox->setSize( QSizeF( 2.0, 0.3) );
+	pBox->setPos( 0.0, 1.0 );
 	_scene.addItem( pBox );
 	
 	CqPhysicalBox* pBox2 = new CqPhysicalBox( NULL, _pPhysicalWorld );
-	pBox2->setSize( QSizeF( 3.0, 0.2 ) );
-	pBox2->setPos( 1.0, 1.0 );
+	pBox2->setSize( QSizeF( 0.2, 3.0 ) );
+	pBox2->setPos( 0.5, 2.0 );
 	_scene.addItem( pBox2 );
+	
+	// ground object
+	CqPhysicalBox* pGround = new CqPhysicalBox( NULL, _pPhysicalWorld );
+	pGround->setSize( QSizeF( 10.0, 1.0 ) );
+	pGround->setPos( 0.0, -0.5 );
+	pGround->setMaterial( CqMaterial( 0, 0, 0 ) );
+	_scene.addItem( pGround );
+	
+	// joint
+	CqNail* pNail = new CqNail( NULL, _pPhysicalWorld );
+	pNail->setAnchorPoint( QPointF( 0.5, 1.0 ) );
+	pNail->setConnectedBodies( pBox, pBox2 );
+	_scene.addItem( pNail );
+	
 	
 	// set scene transform to display things right
 }
@@ -115,17 +139,30 @@ void CqSimulation::InitWorld()
 // =========================== assure objects created =============
 void CqSimulation::assurePhysicalObjectsCreated()
 {
-	// first - create bodies
 	// TODO suboptimal - maintain separate list of bodyless-objects
 	QList< QGraphicsItem* > items = _scene.items();
 	
+	// first - create bodies
 	foreach( QGraphicsItem* pItem, items )
 	{
-		CqPhysicalBody* pBody = qgraphicsitem_cast<CqPhysicalBody*>( pItem );
+		//CqPhysicalBody* pBody = qgraphicsitem_cast<CqPhysicalBody*>( pItem );
+		CqPhysicalBody* pBody = dynamic_cast<CqPhysicalBody*>( pItem );
 		
 		if ( pBody )
 		{
 			pBody->assureBodyCreated();
+		}
+	}
+	
+	// second - create joints
+	foreach( QGraphicsItem* pItem, items )
+	{
+		//CqJoint* pJoint = qgraphicsitem_cast<CqJoint*>( pItem );
+		CqJoint* pJoint = dynamic_cast<CqJoint*>( pItem );
+		
+		if ( pJoint )
+		{
+			pJoint->assureJointCreated();
 		}
 	}
 }
