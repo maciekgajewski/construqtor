@@ -21,7 +21,6 @@
 #define CQPHYSICALBODY_H
 
 // Qt
-#include <QGraphicsItem>
 #include <QPointer>
 #include <QPen>
 #include <QBrush>
@@ -31,6 +30,7 @@
 class b2Body;
 
 // local
+#include "cqitem.h"
 #include "cqworld.h"
 #include "cqmaterial.h"
 
@@ -46,7 +46,7 @@ class b2Body;
 	
 	@author Maciek Gajewski <maciej.gajewski0@gmail.com>
 */
-class CqPhysicalBody : public QGraphicsItem
+class CqPhysicalBody : public CqItem
 {
 public:
 	

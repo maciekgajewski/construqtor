@@ -27,10 +27,17 @@
 // ==================== contructor =======================
 CqPhysicalBox::CqPhysicalBox(QGraphicsItem* parent, CqWorld* world): CqPhysicalBody(parent, world)
 {
+	init();
 }
 
 // ==================== contructor =======================
 CqPhysicalBox::CqPhysicalBox(CqWorld* world): CqPhysicalBody(world)
+{
+	init();
+}
+
+// ==================== init =======================
+void CqPhysicalBox::init()
 {
 }
 
@@ -78,8 +85,16 @@ void CqPhysicalBox::paint
 	QRectF box = QRectF( QPointF( - _size.width()/2.0, - _size.height()/2.0), _size );
 	QPolygonF rotatedBox = t.map( QPolygonF( box ) );
 	
+	
+	// simple selection indicator
+	QBrush b = brush();
+	if ( isSelected() )
+	{
+		b = Qt::gray;
+	}
+	
 	pPainter->setPen( pen() );
-	pPainter->setBrush( brush() );
+	pPainter->setBrush( b );
 	pPainter->drawPolygon( rotatedBox );
 }
 
@@ -90,17 +105,30 @@ QRectF CqPhysicalBox::boundingRect() const
 	QTransform t;
 	t.rotateRadians( rotationRadians() );
 	
-	// NOTE: adding double pen width to rect size
 	QRectF box = QRectF
 		( QPointF
-			( - _size.width()/2.0 - pen().width()
-			, - _size.height()/2.0 - pen().width()
+			( - _size.width()/2.0
+			, - _size.height()/2.0
 			)
-		, _size + QSizeF( pen().width(), pen().width() ) * 2
+		, _size
 		);
 	QPolygonF rotatedBox = t.map( QPolygonF( box ) );
 	
 	return rotatedBox.boundingRect();
+}
+
+// ======================== simulation started ==================
+void CqPhysicalBox::simulationStarted()
+{
+	// make not movable
+	setFlag( QGraphicsItem::ItemIsMovable, false );
+}
+
+// ======================== simulation stoped  ==================
+void CqPhysicalBox::simulationStopped()
+{
+	// make movable
+	setFlag( QGraphicsItem::ItemIsMovable, true );
 }
 
 // EOF

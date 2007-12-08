@@ -27,14 +27,14 @@
 
 // ========================== constructor =================================
 CqPhysicalBody::CqPhysicalBody( QGraphicsItem* parent, CqWorld* world )
-	: QGraphicsItem( parent )
+	: CqItem( parent )
 	, _pWorld( world )
 {
 	init();
 }
 
 CqPhysicalBody::CqPhysicalBody( CqWorld* world )
-	: QGraphicsItem( NULL )
+	: CqItem( NULL )
 	, _pWorld( world )
 {
 	init();
@@ -129,6 +129,9 @@ void CqPhysicalBody::createBody( CqWorld* pWorld )
 /// Updates Grpahics ITem position and rotation to body's
 void CqPhysicalBody::simulationStep()
 {
+	// call inherited
+	CqItem::simulationStep();
+	
 	if ( _pBody )
 	{
 		b2Vec2		b2pos		= _pBody->GetCenterPosition();

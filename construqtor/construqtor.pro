@@ -9,7 +9,9 @@ cqphysicalbox.cpp \
 cqmaterial.cpp \
 cqjoint.cpp \
 cqrevolutejoint.cpp \
-cqnail.cpp
+cqnail.cpp \
+cqitem.cpp \
+mainview.cpp
 FORMS += mainwindow.ui
 
 HEADERS += mainwindow.h \
@@ -21,7 +23,9 @@ cqmaterial.h \
 cqjoint.h \
 cqrevolutejoint.h \
 cqnail.h \
-cqitemtypes.h
+cqitemtypes.h \
+cqitem.h \
+mainview.h
 CONFIG += debug \
 qt \
 warn_on \

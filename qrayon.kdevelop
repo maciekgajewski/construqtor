@@ -169,7 +169,7 @@
       <envvars/>
     </run>
     <general>
-      <activedir>src</activedir>
+      <activedir>construqtor</activedir>
     </general>
     <make>
       <abortonerror>true</abortonerror>

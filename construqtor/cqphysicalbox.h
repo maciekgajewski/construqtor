@@ -48,6 +48,11 @@ public:
 		, QWidget * widget = 0 );
 		
     virtual QRectF boundingRect() const;
+	
+	// signals from simulation
+	virtual void simulationStarted();					///< Caled when simulatio is started
+	virtual void simulationStopped();					///< Caled when simulatio is started
+	
 protected:
 
 	// reimplementables
@@ -55,6 +60,9 @@ protected:
     virtual QList< b2ShapeDef* > createShape();
 
 private:
+
+	// methods
+	void init();		///< Initializes instance
 
 	// data
 	
