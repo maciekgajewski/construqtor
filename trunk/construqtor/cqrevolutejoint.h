@@ -41,6 +41,12 @@ public:
 	
 	void setAnchorPoint( const QPointF& point );	///< Sets anchor point
 	QPointF anchorPoint() const;					///< Returns anchor point
+	/// Enables and configures motor
+	void setMotorEnabled( bool enabled, double speed, double torque );
+	/// Enables and configures motor limits
+	void setLimits( bool limits, double upper, double lower );
+
+	// signal from simulation
 
 	virtual void simulationStep();			///< Called after simulation step
 
@@ -48,6 +54,14 @@ protected:
 
 	
     virtual b2Joint* createJoint( CqWorld* pWorld );	///< Creates joint
+		
+	// motor specfication
+	bool	_enableMotor;							///< Flag - create joint with motor
+	bool	_enableLimits;							///< Flag: apply limits to motor
+	double	_upperLimit, _lowerLimit;
+	
+	double	_maxTorque;
+	double	_initialSpeed;
 
 };
 

@@ -49,6 +49,19 @@ CqSimulation::~CqSimulation()
 void CqSimulation::start()
 {
 	assurePhysicalObjectsCreated();
+	
+	// tell everyone simulation will start
+	QList< QGraphicsItem* > items = _scene.items();
+	
+	foreach( QGraphicsItem* pItem, items )
+	{
+		CqItem* pBody = dynamic_cast<CqItem*>( pItem );
+		
+		if ( pBody )
+		{
+			pBody->simulationStarted();
+		}
+	}
 	_simulationTimer.start( SIMULATION_INTERVAL );
 }
 
@@ -56,6 +69,19 @@ void CqSimulation::start()
 void CqSimulation::stop()
 {
 	_simulationTimer.stop();
+		
+	// tell everyone simulation has stopped
+	QList< QGraphicsItem* > items = _scene.items();
+	
+	foreach( QGraphicsItem* pItem, items )
+	{
+		CqItem* pBody = dynamic_cast<CqItem*>( pItem );
+		
+		if ( pBody )
+		{
+			pBody->simulationStopped();
+		}
+	}
 }
 
 // ======================== isRunning ==================
@@ -75,19 +101,11 @@ void CqSimulation::simulationTimerTimeout()
 	
 	foreach( QGraphicsItem* pItem, items )
 	{
-		// bodies
-		CqPhysicalBody* pBody = dynamic_cast<CqPhysicalBody*>( pItem );
+		CqItem* pBody = dynamic_cast<CqItem*>( pItem );
 		
 		if ( pBody )
 		{
 			pBody->simulationStep();
-		}
-		// joints
-		CqJoint* pJoint = dynamic_cast<CqJoint*>( pItem );
-		
-		if ( pJoint )
-		{
-			pJoint->simulationStep();
 		}
 	}
 }
@@ -112,26 +130,28 @@ void CqSimulation::InitWorld()
 	CqPhysicalBox* pBox = new CqPhysicalBox( NULL, _pPhysicalWorld );
 	pBox->setSize( QSizeF( 2.0, 0.3) );
 	pBox->setPos( 0.0, 1.0 );
-	_scene.addItem( pBox );
+	addItem( pBox );
 	
 	CqPhysicalBox* pBox2 = new CqPhysicalBox( NULL, _pPhysicalWorld );
 	pBox2->setSize( QSizeF( 0.2, 3.0 ) );
 	pBox2->setPos( 0.5, 2.0 );
-	_scene.addItem( pBox2 );
+	addItem( pBox2 );
 	
 	// ground object
 	CqPhysicalBox* pGround = new CqPhysicalBox( NULL, _pPhysicalWorld );
 	pGround->setSize( QSizeF( 10.0, 1.0 ) );
 	pGround->setPos( 0.0, -0.5 );
 	pGround->setMaterial( CqMaterial( 0, 0, 0 ) );
-	_scene.addItem( pGround );
+	addItem( pGround );
 	
 	// joint
 	CqNail* pNail = new CqNail( NULL, _pPhysicalWorld );
 	pNail->setAnchorPoint( QPointF( 0.5, 1.0 ) );
 	pNail->setConnectedBodies( pBox, pBox2 );
-	_scene.addItem( pNail );
+		
+	addItem( pNail );
 	
+	stop();
 	
 	// set scene transform to display things right
 }
@@ -166,4 +186,16 @@ void CqSimulation::assurePhysicalObjectsCreated()
 		}
 	}
 }
+
+// =============================== add item =========================
+void CqSimulation::addItem( CqItem* pItem )
+{
+	Q_ASSERT( pItem );
+	
+	_scene.addItem( pItem );
+	pItem->setSimulation( this );
+}
+
+
+// EOF
 

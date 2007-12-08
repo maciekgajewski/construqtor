@@ -17,74 +17,67 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-
 // local
-#include "cqjoint.h"
-#include "cqworld.h"
-#include "cqitemtypes.h"
+#include "cqsimulation.h"
+#include "cqitem.h"
 
-// =========================== constructor ===================
-CqJoint::CqJoint(CqWorld* world)
-	: CqItem()
-	, _pWorld( world )
+// ========================== constructor ======================
+CqItem::CqItem( QGraphicsItem* parent )
+	: QGraphicsItem(parent)
 {
-	init();
-}
-// =========================== constructor ===================
-CqJoint::CqJoint(QGraphicsItem* parent, CqWorld* world)
-	: CqItem(parent)
-	, _pWorld( world )
-{
-	init();
+	_pSimulation = NULL;
 }
 
-// =========================== destructor ===================
-CqJoint::~CqJoint()
+// ========================== destructor ======================
+CqItem::~CqItem()
 {
-	// nope
+	// none
 }
 
-// =========================== init ===================
-void CqJoint::init()
+// =========================== simulation step ===================
+void CqItem::simulationStep()
 {
-	_pBody1 = NULL;
-	_pBody2 = NULL;
+	// nothing here
 }
 
-// =========================== assure joint created  ===================
-void CqJoint::assureJointCreated()
+// =========================== simulationstarted ===================
+void CqItem::simulationStarted()
 {
-	Q_ASSERT( _pWorld );
-	
-	if ( ! _pJoint )
+	// nothing here
+}
+
+// =========================== simulation stopped ===================
+void CqItem::simulationStopped()
+{
+	// nothing here
+}
+
+// ============================== dbl click ==================
+void CqItem::mouseDoubleClickEvent ( QGraphicsSceneMouseEvent * pEvent )
+{
+	if ( canBeEdited() )
 	{
-		_pJoint = createJoint(_pWorld);
+		breakAllJoints();
 	}
 }
 
-// =========================== set connected bodies  ===================
-void CqJoint::setConnectedBodies( CqPhysicalBody* pBody1, CqPhysicalBody* pBody2 )
+// ============================== mouse release ==================
+void CqItem::mouseReleaseEvent ( QGraphicsSceneMouseEvent * pEvent )
 {
-	_pBody1 = pBody1;
-	_pBody2 = pBody2;
+	// use default handler to select/deselect, but 
+	setFlag( QGraphicsItem::ItemIsSelectable, canBeSelected() );
+
+	QGraphicsItem::mouseReleaseEvent( pEvent );
 }
 
-// =========================== destroy joint  ===================
-void CqJoint::destroyJoint( CqWorld* pWorld )
+// =================================== breaks all atached joints ===
+void CqItem::breakAllJoints()
 {
-	Q_ASSERT( pWorld );
-	Q_ASSERT( _pJoint );
-	
-	pWorld->DestroyJoint( _pJoint );
-	
-	_pJoint = NULL;
-}
-
-// =========================== type  ===================
-int CqJoint::type() const
-{
-	return CQ_JOINT;
+	// TODO add list of joints to each body
 }
 
 // EOF
+
+
+
 

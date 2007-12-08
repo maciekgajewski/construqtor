@@ -29,6 +29,7 @@
 class b2World;
 
 // local
+class CqItem;
 #include "cqworld.h"
 
 /**
@@ -50,6 +51,8 @@ public:
 	
 	QGraphicsScene* scene() { return &_scene; };
 	const QGraphicsScene* scene() const { return &_scene; };
+	
+	void addItem( CqItem* pItem );		///< Adds item do simulation
 
 private slots:
 

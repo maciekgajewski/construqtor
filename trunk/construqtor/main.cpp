@@ -27,13 +27,12 @@ int main(int argc, char *argv[])
 	QApplication app(argc, argv);
 	MainWindow window;
 	CqSimulation simulation;
+	window.simulation = &simulation;
 	
 	// configure view
 	window.view->setScene( simulation.scene() );
 	window.view->rotate( 180 );
 	window.view->scale( 100, 100 );
-	
-	simulation.start();
 	
 	window.show();
 	

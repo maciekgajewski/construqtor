@@ -23,6 +23,17 @@ MainWindow::MainWindow(QWidget *parent)
     : QWidget( parent ), Ui::MainWindow()
 {
 	setupUi( this );
+	simulation = NULL;
+}
+
+void MainWindow::on_buttonStart_clicked()
+{
+	simulation->start();
+}
+
+void MainWindow::on_buttonStop_clicked()
+{
+	simulation->stop();
 }
 
 // EOF

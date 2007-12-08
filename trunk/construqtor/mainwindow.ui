@@ -45,10 +45,17 @@
     </layout>
    </item>
    <item>
-    <widget class="QGraphicsView" name="view" />
+    <widget class="MainView" name="view" />
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>MainView</class>
+   <extends>QGraphicsView</extends>
+   <header>mainview.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

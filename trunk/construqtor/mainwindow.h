@@ -20,13 +20,23 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+// local
+#include "cqsimulation.h"
 #include "ui_mainwindow.h"
 
 class MainWindow: public QWidget, public Ui::MainWindow
 {
 Q_OBJECT
 public:
-    MainWindow( QWidget *parent = 0 );
+	MainWindow( QWidget *parent = 0 );
+	
+	CqSimulation* simulation;
+	
+public slots:
+	// buttons
+	
+	void on_buttonStart_clicked();
+	void on_buttonStop_clicked();
 };
 
 #endif

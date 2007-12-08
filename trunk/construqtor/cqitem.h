@@ -17,74 +17,60 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
+#ifndef CQITEM_H
+#define CQITEM_H
+
+// Qt
+#include <QGraphicsItem>
 
 // local
-#include "cqjoint.h"
-#include "cqworld.h"
-#include "cqitemtypes.h"
+class CqSimulation;
 
-// =========================== constructor ===================
-CqJoint::CqJoint(CqWorld* world)
-	: CqItem()
-	, _pWorld( world )
-{
-	init();
-}
-// =========================== constructor ===================
-CqJoint::CqJoint(QGraphicsItem* parent, CqWorld* world)
-	: CqItem(parent)
-	, _pWorld( world )
-{
-	init();
-}
+/**
+	Common subclass for all simulated items. Provides functonality to communicate
+	with simulation.
 
-// =========================== destructor ===================
-CqJoint::~CqJoint()
+	@author Maciek Gajewski <maciej.gajewski0@gmail.com>
+*/
+class CqItem : public QGraphicsItem
 {
-	// nope
-}
-
-// =========================== init ===================
-void CqJoint::init()
-{
-	_pBody1 = NULL;
-	_pBody2 = NULL;
-}
-
-// =========================== assure joint created  ===================
-void CqJoint::assureJointCreated()
-{
-	Q_ASSERT( _pWorld );
+public:
+	// constrution / destruction
+	CqItem( QGraphicsItem* parent = NULL );
+	virtual ~CqItem();
 	
-	if ( ! _pJoint )
-	{
-		_pJoint = createJoint(_pWorld);
-	}
-}
-
-// =========================== set connected bodies  ===================
-void CqJoint::setConnectedBodies( CqPhysicalBody* pBody1, CqPhysicalBody* pBody2 )
-{
-	_pBody1 = pBody1;
-	_pBody2 = pBody2;
-}
-
-// =========================== destroy joint  ===================
-void CqJoint::destroyJoint( CqWorld* pWorld )
-{
-	Q_ASSERT( pWorld );
-	Q_ASSERT( _pJoint );
 	
-	pWorld->DestroyJoint( _pJoint );
+	// signals form simulation
+	virtual void simulationStep();						///< Called after simulation step
+	virtual void simulationStarted();					///< Caled when simulatio is started
+	virtual void simulationStopped();					///< Caled when simulatio is started
 	
-	_pJoint = NULL;
-}
+	// properties
+	void setSimulation( CqSimulation* pSimulation ) { _pSimulation = pSimulation; }
+	CqSimulation* simulation() { return _pSimulation; }
+	const CqSimulation* simulation() const { return _pSimulation; }
+	
+	// operations
+	void breakAllJoints();								///< Destroys all joints attached
+	
+protected:
 
-// =========================== type  ===================
-int CqJoint::type() const
-{
-	return CQ_JOINT;
-}
+	// state querries
+	virtual bool canBeEdited() const;
+	virtual bool canBeSelected() const;
+
+	// input events
+	
+	virtual void mouseDoubleClickEvent ( QGraphicsSceneMouseEvent * event );
+	virtual void mouseReleaseEvent ( QGraphicsSceneMouseEvent * event );
+
+private:
+
+	CqSimulation*	_pSimulation;						///< Simulation
+};
+
+#endif // CQITEM_H
 
 // EOF
+
 

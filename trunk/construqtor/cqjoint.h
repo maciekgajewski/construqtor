@@ -21,13 +21,13 @@
 #define CQJOINT_H
 
 // Qt
-#include <QGraphicsItem>
 #include <QPointer>
 
 // Box 2D
 class b2Joint;
 
 // local
+#include "cqitem.h"
 class CqPhysicalBody;
 class CqWorld;
 
@@ -36,7 +36,7 @@ class CqWorld;
 
 	@author Maciek Gajewski <maciej.gajewski0@gmail.com>
 */
-class CqJoint : public QGraphicsItem
+class CqJoint : public CqItem
 {
 public:
 	// constrution / destruction
@@ -56,7 +56,6 @@ public:
 	const b2Joint* b2joint() const { return _pJoint; }
 	
 	// info from simulation
-	virtual void simulationStep();			///< Called after simulation step
 	void assureJointCreated();				///< Makes sure that body was created
 	
 	virtual int type() const;	///< RTTI

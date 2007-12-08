@@ -62,6 +62,15 @@ b2Joint* CqRevoluteJoint::createJoint(CqWorld* pWorld)
 		QPointF a = anchorPoint();
 		jointDef.anchorPoint = b2Vec2( a.x(), a.y() );
 		
+		// motor
+		jointDef.enableMotor	= _enableMotor;
+		jointDef.motorSpeed		= _initialSpeed;
+		jointDef.motorTorque	= _maxTorque;
+		jointDef.enableLimit	= _enableLimits;
+		jointDef.upperAngle		= _upperLimit;
+		jointDef.lowerAngle		= _lowerLimit;
+		
+		
 		return pWorld->CreateJoint( & jointDef );
 	}
 	
@@ -92,6 +101,22 @@ void CqRevoluteJoint::simulationStep()
 		setPos( pos.x, pos.y );
 		//qDebug("pos: %lf, %lf", double( pos.x ), double( pos.y ) ); // TODO remove
 	}
+}
+
+// ================================ set motor enabled ===========================
+void CqRevoluteJoint::setMotorEnabled( bool enabled, double speed, double torque )
+{
+	_enableMotor	= enabled;
+	_initialSpeed	= speed;
+	_maxTorque		= torque; // TODO stil ot sure if it is max torque
+}
+
+// ================================ set limits enabled ===========================
+void CqRevoluteJoint::setLimits( bool limits, double upper, double lower )
+{
+	_enableLimits	= limits;
+	_upperLimit		= upper;
+	_lowerLimit		= lower;
 }
 
 // EOF

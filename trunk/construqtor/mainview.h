@@ -17,74 +17,32 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
+#ifndef MAINVIEW_H
+#define MAINVIEW_H
 
-// local
-#include "cqjoint.h"
-#include "cqworld.h"
-#include "cqitemtypes.h"
+#include <QGraphicsView>
 
-// =========================== constructor ===================
-CqJoint::CqJoint(CqWorld* world)
-	: CqItem()
-	, _pWorld( world )
-{
-	init();
-}
-// =========================== constructor ===================
-CqJoint::CqJoint(QGraphicsItem* parent, CqWorld* world)
-	: CqItem(parent)
-	, _pWorld( world )
-{
-	init();
-}
-
-// =========================== destructor ===================
-CqJoint::~CqJoint()
-{
-	// nope
-}
-
-// =========================== init ===================
-void CqJoint::init()
-{
-	_pBody1 = NULL;
-	_pBody2 = NULL;
-}
-
-// =========================== assure joint created  ===================
-void CqJoint::assureJointCreated()
-{
-	Q_ASSERT( _pWorld );
+/**
+	Main scene view implements viewport control and editing.
 	
-	if ( ! _pJoint )
-	{
-		_pJoint = createJoint(_pWorld);
-	}
-}
-
-// =========================== set connected bodies  ===================
-void CqJoint::setConnectedBodies( CqPhysicalBody* pBody1, CqPhysicalBody* pBody2 )
+	@author Maciek Gajewski <maciej.gajewski0@gmail.com>
+*/
+class MainView : public QGraphicsView
 {
-	_pBody1 = pBody1;
-	_pBody2 = pBody2;
-}
-
-// =========================== destroy joint  ===================
-void CqJoint::destroyJoint( CqWorld* pWorld )
-{
-	Q_ASSERT( pWorld );
-	Q_ASSERT( _pJoint );
+Q_OBJECT
+public:
+	MainView( QWidget* parent = NULL );
+	MainView(QGraphicsScene* scene, QWidget* parent = NULL);
 	
-	pWorld->DestroyJoint( _pJoint );
+	virtual ~MainView();
 	
-	_pJoint = NULL;
-}
+	
+	// mouse events
+	void mouseDoubleClickEvent(QMouseEvent* event);
+	void mouseMoveEvent(QMouseEvent* event);
+	void mousePressEvent(QMouseEvent* event);
+	void mouseReleaseEvent(QMouseEvent* event);
 
-// =========================== type  ===================
-int CqJoint::type() const
-{
-	return CQ_JOINT;
-}
+};
 
-// EOF
-
+#endif	// MAINVIEW_H
