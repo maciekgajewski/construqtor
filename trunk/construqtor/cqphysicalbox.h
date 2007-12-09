@@ -49,9 +49,9 @@ public:
 		
     virtual QRectF boundingRect() const;
 	
-	// signals from simulation
-	virtual void simulationStarted();					///< Caled when simulatio is started
-	virtual void simulationStopped();					///< Caled when simulatio is started
+	// editor flags
+	virtual bool canBeSelected() const;
+	virtual bool canBeMoved() const;
 	
 protected:
 

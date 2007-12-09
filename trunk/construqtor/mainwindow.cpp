@@ -24,6 +24,8 @@ MainWindow::MainWindow(QWidget *parent)
 {
 	setupUi( this );
 	simulation = NULL;
+	
+	connect( view, SIGNAL(pointerPos(double,double)), SLOT(scenePointerPos(double,double)));
 }
 
 void MainWindow::on_buttonStart_clicked()
@@ -34,6 +36,11 @@ void MainWindow::on_buttonStart_clicked()
 void MainWindow::on_buttonStop_clicked()
 {
 	simulation->stop();
+}
+
+void MainWindow::scenePointerPos( double x, double y )
+{
+	labelPos->setText( QString("%1, %2").arg( x ).arg( y ) );
 }
 
 // EOF

@@ -20,7 +20,15 @@
 #ifndef MAINVIEW_H
 #define MAINVIEW_H
 
+// Qt
 #include <QGraphicsView>
+
+
+// Cq
+class CqItem;
+
+// local
+class CeEditorItem;
 
 /**
 	Main scene view implements viewport control and editing.
@@ -35,14 +43,33 @@ public:
 	MainView(QGraphicsScene* scene, QWidget* parent = NULL);
 	
 	virtual ~MainView();
-	
-	
-	// mouse events
-	void mouseDoubleClickEvent(QMouseEvent* event);
-	void mouseMoveEvent(QMouseEvent* event);
-	void mousePressEvent(QMouseEvent* event);
-	void mouseReleaseEvent(QMouseEvent* event);
 
+signals:
+
+	void pointerPos( double x, double y );	///< Signals mouse pointer pos in scene corrds
+	
+protected:
+
+	// mouse events
+	
+	virtual void mouseDoubleClickEvent(QMouseEvent* event);
+	virtual void mouseMoveEvent(QMouseEvent* event);
+	virtual void mousePressEvent(QMouseEvent* event);
+	virtual void mouseReleaseEvent(QMouseEvent* event);
+	virtual void wheelEvent ( QWheelEvent * event );
+	
+	// methods
+	
+	void init();
+	
+	void selectUnderPoint( const QPoint& pos );
+	//void startDragUnderPoint( const QPoint& pos );
+	void unselectAll();
+	void breakJointUnderPoint( const QPoint& pos );
+	
+	
+	//CqItem* _draggedItem;	///< Currently dragged item TODO remove
+	CeEditorItem* _pEditor;	///< editor item
 };
 
 #endif	// MAINVIEW_H

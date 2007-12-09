@@ -53,6 +53,12 @@ public:
 	const QGraphicsScene* scene() const { return &_scene; };
 	
 	void addItem( CqItem* pItem );		///< Adds item do simulation
+	
+	// editor control
+	bool canBeSelected( const CqItem* pItem ) const;	///< If itemcan be selected
+	bool canBeMoved( const CqItem* pItem ) const;		///< If item can be moved
+	/// If moved item can be moved into this position
+	bool canBeMovedHere( const CqItem* pItem, const QPointF& pos ) const;
 
 private slots:
 

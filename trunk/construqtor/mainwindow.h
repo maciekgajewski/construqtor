@@ -37,6 +37,8 @@ public slots:
 	
 	void on_buttonStart_clicked();
 	void on_buttonStop_clicked();
+	
+	void scenePointerPos( double x, double y );
 };
 
 #endif
