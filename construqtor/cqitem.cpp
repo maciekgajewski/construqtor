@@ -17,6 +17,10 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
+
+// Qt
+#include <QGraphicsSceneMouseEvent>
+
 // local
 #include "cqsimulation.h"
 #include "cqitem.h"
@@ -25,13 +29,21 @@
 CqItem::CqItem( QGraphicsItem* parent )
 	: QGraphicsItem(parent)
 {
-	_pSimulation = NULL;
+	init();
 }
 
 // ========================== destructor ======================
 CqItem::~CqItem()
 {
 	// none
+}
+
+// ==================================== init ==================
+void CqItem::init()
+{
+	setFlag( QGraphicsItem::ItemIsSelectable, true ); // TODO test - maybe better would be to turn it off and use own selection
+	_pSimulation = NULL;
+	setAcceptedMouseButtons( Qt::NoButton );
 }
 
 // =========================== simulation step ===================
@@ -52,28 +64,39 @@ void CqItem::simulationStopped()
 	// nothing here
 }
 
-// ============================== dbl click ==================
+// ============================== mouse dbl click ==================
 void CqItem::mouseDoubleClickEvent ( QGraphicsSceneMouseEvent * pEvent )
 {
-	if ( canBeEdited() )
-	{
-		breakAllJoints();
-	}
+	pEvent->ignore();
 }
 
+// ============================== mouse move ==================
+void CqItem::mouseMoveEvent ( QGraphicsSceneMouseEvent * pEvent  )
+{
+	pEvent->ignore();
+}
+
+// ============================== mouse press ==================
+void CqItem::mousePressEvent ( QGraphicsSceneMouseEvent * pEvent )
+{
+	pEvent->ignore();
+}
 // ============================== mouse release ==================
-void CqItem::mouseReleaseEvent ( QGraphicsSceneMouseEvent * pEvent )
+void CqItem::mouseReleaseEvent ( QGraphicsSceneMouseEvent *  )
 {
-	// use default handler to select/deselect, but 
-	setFlag( QGraphicsItem::ItemIsSelectable, canBeSelected() );
-
-	QGraphicsItem::mouseReleaseEvent( pEvent );
 }
 
-// =================================== breaks all atached joints ===
-void CqItem::breakAllJoints()
+// ======================== can item be moved here? =============
+bool CqItem::canBeMovedHere( const QPointF& scenePos )
 {
-	// TODO add list of joints to each body
+	return _pSimulation->canBeMovedHere( this, scenePos );
+}
+
+// ============================== set physical pos ===============
+/// Proper way to move the item. It alse updates all neccesary data
+void CqItem::setPhysicalPos( const QPointF& pos )
+{
+	setPos( pos );
 }
 
 // EOF

@@ -52,6 +52,9 @@ public:
 
 protected:
 
+	// methods
+	void init();
+	
 	
     virtual b2Joint* createJoint( CqWorld* pWorld );	///< Creates joint
 		

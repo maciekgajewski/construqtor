@@ -28,14 +28,14 @@
 // =========================== constructor ===================
 CqRevoluteJoint::CqRevoluteJoint(QGraphicsItem* parent, CqWorld* world): CqJoint(parent, world)
 {
-	// nothing
+	init();
 }
 
 
 // =========================== constructor ===================
 CqRevoluteJoint::CqRevoluteJoint(CqWorld* world): CqJoint(world)
 {
-	// nothing
+	init();
 }
 
 
@@ -45,6 +45,12 @@ CqRevoluteJoint::~CqRevoluteJoint()
 	// nothing
 }
 
+// ============================= init ======================
+void CqRevoluteJoint::init()
+{
+	_enableMotor	= false;
+	_enableLimits	= false;
+}
 
 // =========================== create joint ===================
 b2Joint* CqRevoluteJoint::createJoint(CqWorld* pWorld)
@@ -75,6 +81,7 @@ b2Joint* CqRevoluteJoint::createJoint(CqWorld* pWorld)
 	}
 	
 	qWarning("Tired to create revolute joint without bodies");
+	return NULL;
 }
 
 // ===========================set anchor ===================

@@ -33,6 +33,7 @@ class b2Body;
 #include "cqitem.h"
 #include "cqworld.h"
 #include "cqmaterial.h"
+class CqJoint;
 
 /**
 	This is a Graphics Scene item which has is physical alter-ego
@@ -74,10 +75,18 @@ public:
 
 	virtual int type() const;	///< RTTI
 	
+	virtual void setPhysicalPos( const QPointF& pos );
+	// operations
+	void breakAllJoints();								///< Destroys all joints attached
+	
 	// signals from simulation
 	
 	void simulationStep();					///< Called after simulation step
 	void assureBodyCreated();				///< Makes sure that body was created
+	
+	// signals from joint
+	void addJoint( CqJoint* pJoint );		///< Info: you have new joint
+	void removeJoint( CqJoint* pJoint );	///< Info: joint was removed
 	
 protected:
 	
@@ -91,7 +100,9 @@ protected:
 	/// Shape defiitions should be created with \b new, and will be destroyed with \b delete
 	virtual QList<b2ShapeDef*> createShape() = 0;
 	
+	// data
 	
+	QList<CqJoint*>	_joints;		///< Joints within this body
 
 private:
 

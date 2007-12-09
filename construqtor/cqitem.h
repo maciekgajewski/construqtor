@@ -50,22 +50,30 @@ public:
 	CqSimulation* simulation() { return _pSimulation; }
 	const CqSimulation* simulation() const { return _pSimulation; }
 	
-	// operations
-	void breakAllJoints();								///< Destroys all joints attached
+	virtual void setPhysicalPos( const QPointF& pos );		///< changes item position
+	
+	// editability info
+	virtual bool canBeSelected() const { return false; }
+	virtual bool canBeMoved() const { return false; }
+	virtual bool canBeMovedHere( const QPointF& scenePos );
 	
 protected:
-
-	// state querries
-	virtual bool canBeEdited() const;
-	virtual bool canBeSelected() const;
-
-	// input events
 	
+	// input handlers
 	virtual void mouseDoubleClickEvent ( QGraphicsSceneMouseEvent * event );
+	virtual void mouseMoveEvent ( QGraphicsSceneMouseEvent * event );
+	virtual void mousePressEvent ( QGraphicsSceneMouseEvent * event );
 	virtual void mouseReleaseEvent ( QGraphicsSceneMouseEvent * event );
 
+	
 private:
 
+	// methods
+	
+	void init();
+	
+	// data
+	
 	CqSimulation*	_pSimulation;						///< Simulation
 };
 

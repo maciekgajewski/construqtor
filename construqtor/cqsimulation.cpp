@@ -196,6 +196,29 @@ void CqSimulation::addItem( CqItem* pItem )
 	pItem->setSimulation( this );
 }
 
+// ============================= can be selected ? ==================
+bool CqSimulation::canBeSelected( const CqItem* pItem ) const
+{
+	Q_ASSERT( pItem );
+	
+	// TODO 'selectable' are here
+	return true;
+}
+
+// ============================== can be moved ? =====================
+bool CqSimulation::canBeMoved( const CqItem* pItem ) const
+{
+	// TODO 'movable' are here
+	return ! isRunning();
+}
+
+// ============================== can be moved here ? =====================
+bool CqSimulation::canBeMovedHere( const CqItem* pItem, const QPointF& pos ) const
+{
+	// TODO editable region here
+	return true;
+}
+
 
 // EOF
 

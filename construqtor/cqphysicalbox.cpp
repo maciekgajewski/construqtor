@@ -23,6 +23,7 @@
 
 // local
 #include "cqphysicalbox.h"
+#include "cqsimulation.h"
 
 // ==================== contructor =======================
 CqPhysicalBox::CqPhysicalBox(QGraphicsItem* parent, CqWorld* world): CqPhysicalBody(parent, world)
@@ -117,18 +118,18 @@ QRectF CqPhysicalBox::boundingRect() const
 	return rotatedBox.boundingRect();
 }
 
-// ======================== simulation started ==================
-void CqPhysicalBox::simulationStarted()
+// ======================== can be selected =============
+bool CqPhysicalBox::canBeSelected() const
 {
-	// make not movable
-	setFlag( QGraphicsItem::ItemIsMovable, false );
+	// of course, id simulation permits
+	return simulation()->canBeSelected( this );
 }
 
-// ======================== simulation stoped  ==================
-void CqPhysicalBox::simulationStopped()
+// ========================= can be moved ================
+bool CqPhysicalBox::canBeMoved() const
 {
-	// make movable
-	setFlag( QGraphicsItem::ItemIsMovable, true );
+	// if there is no joins, then yes
+	return _joints.empty()  && simulation()->canBeMoved( this );
 }
 
 // EOF

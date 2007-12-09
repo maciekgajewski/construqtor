@@ -58,6 +58,9 @@ public:
 	// info from simulation
 	void assureJointCreated();				///< Makes sure that body was created
 	
+	// info from body
+	void breakJoint();						///< Breaks joint
+	
 	virtual int type() const;	///< RTTI
 	
 protected:

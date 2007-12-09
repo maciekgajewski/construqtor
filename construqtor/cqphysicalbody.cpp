@@ -24,6 +24,7 @@
 // local
 #include "cqphysicalbody.h"
 #include "cqitemtypes.h"
+#include "cqjoint.h"
 
 // ========================== constructor =================================
 CqPhysicalBody::CqPhysicalBody( QGraphicsItem* parent, CqWorld* world )
@@ -191,6 +192,58 @@ int CqPhysicalBody::type() const
 	return CQ_BODY;
 }
 
+// =================================== breaks all atached joints ===
+void CqPhysicalBody::breakAllJoints()
+{
+	// get copy of joint list, couse they will be removed from 'official' list
+	// during the process
+	QList< CqJoint* > joints = _joints;
+	
+	foreach( CqJoint* pJoint, joints )
+	{
+		pJoint->breakJoint();
+	}
+}
+
+// ============================== set physical pos ===============
+/// Proper way to move the item. It alse updates all neccesary data
+void CqPhysicalBody::setPhysicalPos( const QPointF& pos )
+{
+	CqItem::setPhysicalPos( pos );
+	if ( _pBody )
+	{
+		_pBody->SetCenterPosition( b2Vec2( pos.x(), pos.y() ), _rotation );
+		update();
+	}
+}
+
+// =============================== add joint ======================
+void CqPhysicalBody::addJoint( CqJoint* pJoint )
+{
+	// duplicate check
+	if ( _joints.contains( pJoint ) )
+	{
+		qWarning("joint added once again to same body");
+	}
+	else
+	{
+		_joints.append( pJoint );
+	}
+}
+
+// =============================== remove joint ======================
+void CqPhysicalBody::removeJoint( CqJoint* pJoint )
+{
+	// existence check
+	if ( _joints.contains( pJoint ) )
+	{
+		_joints.removeAll( pJoint );
+	}
+	else
+	{
+		qWarning("joint remove from body, to each it doesn;t belogns");
+	}
+}
 
 // EOF
 
