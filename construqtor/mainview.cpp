@@ -255,6 +255,17 @@ void MainView::wheelEvent ( QWheelEvent * pEvent )
 
 }
 
+// ========================= on simulation started ===========================
+void MainView::simulationStarted()
+{
+	unselectAll();
+}
+
+// ========================= on simulation paused ===========================
+void MainView::simulationPaused()
+{
+	// nope
+}
 
 // EOF
 

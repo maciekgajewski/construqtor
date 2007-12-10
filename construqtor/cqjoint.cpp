@@ -43,7 +43,10 @@ CqJoint::CqJoint(QGraphicsItem* parent, CqWorld* world)
 CqJoint::~CqJoint()
 {
 	Q_ASSERT( _pWorld );
-	destroyJoint( _pWorld );
+	if ( _pJoint )
+	{
+		destroyJoint( _pWorld );
+	}
 }
 
 // =========================== init ===================

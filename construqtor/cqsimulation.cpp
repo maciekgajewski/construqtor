@@ -63,6 +63,8 @@ void CqSimulation::start()
 		}
 	}
 	_simulationTimer.start( SIMULATION_INTERVAL );
+	
+	emit simulationStarted();
 }
 
 // ======================== stop ==================
@@ -82,6 +84,8 @@ void CqSimulation::stop()
 			pBody->simulationStopped();
 		}
 	}
+
+	emit simulationPaused();
 }
 
 // ======================== isRunning ==================
@@ -208,7 +212,7 @@ bool CqSimulation::canBeSelected( const CqItem* pItem ) const
 // ============================== can be moved ? =====================
 bool CqSimulation::canBeMoved( const CqItem* pItem ) const
 {
-	// TODO 'movable' are here
+	// TODO 'movable' area here
 	return ! isRunning();
 }
 
@@ -219,6 +223,12 @@ bool CqSimulation::canBeMovedHere( const CqItem* pItem, const QPointF& pos ) con
 	return true;
 }
 
+// ================================ can be rotated =======================
+bool CqSimulation::canBeRotated( const CqItem* pItem ) const
+{
+	// TODO 'movable' area here
+	return ! isRunning();
+}
 
 // EOF
 

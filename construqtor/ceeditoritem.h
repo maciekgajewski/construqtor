@@ -36,6 +36,8 @@ class CqItem;
 class CeEditorItem : public QGraphicsItem
 {
 public:
+	static const double SIZE;		///< Editor's size
+	
 	explicit CeEditorItem( CqItem* pItem );
 	virtual ~CeEditorItem();
 
@@ -53,8 +55,6 @@ protected:
 	virtual void mouseReleaseEvent ( QGraphicsSceneMouseEvent * pEvent ){ pEvent->ignore(); }
 
 private:
-	
-	static const double SIZE;		///< Editor's size
 	
 	// private classes
 	class MoveHandler : public QGraphicsItem
@@ -77,14 +77,37 @@ private:
 		
 	};
 	
+	// private classes
+	class RotateHandler : public QGraphicsItem
+	{
+		public:
+		static const double SIZE;		///< Move handler size
+		/// Constructor
+		RotateHandler( CqItem* pItem, CeEditorItem* parent );
+		
+		virtual void paint ( QPainter * painter, const QStyleOptionGraphicsItem * option, QWidget * widget = 0 );
+		virtual QRectF boundingRect () const;
+		
+		// mouse handlers
+		virtual void mouseMoveEvent ( QGraphicsSceneMouseEvent * pEvent );
+		virtual void mousePressEvent ( QGraphicsSceneMouseEvent * pEvent );
+		virtual void mouseReleaseEvent ( QGraphicsSceneMouseEvent * pEvent );
+		
+		void adjustPosToAngle();
+		
+		CqItem* _pItem;		///< Moved object
+		bool	_dragging;	///< Is currently dragging
+		
+	};
 	
 	// methods
 	void createHandles();
 	
 	// data
 	
-	CqItem*	_pItem;					///< Associated item
-	MoveHandler*	_pMoveHandler;	///< Handler used to move object
+	CqItem*	_pItem;						///< Associated item
+	MoveHandler*	_pMoveHandler;		///< Handler used to move object
+	RotateHandler*	_pRotateHandler;	///< Handler used to move object
 };
 
 #endif // CEEDITORITEM_H

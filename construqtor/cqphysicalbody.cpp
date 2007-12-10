@@ -25,6 +25,7 @@
 #include "cqphysicalbody.h"
 #include "cqitemtypes.h"
 #include "cqjoint.h"
+#include "cqsimulation.h"
 
 // ========================== constructor =================================
 CqPhysicalBody::CqPhysicalBody( QGraphicsItem* parent, CqWorld* world )
@@ -108,14 +109,7 @@ void CqPhysicalBody::createBody( CqWorld* pWorld )
 	b2Vec2 b2pos;
 	b2pos.x = position.x();
 	b2pos.y = position.y();
-	_pBody->SetCenterPosition( b2pos, 0.0 /* TODO: rotation */ );
-	
-	// get body center just after creation
-	// TODO
-	/*
-	b2Vec2 center = _pBody->GetCenterPosition();
-	QPointF centerPoint( center.x, center.y );
-	*/
+	_pBody->SetCenterPosition( b2pos, _rotation );
 	
 	// delete shapes
 	foreach ( b2ShapeDef* pShape, shapes )
@@ -137,14 +131,6 @@ void CqPhysicalBody::simulationStep()
 	{
 		b2Vec2		b2pos		= _pBody->GetCenterPosition();
 		double		b2rotation	= _pBody->GetRotation();
-		
-		/* TODO no no 
-		QTransform		transform;
-		transform.translate( b2pos.x, b2pos.y );
-		transform.rotateRadians( b2rotation );
-		
-		setTransform( transform );
-		*/
 		
 		setPos( b2pos.x, b2pos.y );
 		setRotationRadians( b2rotation );
@@ -243,6 +229,31 @@ void CqPhysicalBody::removeJoint( CqJoint* pJoint )
 	{
 		qWarning("joint remove from body, to each it doesn;t belogns");
 	}
+}
+
+// =============================== remove joint ======================
+void CqPhysicalBody::setPhysicalRotation( double radians )
+{
+	CqItem::setPhysicalRotation( radians );
+	
+	if ( _pBody )
+	{
+		_pBody->SetCenterPosition( b2Vec2( pos().x(), pos().y() ), _rotation );
+		update();
+	}
+}
+
+// =========================== can be rotated =========================
+bool CqPhysicalBody::canBeRotated() const
+{
+	// yes if no joints. ask editor otherwise
+	
+	if ( _joints.empty() )
+	{
+		return simulation()->canBeRotated( this );
+	}
+	
+	return false;
 }
 
 // EOF

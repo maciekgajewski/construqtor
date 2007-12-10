@@ -99,6 +99,13 @@ void CqItem::setPhysicalPos( const QPointF& pos )
 	setPos( pos );
 }
 
+// ============================== set physical rotation ===============
+/// Proper way to rtate item. Also rotates physical counterpart
+void CqItem::setPhysicalRotation( double radians )
+{
+	setRotationRadians( radians );
+}
+
 // EOF
 
 

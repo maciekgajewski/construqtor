@@ -50,12 +50,18 @@ public:
 	CqSimulation* simulation() { return _pSimulation; }
 	const CqSimulation* simulation() const { return _pSimulation; }
 	
+	virtual void setRotationRadians( double radians ){}		///< Rotates item
+	virtual double rotationRadians() const { return 0.0; } 	///< Retuens rotation
+	
+	// info from editor
+	virtual void setPhysicalRotation( double radians );		///< Rotates item
 	virtual void setPhysicalPos( const QPointF& pos );		///< changes item position
 	
 	// editability info
 	virtual bool canBeSelected() const { return false; }
 	virtual bool canBeMoved() const { return false; }
 	virtual bool canBeMovedHere( const QPointF& scenePos );
+	virtual bool canBeRotated() const { return false; }
 	
 protected:
 	
