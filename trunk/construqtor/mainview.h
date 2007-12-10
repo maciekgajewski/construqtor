@@ -70,6 +70,11 @@ protected:
 	
 	//CqItem* _draggedItem;	///< Currently dragged item TODO remove
 	CeEditorItem* _pEditor;	///< editor item
+	
+protected slots:
+
+	void simulationStarted();
+	void simulationPaused();
 };
 
 #endif	// MAINVIEW_H

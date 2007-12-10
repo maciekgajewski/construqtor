@@ -18,6 +18,9 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+// libc
+#include <math.h>
+
 // Qt
 #include <QPainter>
 #include <QGraphicsSceneMouseEvent>
@@ -30,6 +33,7 @@
 #include "ceeditoritem.h"
 
 const double CeEditorItem::MoveHandler::SIZE	= 15.0;		///< Move handler size [px]
+const double CeEditorItem::RotateHandler::SIZE	= 10.0;		///< Move handler size [px]
 const double CeEditorItem::SIZE				= 60.0;		///< Editor's size [px]
 
 // ============================== constructor =====================
@@ -37,10 +41,10 @@ CeEditorItem::CeEditorItem( CqItem* pItem )
 	: QGraphicsItem(pItem)
 {
 	Q_ASSERT( pItem );
-	_pItem = pItem;
-	_pMoveHandler = NULL;
+	_pItem			= pItem;
+	_pMoveHandler	= NULL;
+	_pRotateHandler	= NULL;
 	createHandles();
-	//setFlag( QGraphicsItem::ItemIgnoresTransformations, true );
 	setPos( 0, 0); // sit exactly on edited item
 }
 
@@ -74,6 +78,12 @@ void CeEditorItem::createHandles()
 	{
 		_pMoveHandler = new MoveHandler( _pItem, this );
 	}
+	
+	// fopr rotatable items: rotation handler
+	if ( _pItem->canBeRotated() )
+	{
+		_pRotateHandler = new RotateHandler( _pItem, this );
+	}
 }
 
 // ============================== move handler constructor =========================
@@ -82,7 +92,6 @@ CeEditorItem::MoveHandler::MoveHandler( CqItem* pItem, CeEditorItem* parent )
 {
 	_pItem = pItem;
 	_dragging = false;
-	//setFlag( QGraphicsItem::ItemIgnoresTransformations, true );
 	setAcceptedMouseButtons( Qt::LeftButton );
 }
 
@@ -109,24 +118,6 @@ void CeEditorItem::MoveHandler::mouseMoveEvent ( QGraphicsSceneMouseEvent * pEve
 	if ( _dragging )
 	{
 		
-		// convert pos to scene pos
-		/*
-		QGraphicsView* pView = qobject_cast<QGraphicsView*>( pEvent->widget()->parent() );
-		
-		if ( ! pView )
-		{
-			qDebug( "windget is not a view");
-			return;
-		}
-		
-		QPointF sp = scenePos();
-		QPoint pixelPos = pView->mapFromScene( sp ) + pEvent->pos().toPoint();
-		QPointF scenePos = pView->mapToScene( pixelPos );
-		//qDebug("pixel pos = %d,%d, scene pos= %.3lf, %.2lf", pixelPos.x(), pixelPos.y(),
-		//	 scenePos.x(), scenePos.y() );
-		*/
-		// TODO remove above, resolved by not using "ignore transform" flag
-		
 		// move object
 		_pItem->setPhysicalPos( mapToScene( pEvent->pos() ) );
 		
@@ -152,13 +143,81 @@ void CeEditorItem::MoveHandler::mouseReleaseEvent ( QGraphicsSceneMouseEvent * p
 // ==================================== hndle contains ==============================
 bool CeEditorItem::handleContains( const QPointF& point) const
 {
-	if ( _pMoveHandler )
+	if ( _pMoveHandler &&  _pMoveHandler->contains( _pMoveHandler->mapFromScene( point ) ) )
 	{
-		QPointF mapped = mapFromScene( point );
-		return _pMoveHandler->contains( mapped );
+		return true;
+	}
+	else if ( _pRotateHandler && _pRotateHandler->contains( _pRotateHandler->mapFromScene( point ) ) )
+	{
+		return true;
 	}
 	
 	return false;
 }
+
+// ============================ Rotate Handler =======================
+CeEditorItem::RotateHandler::RotateHandler( CqItem* pItem, CeEditorItem* parent )
+	: QGraphicsItem( parent )
+{
+	_pItem = pItem;
+	_dragging = false;
+	setAcceptedMouseButtons( Qt::LeftButton );
+	adjustPosToAngle();
+}
+
+// ============================= Rotate handle: adjust pos to angle =========
+void CeEditorItem::RotateHandler::adjustPosToAngle()
+{
+	Q_ASSERT( _pItem );
+	
+	double angle = _pItem->rotationRadians();
+	QPointF newPos = QPointF( CeEditorItem::SIZE * cos( angle), CeEditorItem::SIZE * sin( angle ) );
+	
+	setPos( newPos );
+}
+
+// =========================== Rotate Hndler: paint ==================================
+void CeEditorItem::RotateHandler::paint ( QPainter * pPainter, const QStyleOptionGraphicsItem * option, QWidget * widget )
+{
+	QRectF rect(- SIZE/2.0, -SIZE/2.0, SIZE, SIZE ); 
+	pPainter->setPen( Qt::red );
+	pPainter->setBrush( QColor( 0xff, 0xff, 0x00, 0x80 ) ); // 50% transparent yellow
+	
+	pPainter->drawRect( rect );
+}
+
+// =========================== Rotate Hndler: bounding rect ==================================
+QRectF CeEditorItem::RotateHandler::boundingRect () const
+{
+	double brsize = SIZE * 1.1;
+	return QRectF( - brsize/2.0, -brsize/2.0, brsize, brsize );
+}
+
+// ============================== Rotate Handler: move event ===============================
+void CeEditorItem::RotateHandler::mouseMoveEvent ( QGraphicsSceneMouseEvent * pEvent )
+{
+	if ( _dragging )
+	{
+		QPointF parentPos = mapToParent( pEvent->pos() );
+		double angle = atan2( parentPos.y(), parentPos.x() );
+		
+		_pItem->setPhysicalRotation( angle );
+		adjustPosToAngle();
+	}
+}
+
+// ============================== Rotate Handler: move press ===============================
+void CeEditorItem::RotateHandler::mousePressEvent ( QGraphicsSceneMouseEvent * pEvent )
+{
+	_dragging = true;
+}
+
+// ============================== Rotate Handler: move release ===============================
+void CeEditorItem::RotateHandler::mouseReleaseEvent ( QGraphicsSceneMouseEvent * pEvent )
+{
+	_dragging = false;
+}
+
+		
 
 // EOF

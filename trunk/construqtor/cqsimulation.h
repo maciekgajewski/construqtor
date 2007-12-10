@@ -59,6 +59,12 @@ public:
 	bool canBeMoved( const CqItem* pItem ) const;		///< If item can be moved
 	/// If moved item can be moved into this position
 	bool canBeMovedHere( const CqItem* pItem, const QPointF& pos ) const;
+	bool canBeRotated( const CqItem* pItem ) const;		///< If item can be rotated
+
+signals:
+
+	void simulationStarted();
+	void simulationPaused();
 
 private slots:
 
