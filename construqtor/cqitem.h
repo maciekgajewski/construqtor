@@ -25,6 +25,8 @@
 
 // local
 class CqSimulation;
+class CqWorld;
+class CqPhysicalBody;
 
 /**
 	Common subclass for all simulated items. Provides functonality to communicate
@@ -68,6 +70,8 @@ public:
 	
 	/// If connection (nail/bolt/...) can be attached at this point
 	virtual bool canConnectHere( const QPointF& scenePoint ) { return false; }
+	/// Physical body connected to joint in this location
+	virtual CqPhysicalBody* bodyHere( const QPointF& scenePoint ) { return NULL; }
 	
 protected:
 	
@@ -77,7 +81,6 @@ protected:
 	virtual void mousePressEvent ( QGraphicsSceneMouseEvent * event );
 	virtual void mouseReleaseEvent ( QGraphicsSceneMouseEvent * event );
 
-	
 private:
 
 	// methods

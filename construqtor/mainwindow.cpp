@@ -52,11 +52,31 @@ void MainWindow::scenePointerPos( double x, double y )
 }
 
 // =========================== girder 200 =======================
+void MainWindow::on_buttonGirder100_clicked()
+{
+	CqGirder* pGirder = new CqGirder( 1.0, 0.2 ); // 100x20 cm
+	view->toolAddObject( pGirder );
+}
+
+// =========================== girder 200 =======================
 void MainWindow::on_buttonGirder200_clicked()
 {
 	CqGirder* pGirder = new CqGirder( 2.0, 0.2 ); // 200x20 cm
-	
 	view->toolAddObject( pGirder );
+}
+
+// =========================== girder 200 =======================
+void MainWindow::on_buttonGirder300_clicked()
+{
+	CqGirder* pGirder = new CqGirder( 3.0, 0.2 ); // 300x20 cm
+	view->toolAddObject( pGirder );
+}
+
+// ============================ nail ==============================
+void MainWindow::on_buttonNail_clicked()
+{
+	CqNail* pNail = new CqNail();
+	view->toolAddNail( pNail );
 }
 
 // EOF

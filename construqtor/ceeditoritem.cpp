@@ -171,7 +171,7 @@ void CeEditorItem::RotateHandler::adjustPosToAngle()
 	Q_ASSERT( _pItem );
 	
 	double angle = _pItem->rotationRadians();
-	QPointF newPos = QPointF( CeEditorItem::SIZE * cos( angle), CeEditorItem::SIZE * sin( angle ) );
+	QPointF newPos = QPointF( CeEditorItem::SIZE * cos( angle) / 2, CeEditorItem::SIZE * sin( angle ) / 2 );
 	
 	setPos( newPos );
 }

@@ -62,7 +62,6 @@ void CqPhysicalBody::setWorld ( CqWorld* pWorld )
 	if ( pWorld && pWorld != _pWorld )
 	{
 		_pWorld = pWorld;
-		Q_ASSERT( _pBody ); // TODO this could be habndked - body rempoved from one world and addetd to another
 	}
 }
 

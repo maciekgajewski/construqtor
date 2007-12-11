@@ -51,6 +51,7 @@ public:
 	const CqPhysicalBody* body2() const { return _pBody2; }
 	CqPhysicalBody* body1(){ return _pBody1; }
 	CqPhysicalBody* body2(){ return _pBody2; }
+	virtual void setWorld ( CqWorld* pWorld );		///< Sets world
 	
 	b2Joint* b2joint() { return _pJoint; }
 	const b2Joint* b2joint() const { return _pJoint; }
