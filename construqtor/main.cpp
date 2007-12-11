@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
 	window.simulation = &simulation;
 	
 	// configure view
-	window.view->setScene( simulation.scene() );
+	window.view->setSimulation( &simulation );
 	window.view->rotate( 180 );
 	window.view->scale( 100, 100 );
 	

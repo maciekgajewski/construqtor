@@ -49,6 +49,7 @@ public:
 	void setSimulation( CqSimulation* pSimulation ) { _pSimulation = pSimulation; }
 	CqSimulation* simulation() { return _pSimulation; }
 	const CqSimulation* simulation() const { return _pSimulation; }
+	virtual void setWorld ( CqWorld* pWorld ){};		///< Sets world
 	
 	virtual void setRotationRadians( double radians ){}		///< Rotates item
 	virtual double rotationRadians() const { return 0.0; } 	///< Retuens rotation
@@ -62,6 +63,11 @@ public:
 	virtual bool canBeMoved() const { return false; }
 	virtual bool canBeMovedHere( const QPointF& scenePos );
 	virtual bool canBeRotated() const { return false; }
+	
+	// geometrical properties
+	
+	/// If connection (nail/bolt/...) can be attached at this point
+	virtual bool canConnectHere( const QPointF& scenePoint ) { return false; }
 	
 protected:
 	

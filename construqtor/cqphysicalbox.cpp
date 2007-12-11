@@ -118,19 +118,28 @@ QRectF CqPhysicalBox::boundingRect() const
 	return rotatedBox.boundingRect();
 }
 
-// ======================== can be selected =============
-bool CqPhysicalBox::canBeSelected() const
+// ============================== shape ==============================
+QPainterPath CqPhysicalBox::shape() const
 {
-	// of course, id simulation permits
-	return simulation()->canBeSelected( this );
+	QTransform t;
+	t.rotateRadians( rotationRadians() );
+	
+	QRectF box = QRectF
+		( QPointF
+			( - _size.width()/2.0
+			, - _size.height()/2.0
+			)
+		, _size
+		);
+	QPolygonF rotatedBox = t.map( QPolygonF( box ) );
+	
+	QPainterPath path;
+	path.addPolygon( rotatedBox );
+	
+	return path;
+	// TODO optimization idea: cache rotatedBox, update on ratotion
 }
 
-// ========================= can be moved ================
-bool CqPhysicalBox::canBeMoved() const
-{
-	// if there is no joins, then yes
-	return _joints.empty()  && simulation()->canBeMoved( this );
-}
 
 // EOF
 

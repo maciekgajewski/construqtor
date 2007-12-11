@@ -12,7 +12,8 @@ cqrevolutejoint.cpp \
 cqnail.cpp \
 cqitem.cpp \
 mainview.cpp \
-ceeditoritem.cpp
+ceeditoritem.cpp \
+cqgirder.cpp
 FORMS += mainwindow.ui
 
 HEADERS += mainwindow.h \
@@ -27,7 +28,8 @@ cqnail.h \
 cqitemtypes.h \
 cqitem.h \
 mainview.h \
-ceeditoritem.h
+ceeditoritem.h \
+cqgirder.h
 CONFIG += debug \
 qt \
 warn_on \

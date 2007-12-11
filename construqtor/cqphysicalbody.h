@@ -57,7 +57,7 @@ public:
 	virtual ~CqPhysicalBody();
 
 	// properties
-	void setWorld ( CqWorld* pWorld );		///< Sets world
+	virtual void setWorld ( CqWorld* pWorld );		///< Sets world
 	
 	virtual void setRotationRadians( double radians );	///< sets rotation in radians
 	virtual double rotationRadians() const { return _rotation; } ///< Retuens rotation

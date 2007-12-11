@@ -33,7 +33,7 @@ class CqMaterial
 public:
 	
 	// construction / destruction
-	CqMaterial( double d = 1.0, double f = 0.5, double r = 0.5){ density = d; friction = f; restitution = r;}
+	CqMaterial( double d = 1.0, double f = 0.7, double r = 0.1){ density = d; friction = f; restitution = r;}
 	~CqMaterial(){}
 
 	enum Type { Steel, Rubber, Wood, Custom };
@@ -78,7 +78,7 @@ public:
 	{
 		CqMaterial m;
 		m.density		= 2.0;
-		m.friction		= 0.5;
+		m.friction		= 0.7;
 		m.restitution	= 0.1;
 		
 		m.type = Wood;

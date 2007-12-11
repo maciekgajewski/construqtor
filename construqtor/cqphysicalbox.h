@@ -48,10 +48,7 @@ public:
 		, QWidget * widget = 0 );
 		
     virtual QRectF boundingRect() const;
-	
-	// editor flags
-	virtual bool canBeSelected() const;
-	virtual bool canBeMoved() const;
+    virtual QPainterPath shape() const;
 	
 protected:
 
