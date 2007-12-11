@@ -50,6 +50,8 @@ public:
     virtual QRectF boundingRect() const;
     virtual QPainterPath shape() const;
 	
+	virtual CqPhysicalBody* bodyHere( const QPointF& scenePoint ) { return this; }
+	
 protected:
 
 	// reimplementables

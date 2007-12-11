@@ -28,6 +28,7 @@
 #include "cqjoint.h"
 #include "cqphysicalbody.h"
 #include "cqsimulation.h"
+#include "cqrevolutejoint.h"
 
 // Local
 #include "mainview.h"
@@ -58,8 +59,6 @@ void MainView::setSimulation( CqSimulation* pSimulation )
 	
 	setScene( pSimulation->scene() );
 	
-	_addedObject = NULL;
-	_addingObject = false;
 }
 
 // ========================== init =============================
@@ -70,6 +69,10 @@ void MainView::init()
 	
 	setRenderHint( QPainter::Antialiasing, true );
 	_pSimulation = NULL;
+	
+	_addedObject	= NULL;
+	_addedNail		= NULL;
+	_mode = SELECTING;
 }
 
 // ========================= destructor ======================
@@ -81,7 +84,7 @@ MainView::~MainView()
 // ============================= dbl click ===================
 void MainView::mouseDoubleClickEvent(QMouseEvent* pEvent )
 {
-	// QGraphicsView::mouseDoubleClickEvent(event);
+	 //QGraphicsView::mouseDoubleClickEvent(event);
 	
 	// break joint woth left double click
 	if ( pEvent->button() == Qt::LeftButton )
@@ -93,81 +96,77 @@ void MainView::mouseDoubleClickEvent(QMouseEvent* pEvent )
 // =========================== move =====================
 void MainView::mouseMoveEvent(QMouseEvent* pEvent)
 {
+	// emit scene pos
 	QPointF pos = mapToScene( pEvent->pos() );
 	emit pointerPos( pos.x(), pos.y() );
 	
-	QGraphicsView::mouseMoveEvent( pEvent );
-	
-	if ( pEvent->isAccepted() ) return;
-	// drag
-	/* dragging moved to editor item 
-	if ( _draggedItem )
+	// in 'add nail' mode update cursor
+	if ( _mode == ADDING_NAIL && canAddNail( mapToScene( pEvent->pos() ) ) )
 	{
-		// get scene pos
-		QPointF scenePos = mapToScene( pEvent->pos() );
-		
-		if ( _draggedItem->canBeMovedHere( scenePos ) )
-		{
-			_draggedItem->setPhysicalPos( scenePos );
-		}
+		setCursor( Qt::CrossCursor );
 	}
-	*/
+	else
+	{
+		unsetCursor();
+	}
+	
+	QGraphicsView::mouseMoveEvent( pEvent );
 	
 }
 
 // =========================== press =====================
 void MainView::mousePressEvent(QMouseEvent* pEvent)
 {
+	QPointF scenePos = mapToScene( pEvent->pos() );
+	
 	// hanlde only if outside editor
-	if ( _pEditor && _pEditor->handleContains( mapToScene( pEvent->pos() ) ) )
+	if ( _pEditor && _pEditor->handleContains( scenePos ) )
 	{
 		QGraphicsView::mousePressEvent( pEvent );
 		return;
 	}
 	
-	// select / add with left button
+	// left button
 	if ( pEvent->button() == Qt::LeftButton )
 	{
 		// add
-		if ( _addingObject )
+		switch ( _mode )
 		{
-			if ( _pSimulation->canAddHere( _addedObject, mapToScene( pEvent->pos() ) ) )
+		case ADDING_OBJECT:
+		{
+			if ( _pSimulation->canAddHere( _addedObject, scenePos ) )
 			{
 				_pSimulation->addItem( _addedObject );
-				_addedObject->setPhysicalPos( mapToScene( pEvent->pos() ) );
+				_addedObject->setPhysicalPos( scenePos );
 			}
 			_addedObject = NULL;
-			_addingObject = false;
+			setMode( SELECTING );
 		}
-		// select
-		else
+		break;
+		case ADDING_NAIL:
+		{
+			if ( canAddNail( scenePos ) )
+			{
+				addNail( scenePos, _addedNail );
+				_addedNail = NULL;
+				setMode( SELECTING );
+			}
+		}
+		break;
+		case SELECTING:
 		{
 			QPoint pos = pEvent->pos();
 			
 			unselectAll();
 			
-			// start drag
-			/* no dragiing here
-			startDragUnderPoint( pos );
-			
-			// if not dragging anything, at least try to select
-			if ( ! _draggedItem )
-			{
-				selectUnderPoint( pos );
-			}
-			*/
 			selectUnderPoint( pos );
 		}
+		} // switch
 	}
 	// cancel adding with right button
 	else if ( pEvent->button() == Qt::LeftButton )
 	{
-		if ( _addingObject )
-		{
-			_addingObject = false;
-			delete _addedObject;
-			_addedObject = NULL;
-		}
+		setMode( SELECTING );
 	}
 }
 
@@ -176,15 +175,6 @@ void MainView::mouseReleaseEvent(QMouseEvent* pEvent)
 {
 	QGraphicsView::mouseReleaseEvent( pEvent );
 	
-	if ( pEvent->isAccepted() ) return;
-	
-	/* no draggign, move to editor 
-	if ( _draggedItem )
-	{
-		// stop dragging
-		_draggedItem = NULL;
-	}
-	*/
 }
 
 // ======================== select under point ===========
@@ -232,30 +222,6 @@ void MainView::unselectAll()
 	delete _pEditor;
 	_pEditor = NULL;
 }
-
-// ========================= start drag under point ================
-/*
-void MainView::startDragUnderPoint( const QPoint& pos )
-{
-	QList<QGraphicsItem *> itemList = items( pos );
-	// simplest implementation - select first selectable CqItem
-	foreach( QGraphicsItem* pItem, itemList )
-	{
-		CqItem* pcqitem = dynamic_cast<CqItem*>( pItem );
-		if ( pcqitem )
-		{
-			// selectable
-			if ( pcqitem->canBeMoved() )
-			{
-				pcqitem->setSelected( pcqitem->canBeSelected() );
-				pcqitem->update();
-				_draggedItem = pcqitem;
-				break;
-			}
-		}
-	}
-}
-*/
 
 // ======================= break joint under point ==============
 void MainView::breakJointUnderPoint( const QPoint& pos )
@@ -330,13 +296,95 @@ void MainView::toolAddObject( CqItem* pItem )
 	Q_ASSERT( pItem );
 	
 	// cancel current adding
-	if ( _addingObject )
-	{
-		delete _addedObject;
-	}
-	_addingObject = true;
+	delete _addedObject;
+	setMode( ADDING_OBJECT );
 	_addedObject = pItem;
 	
+}
+
+// ============================ show event ==============================
+void MainView::showEvent( QShowEvent* pEvent )
+{
+	ensureVisible( -6, 1, 8, 8 );
+}
+
+// ============================ can add nail ==============================
+bool MainView::canAddNail( const QPointF& point ) const
+{
+	// look for 'nailable' objects here
+	QList<QGraphicsItem *> itemsHere = items( mapFromScene( point ) );
+	
+	int iNailableHere = 0;
+	foreach( QGraphicsItem* pItem, itemsHere )
+	{
+		CqItem* pCqItem = dynamic_cast<CqItem*>( pItem );
+		if ( pCqItem && pCqItem->canConnectHere( point ) )
+		{
+			iNailableHere++;
+		}
+	}
+	
+	return iNailableHere == 2;
+}
+
+// ============================ add nail ==============================
+void MainView::addNail( QPointF& point, CqRevoluteJoint* pNail )
+{
+	// look for 'nailable' objects here
+	QList<QGraphicsItem *> itemsHere = items( mapFromScene( point ) );
+	
+	int iNailableHere	= 0;
+	CqPhysicalBody*		pBody[2];
+	foreach( QGraphicsItem* pItem, itemsHere )
+	{
+		// check
+		if ( iNailableHere == 2 )
+		{
+			delete pNail; // TODO this stinks
+			return; // bail out!
+		}
+		
+		CqItem* pCqItem = dynamic_cast<CqItem*>( pItem );
+		if ( pCqItem && pCqItem->canConnectHere( point ) )
+		{
+			pBody[ iNailableHere++ ] = pCqItem->bodyHere( point );
+		}
+		
+	}
+	
+	// create nail
+	pNail->setConnectedBodies( pBody[0], pBody[1] );
+	pNail->setAnchorPoint( point );
+	_pSimulation->addItem( pNail );
+	
+}
+
+// ============================ tool - add nail =======================
+void MainView::toolAddNail( CqRevoluteJoint* pNail )
+{
+	setMode( ADDING_NAIL );
+	_addedNail = pNail;
+}
+
+// ============================ set mode ===============================
+void MainView::setMode( Mode mode )
+{
+	if ( mode != _mode )
+	{
+		// cleanup after last mode
+		if ( _mode == ADDING_NAIL )
+		{
+			delete _addedNail;
+			_addedNail = NULL;
+		}
+		else if ( _mode == ADDING_OBJECT )
+		{
+			delete _addedObject;
+			_addedObject = NULL;
+		}
+		
+		_mode = mode;
+	}
 }
 
 // EOF

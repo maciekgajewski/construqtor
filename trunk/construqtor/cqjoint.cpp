@@ -42,9 +42,9 @@ CqJoint::CqJoint(QGraphicsItem* parent, CqWorld* world)
 // =========================== destructor ===================
 CqJoint::~CqJoint()
 {
-	Q_ASSERT( _pWorld );
 	if ( _pJoint )
 	{
+		Q_ASSERT( _pWorld );
 		destroyJoint( _pWorld );
 	}
 }
@@ -79,6 +79,13 @@ void CqJoint::setConnectedBodies( CqPhysicalBody* pBody1, CqPhysicalBody* pBody2
 	// let bodoes know they have new joint
 	_pBody1->addJoint( this );
 	_pBody2->addJoint( this );
+}
+
+// ============================== set world ==================
+void CqJoint::setWorld ( CqWorld* pWorld )
+{
+	// TODO this could be more smart
+	_pWorld = pWorld;
 }
 
 // =========================== destroy joint  ===================

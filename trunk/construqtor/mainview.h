@@ -27,6 +27,7 @@
 // Cq
 class CqItem;
 class CqSimulation;
+class CqRevoluteJoint;
 
 // local
 class CeEditorItem;
@@ -49,6 +50,7 @@ public:
 	
 	// toolbox
 	void toolAddObject( CqItem* pItem );	///< Adds new item to scene
+	void toolAddNail( CqRevoluteJoint* pNail ); ///< Adds new nail
 
 signals:
 
@@ -56,6 +58,15 @@ signals:
 	
 protected:
 
+	/// work modes
+	enum Mode{
+		SELECTING,
+		ADDING_OBJECT,
+		ADDING_NAIL
+		};
+
+	void setMode( Mode mode );			///< Proper way to change mode
+	
 	// mouse events
 	
 	virtual void mouseDoubleClickEvent(QMouseEvent* event);
@@ -63,6 +74,8 @@ protected:
 	virtual void mousePressEvent(QMouseEvent* event);
 	virtual void mouseReleaseEvent(QMouseEvent* event);
 	virtual void wheelEvent ( QWheelEvent * event );
+	
+	virtual void showEvent( QShowEvent* pEvent );
 	
 	// methods
 	
@@ -72,6 +85,9 @@ protected:
 	//void startDragUnderPoint( const QPoint& pos );
 	void unselectAll();
 	void breakJointUnderPoint( const QPoint& pos );
+	
+	bool canAddNail( const QPointF& point ) const;		///< Checks if nail may be added here
+	void addNail( QPointF& point, CqRevoluteJoint* pNail ); ///< Adds nail at point
 	
 	
 	//CqItem* _draggedItem;	///< Currently dragged item TODO remove
@@ -86,8 +102,10 @@ private:
 
 	// data
 	CqSimulation*	_pSimulation;
-	bool			_addingObject;				///< Flag: if in adding object mode
 	CqItem*			_addedObject;				///< Added object
+	CqRevoluteJoint*	_addedNail;			///< Added joint
+	
+	Mode			_mode;						///< Current work mode
 };
 
 #endif	// MAINVIEW_H

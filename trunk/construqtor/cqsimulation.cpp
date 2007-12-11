@@ -130,6 +130,8 @@ void CqSimulation::InitWorld()
 	// create world
 	_pPhysicalWorld = new CqWorld( worldAABB, gravity, true /* do sleep*/, this );
 	
+	_scene.setSceneRect( -50, -50, 100, 100 );
+	
 	// add sample objects
 	/*
 	CqPhysicalBox* pBox = new CqPhysicalBox( NULL, _pPhysicalWorld );
@@ -142,12 +144,6 @@ void CqSimulation::InitWorld()
 	pBox2->setPos( 0.5, 2.0 );
 	addItem( pBox2 );
 	
-	// ground object
-	CqPhysicalBox* pGround = new CqPhysicalBox( NULL, _pPhysicalWorld );
-	pGround->setSize( QSizeF( 10.0, 1.0 ) );
-	pGround->setPos( 0.0, -0.5 );
-	pGround->setMaterial( CqMaterial( 0, 0, 0 ) );
-	addItem( pGround );
 	
 	// joint
 	CqNail* pNail = new CqNail( NULL, _pPhysicalWorld );
@@ -156,6 +152,13 @@ void CqSimulation::InitWorld()
 		
 	addItem( pNail );
 	*/
+	// ground object
+	CqPhysicalBox* pGround = new CqPhysicalBox( NULL, _pPhysicalWorld );
+	pGround->setSize( QSizeF( 100.0, 50.0 ) );
+	pGround->setPos( 0.0, -25.0 );
+	pGround->setMaterial( CqMaterial( 0, 0, 0 ) );
+	pGround->setBrush( Qt::darkGreen );
+	addItem( pGround );
 	
 	stop();
 }
