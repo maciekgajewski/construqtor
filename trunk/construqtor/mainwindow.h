@@ -33,10 +33,15 @@ public:
 	CqSimulation* simulation;
 	
 public slots:
-	// buttons
+	
+	// buttons - start/stop
 	
 	void on_buttonStart_clicked();
 	void on_buttonStop_clicked();
+	
+	// buttons - elements
+	
+	void on_buttonGirder200_clicked();
 	
 	void scenePointerPos( double x, double y );
 };

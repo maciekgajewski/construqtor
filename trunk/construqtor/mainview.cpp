@@ -27,6 +27,7 @@
 #include "cqitem.h"
 #include "cqjoint.h"
 #include "cqphysicalbody.h"
+#include "cqsimulation.h"
 
 // Local
 #include "mainview.h"
@@ -45,6 +46,22 @@ MainView::MainView(QGraphicsScene* scene, QWidget* parent): QGraphicsView(scene,
 	init();
 }
 
+// ============================= set simulation =================
+/// Sets simulation. Also associates simulatinos's scene with view
+void MainView::setSimulation( CqSimulation* pSimulation )
+{
+	Q_ASSERT( pSimulation );
+	
+	_pSimulation = pSimulation;
+	connect( _pSimulation, SIGNAL(simulationStarted()), SLOT(simulationStarted()));
+	connect( _pSimulation, SIGNAL(simulationPaused()), SLOT(simulationPaused()));
+	
+	setScene( pSimulation->scene() );
+	
+	_addedObject = NULL;
+	_addingObject = false;
+}
+
 // ========================== init =============================
 void MainView::init()
 {
@@ -52,11 +69,13 @@ void MainView::init()
 	_pEditor = NULL;
 	
 	setRenderHint( QPainter::Antialiasing, true );
+	_pSimulation = NULL;
 }
 
 // ========================= destructor ======================
 MainView::~MainView()
 {
+	// nope
 }
 
 // ============================= dbl click ===================
@@ -106,25 +125,49 @@ void MainView::mousePressEvent(QMouseEvent* pEvent)
 		return;
 	}
 	
-	
-	// select with left button
+	// select / add with left button
 	if ( pEvent->button() == Qt::LeftButton )
 	{
-		QPoint pos = pEvent->pos();
-		
-		unselectAll();
-		
-		// start drag
-		/* no dragiing here
-		startDragUnderPoint( pos );
-		
-		// if not dragging anything, at least try to select
-		if ( ! _draggedItem )
+		// add
+		if ( _addingObject )
 		{
+			if ( _pSimulation->canAddHere( _addedObject, mapToScene( pEvent->pos() ) ) )
+			{
+				_pSimulation->addItem( _addedObject );
+				_addedObject->setPhysicalPos( mapToScene( pEvent->pos() ) );
+			}
+			_addedObject = NULL;
+			_addingObject = false;
+		}
+		// select
+		else
+		{
+			QPoint pos = pEvent->pos();
+			
+			unselectAll();
+			
+			// start drag
+			/* no dragiing here
+			startDragUnderPoint( pos );
+			
+			// if not dragging anything, at least try to select
+			if ( ! _draggedItem )
+			{
+				selectUnderPoint( pos );
+			}
+			*/
 			selectUnderPoint( pos );
 		}
-		*/
-			selectUnderPoint( pos );
+	}
+	// cancel adding with right button
+	else if ( pEvent->button() == Qt::LeftButton )
+	{
+		if ( _addingObject )
+		{
+			_addingObject = false;
+			delete _addedObject;
+			_addedObject = NULL;
+		}
 	}
 }
 
@@ -147,6 +190,13 @@ void MainView::mouseReleaseEvent(QMouseEvent* pEvent)
 // ======================== select under point ===========
 void MainView::selectUnderPoint( const QPoint& pos )
 {
+	Q_ASSERT( _pSimulation );
+	// TODO move decision to simualtion
+	if ( _pSimulation->isRunning() )
+	{
+ 		return; // no selecting when simulation is running
+	}
+	
 	QList<QGraphicsItem *> itemList = items( pos );
 	// simplest implementation - select first selectable CqItem
 	foreach( QGraphicsItem* pItem, itemList )
@@ -210,6 +260,13 @@ void MainView::startDragUnderPoint( const QPoint& pos )
 // ======================= break joint under point ==============
 void MainView::breakJointUnderPoint( const QPoint& pos )
 {
+	Q_ASSERT( _pSimulation );
+	// TODO move decision to simualtion
+	if ( _pSimulation->isRunning() )
+	{
+ 		return; // no breaking joints when simulation is running
+	}
+	
 	QList<QGraphicsItem *> itemList = items( pos );
 	// simplest implementation - break first body or joint discovered
 	foreach( QGraphicsItem* pItem, itemList )
@@ -265,6 +322,21 @@ void MainView::simulationStarted()
 void MainView::simulationPaused()
 {
 	// nope
+}
+
+// ============================ tool: add object ==============================
+void MainView::toolAddObject( CqItem* pItem )
+{
+	Q_ASSERT( pItem );
+	
+	// cancel current adding
+	if ( _addingObject )
+	{
+		delete _addedObject;
+	}
+	_addingObject = true;
+	_addedObject = pItem;
+	
 }
 
 // EOF

@@ -26,6 +26,7 @@
 
 // Cq
 class CqItem;
+class CqSimulation;
 
 // local
 class CeEditorItem;
@@ -43,6 +44,11 @@ public:
 	MainView(QGraphicsScene* scene, QWidget* parent = NULL);
 	
 	virtual ~MainView();
+
+	void setSimulation( CqSimulation* pSimulation );
+	
+	// toolbox
+	void toolAddObject( CqItem* pItem );	///< Adds new item to scene
 
 signals:
 
@@ -75,6 +81,13 @@ protected slots:
 
 	void simulationStarted();
 	void simulationPaused();
+
+private:
+
+	// data
+	CqSimulation*	_pSimulation;
+	bool			_addingObject;				///< Flag: if in adding object mode
+	CqItem*			_addedObject;				///< Added object
 };
 
 #endif	// MAINVIEW_H

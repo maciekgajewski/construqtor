@@ -17,8 +17,13 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
+
+#include "cqnail.h"
+#include "cqgirder.h"
+
 #include "mainwindow.h"
 
+// =========================== cosntructor =======================
 MainWindow::MainWindow(QWidget *parent)
     : QWidget( parent ), Ui::MainWindow()
 {
@@ -28,19 +33,30 @@ MainWindow::MainWindow(QWidget *parent)
 	connect( view, SIGNAL(pointerPos(double,double)), SLOT(scenePointerPos(double,double)));
 }
 
+// =========================== start =======================
 void MainWindow::on_buttonStart_clicked()
 {
 	simulation->start();
 }
 
+// =========================== stop =======================
 void MainWindow::on_buttonStop_clicked()
 {
 	simulation->stop();
 }
 
+// =========================== pointer pos  =======================
 void MainWindow::scenePointerPos( double x, double y )
 {
 	labelPos->setText( QString("%1, %2").arg( x ).arg( y ) );
+}
+
+// =========================== girder 200 =======================
+void MainWindow::on_buttonGirder200_clicked()
+{
+	CqGirder* pGirder = new CqGirder( 2.0, 0.2 ); // 200x20 cm
+	
+	view->toolAddObject( pGirder );
 }
 
 // EOF

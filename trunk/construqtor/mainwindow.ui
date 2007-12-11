@@ -45,7 +45,56 @@
     </layout>
    </item>
    <item>
-    <widget class="MainView" name="view" />
+    <layout class="QHBoxLayout" >
+     <item>
+      <layout class="QVBoxLayout" >
+       <item>
+        <widget class="QPushButton" name="buttonGirder100" >
+         <property name="text" >
+          <string>Girder 100x20</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="buttonGirder200" >
+         <property name="text" >
+          <string>Girder 200x20</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="buttonGirder300" >
+         <property name="text" >
+          <string>Girder 300x20</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="buttonNail" >
+         <property name="text" >
+          <string>Nail</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer>
+         <property name="orientation" >
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" >
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <widget class="MainView" name="view" />
+     </item>
+    </layout>
    </item>
    <item>
     <layout class="QHBoxLayout" >

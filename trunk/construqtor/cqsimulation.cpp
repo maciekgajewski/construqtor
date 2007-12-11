@@ -121,8 +121,8 @@ void CqSimulation::InitWorld()
 	
 	// world size spec
 	b2AABB worldAABB;
-	worldAABB.minVertex.Set(-10.0, -10.0);
-	worldAABB.maxVertex.Set(10.0, 10.0);
+	worldAABB.minVertex.Set(-100.0, -100.0);
+	worldAABB.maxVertex.Set(100.0, 100.0);
 	
 	// gravity
 	b2Vec2 gravity(0.0, -10.0);
@@ -131,6 +131,7 @@ void CqSimulation::InitWorld()
 	_pPhysicalWorld = new CqWorld( worldAABB, gravity, true /* do sleep*/, this );
 	
 	// add sample objects
+	/*
 	CqPhysicalBox* pBox = new CqPhysicalBox( NULL, _pPhysicalWorld );
 	pBox->setSize( QSizeF( 2.0, 0.3) );
 	pBox->setPos( 0.0, 1.0 );
@@ -154,10 +155,9 @@ void CqSimulation::InitWorld()
 	pNail->setConnectedBodies( pBox, pBox2 );
 		
 	addItem( pNail );
+	*/
 	
 	stop();
-	
-	// set scene transform to display things right
 }
 
 // =========================== assure objects created =============
@@ -198,6 +198,7 @@ void CqSimulation::addItem( CqItem* pItem )
 	
 	_scene.addItem( pItem );
 	pItem->setSimulation( this );
+	pItem->setWorld( _pPhysicalWorld );
 }
 
 // ============================= can be selected ? ==================
@@ -227,6 +228,13 @@ bool CqSimulation::canBeMovedHere( const CqItem* pItem, const QPointF& pos ) con
 bool CqSimulation::canBeRotated( const CqItem* pItem ) const
 {
 	// TODO 'movable' area here
+	return ! isRunning();
+}
+// ============================ can add here ? ======================
+// Can item be added here now?
+bool CqSimulation::canAddHere( const CqItem* pItem, const QPointF& pos ) const
+{
+	// TODO 'edit' area here
 	return ! isRunning();
 }
 

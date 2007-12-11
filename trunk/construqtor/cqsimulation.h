@@ -60,6 +60,8 @@ public:
 	/// If moved item can be moved into this position
 	bool canBeMovedHere( const CqItem* pItem, const QPointF& pos ) const;
 	bool canBeRotated( const CqItem* pItem ) const;		///< If item can be rotated
+	/// Can item be added here now?
+	bool canAddHere( const CqItem* pItem, const QPointF& pos ) const;
 
 signals:
 
