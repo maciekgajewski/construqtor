@@ -22,61 +22,59 @@
 
 
 // local
-#include "cqphysicalbox.h"
+#include "cqphysicaldisk.h"
 
 // ==================== contructor =======================
-CqPhysicalBox::CqPhysicalBox(QGraphicsItem* parent, CqWorld* world): CqPhysicalBody(parent, world)
+CqPhysicalDisk::CqPhysicalDisk(QGraphicsItem* parent, CqWorld* world): CqPhysicalBody(parent, world)
 {
 	init();
 }
 
 // ==================== contructor =======================
-CqPhysicalBox::CqPhysicalBox(CqWorld* world): CqPhysicalBody(world)
+CqPhysicalDisk::CqPhysicalDisk(CqWorld* world): CqPhysicalBody(world)
 {
 	init();
 }
 
 // ==================== init =======================
-void CqPhysicalBox::init()
+void CqPhysicalDisk::init()
 {
-	// nothing to intilaize
+	_diameter = 0.0;
 }
 
 // ==================== destructor =======================
-CqPhysicalBox::~CqPhysicalBox()
+CqPhysicalDisk::~CqPhysicalDisk()
 {
-	// nothing
+	// none
 }
 
-// ==================== contructors =======================
-/// Sets box sie.
-/// If called on created body, destroys it. Body will be created when neccesary
-void CqPhysicalBox::setSize( const QSizeF& size )
+// ==================== set diameter =======================
+void CqPhysicalDisk::setDiameter( double diameter )
 {
 	
-	if ( size != _size )
+	if ( diameter != _diameter )
 	{
-		_size = size;
+		_diameter = diameter;
 		recreateBody();
 	}
 }
 
 // ======================== creates shape defiiiton =========
-QList< b2ShapeDef* > CqPhysicalBox::createShape()
+QList< b2ShapeDef* > CqPhysicalDisk::createShape()
 {
-	b2BoxDef* pBox = new b2BoxDef;
-	pBox->extents.Set( _size.width() / 2.0, _size.height() / 2.0 );
+	b2CircleDef* pCircle = new b2CircleDef;
+	pCircle->radius = _diameter / 2.0;
 	
-	material().copyToShapeDef( pBox );
+	material().copyToShapeDef( pCircle );
 	
 	QList< b2ShapeDef* > result;
-	result.append( pBox );
+	result.append( pCircle );
 	
 	return result;
 }
 
 // ======================== paint ============================
-void CqPhysicalBox::paint
+void CqPhysicalDisk::paint
 	( QPainter * pPainter
 	, const QStyleOptionGraphicsItem * pOption
 	, QWidget * pWidget )
@@ -84,9 +82,7 @@ void CqPhysicalBox::paint
 	QTransform t;
 	t.rotateRadians( rotationRadians() );
 	
-	QRectF box = QRectF( QPointF( - _size.width()/2.0, - _size.height()/2.0), _size );
-	QPolygonF rotatedBox = t.map( QPolygonF( box ) );
-	
+	pPainter->setTransform( t, true );
 	
 	// simple selection indicator
 	QBrush b = brush();
@@ -97,48 +93,28 @@ void CqPhysicalBox::paint
 	
 	pPainter->setPen( pen() );
 	pPainter->setBrush( b );
-	pPainter->drawPolygon( rotatedBox );
+	// draw ellipse
+	pPainter->drawEllipse( QRectF( -_diameter/2.0, -_diameter/2.0, _diameter, _diameter ) );
+	// draw some features on it, to make rotation visible
+	pPainter->drawLine( QLineF( _diameter*0.05, 0, _diameter*0.45, 0 ) );
+	pPainter->drawLine( QLineF( -_diameter*0.05, 0, -_diameter*0.45, 0 ) );
 }
 
 
 // ======================== bounding rect  ==================
-QRectF CqPhysicalBox::boundingRect() const
+QRectF CqPhysicalDisk::boundingRect() const
 {
-	QTransform t;
-	t.rotateRadians( rotationRadians() );
-	
-	QRectF box = QRectF
-		( QPointF
-			( - _size.width()/2.0
-			, - _size.height()/2.0
-			)
-		, _size
-		);
-	QPolygonF rotatedBox = t.map( QPolygonF( box ) );
-	
-	return rotatedBox.boundingRect();
+	double brsize = _diameter * 1.1;
+	return QRectF( -brsize/2, -brsize/2, brsize, brsize );
 }
 
 // ============================== shape ==============================
-QPainterPath CqPhysicalBox::shape() const
+QPainterPath CqPhysicalDisk::shape() const
 {
-	QTransform t;
-	t.rotateRadians( rotationRadians() );
-	
-	QRectF box = QRectF
-		( QPointF
-			( - _size.width()/2.0
-			, - _size.height()/2.0
-			)
-		, _size
-		);
-	QPolygonF rotatedBox = t.map( QPolygonF( box ) );
-	
 	QPainterPath path;
-	path.addPolygon( rotatedBox );
+	path.addEllipse( -_diameter/2, -_diameter/2, _diameter, _diameter );
 	
 	return path;
-	// TODO optimization idea: cache rotatedBox, update on ratotion
 }
 
 

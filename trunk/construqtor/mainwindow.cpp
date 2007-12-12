@@ -20,6 +20,7 @@
 
 #include "cqnail.h"
 #include "cqgirder.h"
+#include "cqwheel.h"
 
 #include "mainwindow.h"
 
@@ -78,5 +79,20 @@ void MainWindow::on_buttonNail_clicked()
 	CqNail* pNail = new CqNail();
 	view->toolAddNail( pNail );
 }
+
+// ============================ wheel 40  ==============================
+void MainWindow::on_buttonWheel40_clicked()
+{
+	CqWheel* pWheel = new CqWheel( 0.40 );
+	view->toolAddObject( pWheel );
+}
+
+// ============================ wheel 80  ==============================
+void MainWindow::on_buttonWheel80_clicked()
+{
+	CqWheel* pWheel = new CqWheel( 0.80 );
+	view->toolAddObject( pWheel );
+}
+
 
 // EOF

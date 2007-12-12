@@ -25,7 +25,7 @@
 
 
 /**
-	Girder is game eleemnt - nailable and breakable girder
+	Girder is game element - nailable and breakable girder
 
 	@author Maciek Gajewski <maciej.gajewski0@gmail.com>
 */

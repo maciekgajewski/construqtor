@@ -132,31 +132,12 @@ void CqSimulation::InitWorld()
 	
 	_scene.setSceneRect( -50, -50, 100, 100 );
 	
-	// add sample objects
-	/*
-	CqPhysicalBox* pBox = new CqPhysicalBox( NULL, _pPhysicalWorld );
-	pBox->setSize( QSizeF( 2.0, 0.3) );
-	pBox->setPos( 0.0, 1.0 );
-	addItem( pBox );
-	
-	CqPhysicalBox* pBox2 = new CqPhysicalBox( NULL, _pPhysicalWorld );
-	pBox2->setSize( QSizeF( 0.2, 3.0 ) );
-	pBox2->setPos( 0.5, 2.0 );
-	addItem( pBox2 );
-	
-	
-	// joint
-	CqNail* pNail = new CqNail( NULL, _pPhysicalWorld );
-	pNail->setAnchorPoint( QPointF( 0.5, 1.0 ) );
-	pNail->setConnectedBodies( pBox, pBox2 );
-		
-	addItem( pNail );
-	*/
 	// ground object
+	// TODO replace with loadable ground
 	CqPhysicalBox* pGround = new CqPhysicalBox( NULL, _pPhysicalWorld );
 	pGround->setSize( QSizeF( 100.0, 50.0 ) );
 	pGround->setPos( 0.0, -25.0 );
-	pGround->setMaterial( CqMaterial( 0, 0, 0 ) );
+	pGround->setMaterial( CqMaterial( 0, 0.9, 0.2 ) );
 	pGround->setBrush( Qt::darkGreen );
 	addItem( pGround );
 	

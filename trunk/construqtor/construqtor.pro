@@ -13,7 +13,9 @@ cqnail.cpp \
 cqitem.cpp \
 mainview.cpp \
 ceeditoritem.cpp \
-cqgirder.cpp
+cqgirder.cpp \
+cqphysicaldisk.cpp \
+cqwheel.cpp
 FORMS += mainwindow.ui
 
 HEADERS += mainwindow.h \
@@ -29,7 +31,9 @@ cqitemtypes.h \
 cqitem.h \
 mainview.h \
 ceeditoritem.h \
-cqgirder.h
+cqgirder.h \
+cqphysicaldisk.h \
+cqwheel.h
 CONFIG += debug \
 qt \
 warn_on \
