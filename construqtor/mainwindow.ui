@@ -70,6 +70,27 @@
         </widget>
        </item>
        <item>
+        <widget class="QPushButton" name="buttonWheel40" >
+         <property name="text" >
+          <string>Wheel 40</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="buttonWheel80" >
+         <property name="text" >
+          <string>Wheel 80</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton_2" >
+         <property name="text" >
+          <string>PushButton</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QPushButton" name="buttonNail" >
          <property name="text" >
           <string>Nail</string>

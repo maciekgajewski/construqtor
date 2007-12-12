@@ -17,60 +17,36 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef CQPHYSICALBOX_H
-#define CQPHYSICALBOX_H
 
 // local
-#include "cqphysicalbody.h"
+#include "cqsimulation.h"
+#include "cqwheel.h"
 
-
-/**
-	@author Maciek Gajewski <maciej.gajewski0@gmail.com>
-*/
-class CqPhysicalBox : public CqPhysicalBody
+// ============================== constructor ===============
+CqWheel::CqWheel( double diameter ) : CqPhysicalDisk()
 {
-public:
-	
-	// construction / destruction
-	CqPhysicalBox(QGraphicsItem* parent, CqWorld* world = NULL);
-	CqPhysicalBox(CqWorld* world = NULL);
-	virtual ~CqPhysicalBox();
+	setDiameter( diameter );
+}
 
-	
-	// properties
-	void setSize( const QSizeF& size );		///< Sets/ changes size
-	QSizeF size() const { return _size; };	///< Returns size
+// ============================ destructor ==================
+CqWheel::~CqWheel()
+{
+	// nope
+}
 
-	// operations 
-	virtual void paint
-		( QPainter * painter
-		, const QStyleOptionGraphicsItem * option
-		, QWidget * widget = 0 );
-		
-    virtual QRectF boundingRect() const;
-    virtual QPainterPath shape() const;
-	
-	virtual CqPhysicalBody* bodyHere( const QPointF& scenePoint ) { return this; }
-	
-protected:
+// ======================== can be selected =============
+bool CqWheel::canBeSelected() const
+{
+	// of course, id simulation permits
+	return simulation()->canBeSelected( this );
+}
 
-	// reimplementables
-	
-    virtual QList< b2ShapeDef* > createShape();
-
-private:
-
-	// methods
-	void init();		///< Initializes instance
-
-	// data
-	
-	QSizeF	_size;		///< box's size
-
-};
-
-#endif	// CQPHYSICALBOX_H
+// ========================= can be moved ================
+bool CqWheel::canBeMoved() const
+{
+	// if there is no joins, then yes
+	return _joints.empty()  && simulation()->canBeMoved( this );
+}
 
 // EOF
-
 

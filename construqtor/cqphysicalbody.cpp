@@ -100,6 +100,10 @@ void CqPhysicalBody::createBody( CqWorld* pWorld )
 	// TODO is this needed?
 	bodyDef.userData = this;
 	
+	// damping TODO: experimental
+	bodyDef.linearDamping	= 0.01;
+	bodyDef.angularDamping	= 0.01;
+	
 	// create body
 	_pBody = pWorld->CreateBody(&bodyDef);
 	

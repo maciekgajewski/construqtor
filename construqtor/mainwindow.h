@@ -45,6 +45,9 @@ public slots:
 	void on_buttonGirder200_clicked();
 	void on_buttonGirder300_clicked();
 	
+	void on_buttonWheel40_clicked();
+	void on_buttonWheel80_clicked();
+	
 	void on_buttonNail_clicked();
 	
 	void scenePointerPos( double x, double y );

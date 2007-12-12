@@ -17,60 +17,33 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef CQPHYSICALBOX_H
-#define CQPHYSICALBOX_H
+#ifndef CQWHEEL_H
+#define CQWHEEL_H
 
 // local
-#include "cqphysicalbody.h"
-
+#include "cqphysicaldisk.h"
 
 /**
+	Wheel is game element - simple unsuspended nailable wheel
+
 	@author Maciek Gajewski <maciej.gajewski0@gmail.com>
 */
-class CqPhysicalBox : public CqPhysicalBody
+class CqWheel : public CqPhysicalDisk
 {
 public:
+
+	// construction / destruction 
+	CqWheel( double diameter );
+	virtual ~CqWheel();
 	
-	// construction / destruction
-	CqPhysicalBox(QGraphicsItem* parent, CqWorld* world = NULL);
-	CqPhysicalBox(CqWorld* world = NULL);
-	virtual ~CqPhysicalBox();
-
-	
-	// properties
-	void setSize( const QSizeF& size );		///< Sets/ changes size
-	QSizeF size() const { return _size; };	///< Returns size
-
-	// operations 
-	virtual void paint
-		( QPainter * painter
-		, const QStyleOptionGraphicsItem * option
-		, QWidget * widget = 0 );
-		
-    virtual QRectF boundingRect() const;
-    virtual QPainterPath shape() const;
-	
-	virtual CqPhysicalBody* bodyHere( const QPointF& scenePoint ) { return this; }
-	
-protected:
-
-	// reimplementables
-	
-    virtual QList< b2ShapeDef* > createShape();
-
-private:
-
-	// methods
-	void init();		///< Initializes instance
-
-	// data
-	
-	QSizeF	_size;		///< box's size
-
+	// editor flags
+	virtual bool canBeSelected() const;
+	virtual bool canBeMoved() const;
+	virtual bool canConnectHere( const QPointF& scenePoint ) { return true; } // connect on entire surface
 };
 
-#endif	// CQPHYSICALBOX_H
+
+#endif	// CQWHEEL_H
 
 // EOF
-
 

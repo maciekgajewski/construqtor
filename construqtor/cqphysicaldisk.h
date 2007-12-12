@@ -17,29 +17,30 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef CQPHYSICALBOX_H
-#define CQPHYSICALBOX_H
+#ifndef CQPHYSICALDISK_H
+#define CQPHYSICALDISK_H
 
 // local
 #include "cqphysicalbody.h"
 
 
 /**
+	Uniform monolithi physical body with a shape of a disk
 	@author Maciek Gajewski <maciej.gajewski0@gmail.com>
 */
-class CqPhysicalBox : public CqPhysicalBody
+class CqPhysicalDisk : public CqPhysicalBody
 {
 public:
 	
 	// construction / destruction
-	CqPhysicalBox(QGraphicsItem* parent, CqWorld* world = NULL);
-	CqPhysicalBox(CqWorld* world = NULL);
-	virtual ~CqPhysicalBox();
+	CqPhysicalDisk(QGraphicsItem* parent, CqWorld* world = NULL);
+	CqPhysicalDisk(CqWorld* world = NULL);
+	virtual ~CqPhysicalDisk();
 
 	
 	// properties
-	void setSize( const QSizeF& size );		///< Sets/ changes size
-	QSizeF size() const { return _size; };	///< Returns size
+	void setDiameter( double diameter );			///< Sets/ changes diameter
+	double diameter() const { return _diameter; };	///< Returns diameter
 
 	// operations 
 	virtual void paint
@@ -50,6 +51,7 @@ public:
     virtual QRectF boundingRect() const;
     virtual QPainterPath shape() const;
 	
+	/// Returns body under poitn - single body everywhere
 	virtual CqPhysicalBody* bodyHere( const QPointF& scenePoint ) { return this; }
 	
 protected:
@@ -65,11 +67,11 @@ private:
 
 	// data
 	
-	QSizeF	_size;		///< box's size
+	double	_diameter;		///< diameter
 
 };
 
-#endif	// CQPHYSICALBOX_H
+#endif // CQPHYSICALDISK_H
 
 // EOF
 
