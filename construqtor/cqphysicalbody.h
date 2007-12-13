@@ -59,9 +59,6 @@ public:
 	// properties
 	virtual void setWorld ( CqWorld* pWorld );		///< Sets world
 	
-	virtual void setRotationRadians( double radians );	///< sets rotation in radians
-	virtual double rotationRadians() const { return _rotation; } ///< Retuens rotation
-	
 	CqMaterial material() { return _material; }
 	void setMaterial( const CqMaterial& material ) {  _material = material; }
 	
@@ -76,10 +73,6 @@ public:
 
 	virtual int type() const;	///< RTTI
 	
-	// signals form editor
-	virtual void setPhysicalRotation( double radians );		///< Rotates item
-	virtual void setPhysicalPos( const QPointF& pos );		///< Moves item
-	
 	// operations
 	void breakAllJoints();								///< Destroys all joints attached
 	
@@ -87,6 +80,7 @@ public:
 	
 	void simulationStep();					///< Called after simulation step
 	void assureBodyCreated();				///< Makes sure that body was created
+	virtual void updatePhysicalPos();		///< Updates body pos to item positon/rotation
 	
 	// signals from joint
 	void addJoint( CqJoint* pJoint );		///< Info: you have new joint

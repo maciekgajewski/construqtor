@@ -108,11 +108,7 @@ void CqPhysicalBody::createBody( CqWorld* pWorld )
 	_pBody = pWorld->CreateBody(&bodyDef);
 	
 	// set body position
-	QPointF position = pos();
-	b2Vec2 b2pos;
-	b2pos.x = position.x();
-	b2pos.y = position.y();
-	_pBody->SetCenterPosition( b2pos, _rotation );
+	updatePhysicalPos();
 	
 	// delete shapes
 	foreach ( b2ShapeDef* pShape, shapes )
@@ -135,8 +131,8 @@ void CqPhysicalBody::simulationStep()
 		b2Vec2		b2pos		= _pBody->GetCenterPosition();
 		double		b2rotation	= _pBody->GetRotation();
 		
-		setPos( b2pos.x, b2pos.y );
-		setRotationRadians( b2rotation );
+		setPos( mapFromPhysical( QPointF( b2pos.x, b2pos.y ) ) );
+		setRotationRadians( mapFromPhysical( b2rotation ) );
 		
 	}
 }
@@ -165,16 +161,6 @@ void CqPhysicalBody::destroyBody( CqWorld* pWorld )
 	_pBody = NULL;
 }
 
-// ======================= set rotation [radians] ==========================
-void CqPhysicalBody::setRotationRadians( double radians )
-{
-	if ( fabs( _rotation - radians ) > 0.01 )
-	{
-		prepareGeometryChange();
-		_rotation = radians;
-	}
-}
-
 // =========================== type  ===================
 int CqPhysicalBody::type() const
 {
@@ -194,14 +180,17 @@ void CqPhysicalBody::breakAllJoints()
 	}
 }
 
-// ============================== set physical pos ===============
-/// Proper way to move the item. It alse updates all neccesary data
-void CqPhysicalBody::setPhysicalPos( const QPointF& pos )
+// ============================== update physical pos ===============
+void CqPhysicalBody::updatePhysicalPos()
 {
-	CqItem::setPhysicalPos( pos );
+	CqItem::updatePhysicalPos();
 	if ( _pBody )
 	{
-		_pBody->SetCenterPosition( b2Vec2( pos.x(), pos.y() ), _rotation );
+		// translate coords to physical
+		QPointF pp	= mapToPhysical( pos() );
+		double r	= mapToPhysical( rotationRadians() );
+		
+		_pBody->SetCenterPosition( b2Vec2( pp.x(), pp.y() ), r );
 		update();
 	}
 }
@@ -231,18 +220,6 @@ void CqPhysicalBody::removeJoint( CqJoint* pJoint )
 	else
 	{
 		qWarning("joint remove from body, to each it doesn;t belogns");
-	}
-}
-
-// =============================== remove joint ======================
-void CqPhysicalBody::setPhysicalRotation( double radians )
-{
-	CqItem::setPhysicalRotation( radians );
-	
-	if ( _pBody )
-	{
-		_pBody->SetCenterPosition( b2Vec2( pos().x(), pos().y() ), _rotation );
-		update();
 	}
 }
 

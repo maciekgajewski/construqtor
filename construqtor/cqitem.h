@@ -53,8 +53,15 @@ public:
 	const CqSimulation* simulation() const { return _pSimulation; }
 	virtual void setWorld ( CqWorld* pWorld ){};		///< Sets world
 	
-	virtual void setRotationRadians( double radians ){}		///< Rotates item
-	virtual double rotationRadians() const { return 0.0; } 	///< Retuens rotation
+	virtual void setRotationRadians( double radians );	///< sets rotation in radians
+	virtual double rotationRadians() const { return _rotation; } ///< Retuens rotation
+	
+	// mapping coordinates 
+	QPointF mapToPhysical( const QPointF& local );		///< Maps local to physical scene
+	double	mapToPhysical( double rotation );			///< Maps local rotation to [husical
+		
+	QPointF mapFromPhysical( const QPointF& physical );	///< Maps pos from physical to local
+	double mapFromPhysical( double rotation );			///< Maps rotation from physical to local
 	
 	// info from editor
 	virtual void setPhysicalRotation( double radians );		///< Rotates item
@@ -73,6 +80,12 @@ public:
 	/// Physical body connected to joint in this location
 	virtual CqPhysicalBody* bodyHere( const QPointF& scenePoint ) { return NULL; }
 	
+	// child / parent relationship
+	QList< CqItem* > physicalChildren();			///< Return list of CqItem children
+	CqItem* physicalParent();						///< return CqItem parent
+	
+	virtual void updatePhysicalPos();				///< Updates physical pos to item pos/rotation
+	
 protected:
 	
 	// input handlers
@@ -90,6 +103,7 @@ private:
 	// data
 	
 	CqSimulation*	_pSimulation;						///< Simulation
+	double			_rotation;							///< Rotation
 };
 
 #endif // CQITEM_H
