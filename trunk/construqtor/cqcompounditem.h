@@ -17,67 +17,49 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef CQWHEELWITHENGINE_H
-#define CQWHEELWITHENGINE_H
+#ifndef CQCOMPOUNDITEM_H
+#define CQCOMPOUNDITEM_H
 
 // Local
-#include "cqphysicalbox.h"
-#include "cqwheel.h"
-#include "cqrevolutejoint.h"
-#include "cqcompounditem.h"
+#include "cqitem.h"
 
 /**
-	 complex item. Consist of 'motor' and 'wheel' conected wityh motorized
-	 revolute joint.
-	 
+	Compound item - does not paint itself. Adopts shape and bounding box of it's children.
 	@author Maciek Gajewski <maciej.gajewski0@gmail.com>
 */
-class CqWheelWithEngine : public CqCompoundItem
+class CqCompoundItem : public CqItem
 {
 public:
-	CqWheelWithEngine( double wheelDiameter );
-	virtual ~CqWheelWithEngine();
 	
-	/// If connection (nail/bolt/...) can be attached at this point
-	virtual bool canConnectHere( const QPointF& scenePoint );
-	/// Physical body connected to joint in this location
-	virtual CqPhysicalBody* bodyHere( const QPointF& scenePoint );
+	CqCompoundItem( QGraphicsItem *pParent = 0 );
+	virtual ~CqCompoundItem();
 
+	void addChild( CqItem* pChild );
+	virtual void setWorld ( CqWorld* pWorld );			///< Sets world
+	virtual void setSelected( bool selected );			///< Selects
+					
+	/// Return list of CqItem children
+	QList< CqItem* > physicalChildren(){ return _children; }
+	
+	// QGrpahicsItem
+	virtual void paint( QPainter*, const QStyleOptionGraphicsItem*, QWidget* );
+	virtual QRectF boundingRect() const;
+	virtual QPainterPath shape() const;
+	
+	virtual void updatePhysicalPos();
 	
 private:
 
-	class Motor : public CqRevoluteJoint
-	{
-		public:
-		
-		Motor( CqWheelWithEngine* parent = 0 );
-		virtual ~Motor(){}
-		
-		// operations
-		virtual void paint
-			( QPainter * painter
-			, const QStyleOptionGraphicsItem * option
-			, QWidget * widget = 0 );
-			
-		virtual QRectF boundingRect() const;
-	
-		
-	};
-
 	// methods
 	
-	void init();				///< Init
+	void init();			
 	
 	// data
 	
-	CqPhysicalBox*	_pEngine;		///< Engine sub-element
-	CqWheel*		_pWheel;		///< Wheel sub-element
-	Motor*			_pMotor;		///< Motorized revolute joint
-	
-	double _wheelDiameter;
+	QList<CqItem*> _children;						///< Child items
 };
 
-#endif // CQWHEELWITHENGINE_H
+#endif // CQCOMPOUNDITEM_H
 
 // EOF
 

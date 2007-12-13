@@ -65,7 +65,7 @@ b2Joint* CqRevoluteJoint::createJoint(CqWorld* pWorld)
 		
 		jointDef.collideConnected = false;
 		
-		QPointF a = anchorPoint();
+		QPointF a = mapToWorld( anchorPoint() );
 		jointDef.anchorPoint = b2Vec2( a.x(), a.y() );
 		
 		// motor
@@ -105,7 +105,7 @@ void CqRevoluteJoint::simulationStep()
 		
 		b2Vec2 pos = pJoint->GetAnchor1();
 		
-		setPos( mapFromPhysical( QPointF(pos.x, pos.y) ) );
+		setPos( mapFromWorld( QPointF(pos.x, pos.y) ) );
 	}
 }
 

@@ -69,12 +69,19 @@ public:
 	int cqFlags() const { return _flags; }				///< Retuns flags
 	void setCqFlags( int flags ) { _flags = flags; }	///< Sets flags
 	
+	virtual void setSelected( bool selected );
+	bool selected() const { return _selected; }
 	// mapping coordinates 
-	QPointF mapToPhysical( const QPointF& local );		///< Maps local to physical scene
-	double	mapToPhysical( double rotation );			///< Maps local rotation to [husical
+	QPointF mapToWorld( const QPointF& local );			///< Maps local to physical scene
+	double	mapToWorld( double rotation );				///< Maps local rotation to [husical
 		
-	QPointF mapFromPhysical( const QPointF& physical );	///< Maps pos from physical to local
-	double mapFromPhysical( double rotation );			///< Maps rotation from physical to local
+	QPointF mapFromWorld( const QPointF& physical );	///< Maps pos from physical to local
+	double mapFromWorld( double rotation );				///< Maps rotation from physical to local
+	
+	QPointF worldPos() const;							///< item positon in world's coordsa
+	double worldRotation() const;						///< item rotation in world coords
+	void setWorldPos( const QPointF pos );
+	void setWorldRotation( double rotation );
 	
 	// info from editor
 	virtual void setPhysicalRotation( double radians );		///< Rotates item
@@ -94,11 +101,11 @@ public:
 	virtual CqPhysicalBody* bodyHere( const QPointF& scenePoint ) { return NULL; }
 	
 	// child / parent relationship
-	QList< CqItem* > physicalChildren();			///< Return list of CqItem children
-	CqItem* physicalParent();						///< return CqItem parent
-	const CqItem* physicalParent() const;			///< return CqItem parent
+	CqItem* physicalParent(){ return _pPhysicalParent; }
+	const CqItem* physicalParent() const { return _pPhysicalParent; }
+	void setPhysicalParent( CqItem* pParent ){ _pPhysicalParent = pParent; }
 	
-	virtual void updatePhysicalPos();				///< Updates physical pos to item pos/rotation
+	virtual void updatePhysicalPos(){};				///< Updates physical pos to item pos/rotation
 	
 protected:
 	
@@ -120,6 +127,8 @@ private:
 	CqWorld*		_pWorld;							///< Physical world
 	double			_rotation;							///< Rotation
 	int				_flags;								///< Behavior flags
+	bool			_selected;							///< Selected
+	CqItem*			_pPhysicalParent;					///< Parent item
 
 };
 

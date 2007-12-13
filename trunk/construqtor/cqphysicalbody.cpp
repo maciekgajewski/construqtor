@@ -30,16 +30,16 @@
 // ========================== constructor =================================
 CqPhysicalBody::CqPhysicalBody( QGraphicsItem* parent, CqWorld* world )
 	: CqItem( parent )
-	, world()( world )
 {
 	init();
+	setWorld( world );
 }
 
 CqPhysicalBody::CqPhysicalBody( CqWorld* world )
 	: CqItem( NULL )
-	, world()( world )
 {
 	init();
+	setWorld( world );
 }
 
 // =========================== destructor ===================================
@@ -122,8 +122,8 @@ void CqPhysicalBody::simulationStep()
 		b2Vec2		b2pos		= _pBody->GetCenterPosition();
 		double		b2rotation	= _pBody->GetRotation();
 		
-		setPos( mapFromPhysical( QPointF( b2pos.x, b2pos.y ) ) );
-		setRotationRadians( mapFromPhysical( b2rotation ) );
+		setWorldPos( QPointF( b2pos.x, b2pos.y ) );
+		setWorldRotation( b2rotation );
 		
 	}
 }
@@ -178,8 +178,12 @@ void CqPhysicalBody::updatePhysicalPos()
 	if ( _pBody )
 	{
 		// translate coords to physical
-		QPointF pp	= mapToPhysical( pos() );
-		double r	= mapToPhysical( rotationRadians() );
+		//QPointF pp	= mapToWorld( pos() );
+		//double r	= mapToWorld( rotationRadians() );
+		
+		QPointF pp	= worldPos();
+		double r	= worldRotation();
+
 		
 		_pBody->SetCenterPosition( b2Vec2( pp.x(), pp.y() ), r );
 		update();
