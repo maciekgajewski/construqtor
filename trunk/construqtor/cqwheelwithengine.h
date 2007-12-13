@@ -21,9 +21,9 @@
 #define CQWHEELWITHENGINE_H
 
 // Local
-#include "cqitem.h"
 #include "cqphysicalbox.h"
 #include "cqphysicaldisk.h"
+#include "cqrevolutejoint.h"
 
 /**
 	 complex item. Consist of 'motor' and 'wheel' conected wityh motorized
@@ -63,6 +63,8 @@ private:
 	// sub - elements
 	class Engine : public CqPhysicalBox
 	{
+		public:
+		
 		Engine( CqWheelWithEngine* parent );
 		virtual ~Engine(){}
 		
@@ -74,8 +76,11 @@ private:
 		
 	};
 	
+	// TODO be able to use stock wheel here
 	class Wheel : public CqPhysicalDisk
 	{
+		public:
+		
 		Wheel( CqWheelWithEngine* parent );
 		virtual ~Wheel(){}
 		
@@ -84,6 +89,24 @@ private:
 			( QPainter * painter
 			, const QStyleOptionGraphicsItem * option
 			, QWidget * widget = 0 );
+	};
+	
+	class Motor : public CqRevoluteJoint
+	{
+		public:
+		
+		Motor( CqWheelWithEngine* parent );
+		virtual ~Motor(){}
+		
+		// operations
+		virtual void paint
+			( QPainter * painter
+			, const QStyleOptionGraphicsItem * option
+			, QWidget * widget = 0 );
+			
+		virtual QRectF boundingRect() const;
+	
+		
 	};
 
 	// methods
@@ -95,7 +118,7 @@ private:
 	Engine	_engine;			///< Engine sub-element
 	Wheel	_wheel;				///< Wheel sub-element
 	
-	CqRevoluteJoint	_joint;		///< Joint
+	Motor	_motor;		///< Joint
 	
 
 };

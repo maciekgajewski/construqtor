@@ -78,8 +78,8 @@ QList< b2ShapeDef* > CqPhysicalBox::createShape()
 // ======================== paint ============================
 void CqPhysicalBox::paint
 	( QPainter * pPainter
-	, const QStyleOptionGraphicsItem * pOption
-	, QWidget * pWidget )
+	, const QStyleOptionGraphicsItem * /*pOption*/
+	, QWidget * /*pWidget*/ )
 {
 	QTransform t;
 	t.rotateRadians( rotationRadians() );

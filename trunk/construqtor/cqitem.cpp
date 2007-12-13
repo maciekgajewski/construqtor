@@ -97,6 +97,7 @@ bool CqItem::canBeMovedHere( const QPointF& scenePos )
 void CqItem::setPhysicalPos( const QPointF& pos )
 {
 	setPos( pos );
+	updatePhysicalPos();
 }
 
 // ============================== set physical rotation ===============
@@ -104,6 +105,99 @@ void CqItem::setPhysicalPos( const QPointF& pos )
 void CqItem::setPhysicalRotation( double radians )
 {
 	setRotationRadians( radians );
+	updatePhysicalPos();
+}
+
+// ============================ physical children ======================
+QList< CqItem* > CqItem::physicalChildren()
+{
+	QList< CqItem* > physicalChildren;
+	QList< QGraphicsItem* > allChildren = children();
+	
+	foreach( QGraphicsItem* pItem, allChildren )
+	{
+		CqItem* pCqItem = dynamic_cast<CqItem*>( pItem );
+		if ( pCqItem )
+		{
+			physicalChildren.append( pCqItem );
+		}
+	}
+	
+	return physicalChildren;
+}
+
+// ============================== physical parent ======================
+CqItem* CqItem::physicalParent()
+{
+	return dynamic_cast< CqItem* >( parentItem() );
+}
+
+// ======================= set rotation [radians] ==========================
+void CqItem::setRotationRadians( double radians )
+{
+	if ( fabs( _rotation - radians ) > 0.01 ) // some fuse to avoid frequrnt updates
+	{
+		prepareGeometryChange();
+		_rotation = radians;
+	}
+}
+
+// ======================== map to physical ==================================
+QPointF CqItem::mapToPhysical( const QPointF& local )
+{
+	// TODO currently simple imeplementation, when scene coords are physical coords
+	return mapToScene( local );
+	// TODO what about rotation?
+}
+
+// ========================== map to physical =================================
+/// maps current rotation to physical
+double	CqItem::mapToPhysical( double rotation )
+{
+	CqItem* pParent = physicalParent();
+	
+	if ( pParent )
+	{
+		return rotation + pParent->mapToPhysical( pParent->rotationRadians() );
+	}
+	else
+	{
+		return rotation;
+	}
+}
+
+// ============================ map from physical ==========================
+QPointF CqItem::mapFromPhysical( const QPointF& physical )
+{
+	return mapFromScene( physical );
+}
+
+// ============================ map from physical ==========================
+double CqItem::mapFromPhysical( double rotation )
+{
+	CqItem* pParent = physicalParent();
+	
+	if ( pParent )
+	{
+		return rotation - pParent->mapToPhysical( pParent->rotationRadians() );
+	}
+	else
+	{
+		return rotation;
+	}
+}
+
+// ============================= update physical pos ===========================
+void CqItem::updatePhysicalPos()
+{
+	// update children
+	QList< CqItem* > children = physicalChildren();
+	
+	foreach( CqItem* pChild, children )
+	{
+		pChild->updatePhysicalPos();
+	}
+	
 }
 
 // EOF

@@ -105,8 +105,7 @@ void CqRevoluteJoint::simulationStep()
 		
 		b2Vec2 pos = pJoint->GetAnchor1();
 		
-		setPos( pos.x, pos.y );
-		//qDebug("pos: %lf, %lf", double( pos.x ), double( pos.y ) ); // TODO remove
+		setPos( mapFromPhysical( QPointF(pos.x, pos.y) ) );
 	}
 }
 
