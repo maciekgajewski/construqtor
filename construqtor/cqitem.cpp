@@ -47,6 +47,9 @@ void CqItem::init()
 	_pSimulation = NULL;
 	_pWorld = NULL;
 	_flags = 0; // no flag set by default
+	_pPhysicalParent = NULL;
+	_selected = false;
+	_rotation = 0.0;
 }
 
 // =========================== simulation step ===================
@@ -131,36 +134,6 @@ void CqItem::setPhysicalRotation( double radians )
 	updatePhysicalPos();
 }
 
-// ============================ physical children ======================
-QList< CqItem* > CqItem::physicalChildren()
-{
-	QList< CqItem* > physicalChildren;
-	QList< QGraphicsItem* > allChildren = children();
-	
-	foreach( QGraphicsItem* pItem, allChildren )
-	{
-		CqItem* pCqItem = dynamic_cast<CqItem*>( pItem );
-		if ( pCqItem )
-		{
-			physicalChildren.append( pCqItem );
-		}
-	}
-	
-	return physicalChildren;
-}
-
-// ============================== physical parent ======================
-CqItem* CqItem::physicalParent()
-{
-	return dynamic_cast< CqItem* >( parentItem() );
-}
-
-// ============================== physical parent (const) ======================
-const CqItem* CqItem::physicalParent() const
-{
-	return dynamic_cast< const CqItem* >( parentItem() );
-}
-
 // ======================= set rotation [radians] ==========================
 void CqItem::setRotationRadians( double radians )
 {
@@ -172,7 +145,7 @@ void CqItem::setRotationRadians( double radians )
 }
 
 // ======================== map to physical ==================================
-QPointF CqItem::mapToPhysical( const QPointF& local )
+QPointF CqItem::mapToWorld( const QPointF& local )
 {
 	// TODO currently simple imeplementation, when scene coords are physical coords
 	return mapToScene( local );
@@ -181,13 +154,13 @@ QPointF CqItem::mapToPhysical( const QPointF& local )
 
 // ========================== map to physical =================================
 /// maps current rotation to physical
-double	CqItem::mapToPhysical( double rotation )
+double	CqItem::mapToWorld( double rotation )
 {
 	CqItem* pParent = physicalParent();
 	
 	if ( pParent )
 	{
-		return rotation + pParent->mapToPhysical( pParent->rotationRadians() );
+		return rotation + pParent->mapToWorld( pParent->rotationRadians() );
 	}
 	else
 	{
@@ -196,37 +169,24 @@ double	CqItem::mapToPhysical( double rotation )
 }
 
 // ============================ map from physical ==========================
-QPointF CqItem::mapFromPhysical( const QPointF& physical )
+QPointF CqItem::mapFromWorld( const QPointF& physical )
 {
 	return mapFromScene( physical );
 }
 
 // ============================ map from physical ==========================
-double CqItem::mapFromPhysical( double rotation )
+double CqItem::mapFromWorld( double rotation )
 {
 	CqItem* pParent = physicalParent();
 	
 	if ( pParent )
 	{
-		return rotation - pParent->mapToPhysical( pParent->rotationRadians() );
+		return rotation - pParent->mapToWorld( pParent->rotationRadians() );
 	}
 	else
 	{
 		return rotation;
 	}
-}
-
-// ============================= update physical pos ===========================
-void CqItem::updatePhysicalPos()
-{
-	// update children
-	QList< CqItem* > children = physicalChildren();
-	
-	foreach( CqItem* pChild, children )
-	{
-		pChild->updatePhysicalPos();
-	}
-	
 }
 
 // ================================ set world ===================================
@@ -234,12 +194,71 @@ void CqItem::setWorld ( CqWorld* pWorld )
 {
 	_pWorld = pWorld;
 
+	/* TODO move to compound item
 	QList< CqItem* > children = physicalChildren();
 	
 	foreach( CqItem* pItem, children )
 	{
-		pItem->setWorld( pItem );
-	}	
+		pItem->setWorld( pWorld );
+	}
+	*/
+}
+
+// ============================== set selected =============================
+void CqItem::setSelected( bool selected )
+{
+	_selected = selected;
+	update();
+}
+
+// ============================== world pos =========================
+QPointF CqItem::worldPos() const
+{
+	if ( _pPhysicalParent )
+	{
+		return _pPhysicalParent->mapToWorld( pos() );
+	}
+	
+	return pos();
+}
+
+// ================================= wordl rotation =====================
+double CqItem::worldRotation() const
+{
+	if ( _pPhysicalParent )
+	{
+		return _pPhysicalParent->mapToWorld( _rotation );
+	}
+	else
+	{
+		return _rotation;
+	}
+}
+
+// =============================== set world pos =========================
+void CqItem::setWorldPos( const QPointF pos )
+{
+	if ( _pPhysicalParent )
+	{
+		setPos( _pPhysicalParent->mapFromWorld( pos ) );
+	}
+	else
+	{
+		setPos( pos );
+	}
+}
+
+// =============================== set world rotation ======================
+void CqItem::setWorldRotation( double rotation )
+{
+	if ( _pPhysicalParent )
+	{
+		setRotationRadians( _pPhysicalParent->mapFromWorld( rotation ) );
+	}
+	else
+	{
+		setRotationRadians( rotation );
+	}
 }
 
 // EOF

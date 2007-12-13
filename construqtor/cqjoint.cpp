@@ -27,16 +27,16 @@
 // =========================== constructor ===================
 CqJoint::CqJoint(CqWorld* world)
 	: CqItem()
-	, world()( world )
 {
 	init();
+	setWorld( world );
 }
 // =========================== constructor ===================
 CqJoint::CqJoint(QGraphicsItem* parent, CqWorld* world)
 	: CqItem(parent)
-	, world()( world )
 {
 	init();
+	setWorld( world );
 }
 
 // =========================== destructor ===================

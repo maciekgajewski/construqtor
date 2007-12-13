@@ -27,12 +27,9 @@
 
 // ======================== constructor ===================
 CqWheelWithEngine::CqWheelWithEngine( double wheelDiameter )
- : CqItem()
- , _engine( this )
- , _wheel( this )
- , _motor( this )
+ : CqCompoundItem()
 {
-	_wheel.setDiameter( wheelDiameter );
+	_wheelDiameter = wheelDiameter;
 	init();
 }
 
@@ -45,70 +42,42 @@ CqWheelWithEngine::~CqWheelWithEngine()
 // ======================== init ===================
 void CqWheelWithEngine::init()
 {
-	// TODO
-}
-
-// ======================== set world ===================
-void CqWheelWithEngine::setWorld ( CqWorld* pWorld )
-{
-	// TODO move to CqItem
-	_engine.setWorld( pWorld );
-	_wheel.setWorld( pWorld );
-	_motor.setWorld( pWorld );
-}
-
-// ======================== constructor ===================
-void CqWheelWithEngine::setRotationRadians( double radians )
-{
-	// TODO
-}
-
-// ======================== constructor ===================
-double CqWheelWithEngine::rotationRadians() const
-{
-	// TODO
-	return 0.0;
-}
-
-// ======================== constructor ===================
-void CqWheelWithEngine::setPhysicalRotation( double radians )
-{
-	CqItem::setPhysicalRotation( radians );
-	// TODO
-}
-
-// ======================== constructor ===================
-void CqWheelWithEngine::setPhysicalPos( const QPointF& pos )
-{
-	CqItem::setPhysicalPos( pos );
-	// TODO
-}
-
-// ======================== constructor ===================
-bool CqWheelWithEngine::canBeMoved() const
-{
-}
-
-// ======================== constructor ===================
-bool CqWheelWithEngine::canBeRotated() const
-{
-	return simulation()->canBeMoved( this );
-}
-
-// ======================== constructor ===================
-bool CqWheelWithEngine::canConnectHere( const QPointF& /*scenePoint*/ )
-{
-	// TODO
-	return false;
+	// init wheel
+	_pWheel = new CqWheel( _wheelDiameter );
+	_pWheel->setCqFlags( _pWheel->flags() & ~Selectable );
+	
+	// init engine
+	_pEngine = new CqPhysicalBox();
+	_pEngine->setSize( QSizeF( _wheelDiameter / 4, _wheelDiameter /2 ) );
+	_pEngine->setPos( 0, _wheelDiameter * 0.4 );
+	
+	// init joint
+	_pMotor = new Motor();
+	_pMotor->setAnchorPoint( QPointF(0,0) );
+	_pMotor->setConnectedBodies( _pWheel,  _pEngine );
+	_pMotor->setMotorEnabled( true, 1.0, 10.0 );
+	
+	addChild( _pWheel );
+	addChild( _pMotor );
+	addChild( _pWheel );
+	
+	// flags
+	setCqFlags( cqFlags() | Selectable | Movable | Rotatable );
+	
 }
 
 // ======================== constructor ===================
 CqPhysicalBody* CqWheelWithEngine::bodyHere( const QPointF& /*scenePoint*/ )
 {
 	// TODO
-	return false;
+	return NULL;
 }
 
+// =========================== can connect here ===================
+bool CqWheelWithEngine::canConnectHere( const QPointF& scenePoint )
+{
+	return false;
+}
 
 // ======================== Motor : constructor ============
 CqWheelWithEngine::Motor::Motor( CqWheelWithEngine* parent )
@@ -119,11 +88,11 @@ CqWheelWithEngine::Motor::Motor( CqWheelWithEngine* parent )
 
 // ======================== Motor : paint ============
 void CqWheelWithEngine::Motor::paint
-	( QPainter * painter
-	, const QStyleOptionGraphicsItem * option
-	, QWidget * widget )
+	( QPainter * pPainter
+	, const QStyleOptionGraphicsItem * /*option*/
+	, QWidget * /*widget*/ )
 {
-	// TODO temportary
+	pPainter->drawEllipse( boundingRect() );
 }
 	
 // ===================== Motor : rect ==================
