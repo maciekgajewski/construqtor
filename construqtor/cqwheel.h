@@ -34,6 +34,7 @@ public:
 
 	// construction / destruction 
 	CqWheel( double diameter );
+	CqWheel( QGraphicsItem* parent );
 	virtual ~CqWheel();
 	
 	// editor flags

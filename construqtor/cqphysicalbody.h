@@ -57,8 +57,6 @@ public:
 	virtual ~CqPhysicalBody();
 
 	// properties
-	virtual void setWorld ( CqWorld* pWorld );		///< Sets world
-	
 	CqMaterial material() { return _material; }
 	void setMaterial( const CqMaterial& material ) {  _material = material; }
 	
@@ -86,8 +84,6 @@ public:
 	void addJoint( CqJoint* pJoint );		///< Info: you have new joint
 	void removeJoint( CqJoint* pJoint );	///< Info: joint was removed
 	
-	
-	virtual bool canBeRotated() const;		///< Query: can item be rotated
 	
 protected:
 	
@@ -118,7 +114,6 @@ private:
 
 	QPointer< CqWorld > _pWorld;		///< World object
 	b2Body*	_pBody;						///< Body itself
-	double	_rotation;					///< Body's rotation [radians]
 	CqMaterial	_material;				///< Material used
 	
 	QBrush		_brush;					///< Brush used to paint item

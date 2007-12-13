@@ -30,14 +30,14 @@
 // ========================== constructor =================================
 CqPhysicalBody::CqPhysicalBody( QGraphicsItem* parent, CqWorld* world )
 	: CqItem( parent )
-	, _pWorld( world )
+	, world()( world )
 {
 	init();
 }
 
 CqPhysicalBody::CqPhysicalBody( CqWorld* world )
 	: CqItem( NULL )
-	, _pWorld( world )
+	, world()( world )
 {
 	init();
 }
@@ -51,30 +51,21 @@ CqPhysicalBody::~CqPhysicalBody()
 void CqPhysicalBody::init()
 {
 	_pBody = NULL;
-	_rotation = 0;
-}
-
-// =========================== set world ===================================
-/// Sets pohysical world to use. b2d Body is (re) cretaed.
-void CqPhysicalBody::setWorld ( CqWorld* pWorld )
-{
-	// TODO destroy burrent body if world already set
-	if ( pWorld && pWorld != _pWorld )
-	{
-		_pWorld = pWorld;
-	}
+	
+	// make rotatable
+	setCqFlags( cqFlags() | Rotatable );
 }
 
 // =========================== set world ===================================
 /// destroys current body, and creates new one. Calls createShape() along the way
 void CqPhysicalBody::recreateBody()
 {
-	if ( _pWorld )
+	if ( world() )
 	{
 		if ( _pBody )
 		{
 			// destroy current body
-			destroyBody( _pWorld );
+			destroyBody( world() );
 		}
 		// NOTE: body will be created when needed, by simulation with assureBodyCreated()
 	}
@@ -143,11 +134,11 @@ void CqPhysicalBody::simulationStep()
 /// This method is called late, so body creation is deffered as much as possible
 void CqPhysicalBody::assureBodyCreated()
 {
-	Q_ASSERT( _pWorld );
+	Q_ASSERT( world() );
 	
 	if ( ! _pBody )
 	{
-		createBody(_pWorld);
+		createBody(world());
 	}
 }
 
@@ -221,19 +212,6 @@ void CqPhysicalBody::removeJoint( CqJoint* pJoint )
 	{
 		qWarning("joint remove from body, to each it doesn;t belogns");
 	}
-}
-
-// =========================== can be rotated =========================
-bool CqPhysicalBody::canBeRotated() const
-{
-	// yes if no joints. ask editor otherwise
-	
-	if ( _joints.empty() )
-	{
-		return simulation()->canBeRotated( this );
-	}
-	
-	return false;
 }
 
 // EOF

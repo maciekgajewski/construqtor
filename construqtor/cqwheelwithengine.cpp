@@ -109,38 +109,6 @@ CqPhysicalBody* CqWheelWithEngine::bodyHere( const QPointF& /*scenePoint*/ )
 	return false;
 }
 
-// ======================== Engine : constructor ============
-CqWheelWithEngine::Engine::Engine( CqWheelWithEngine* parent )
-	: CqPhysicalBox( parent )
-{
-	// TODO init
-}
-
-// ======================== Engine : paint ============
-void CqWheelWithEngine::Engine::paint
-	( QPainter * pPainter
-	, const QStyleOptionGraphicsItem * option
-	, QWidget * /*widget*/ )
-{
-	// TODO
-	CqPhysicalBox::paint( pPainter, option );
-}
-
-// ======================== Wheel : constructor ============
-CqWheelWithEngine::Wheel::Wheel( CqWheelWithEngine* parent )
-	: CqPhysicalDisk( parent )
-{
-	// TODO
-}
-
-// ======================== Wheel : paint ============
-void CqWheelWithEngine::Wheel::paint
-	( QPainter * pPaint
-	, const QStyleOptionGraphicsItem * option
-	, QWidget * widget )
-{
-	CqPhysicalDisk::paint( pPaint, option, widget );
-}
 
 // ======================== Motor : constructor ============
 CqWheelWithEngine::Motor::Motor( CqWheelWithEngine* parent )

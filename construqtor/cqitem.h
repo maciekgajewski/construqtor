@@ -37,6 +37,14 @@ class CqPhysicalBody;
 class CqItem : public QGraphicsItem
 {
 public:
+
+	// flags
+	enum ItemFlag {
+		Selectable		=	0x1,			//< Item can be selected
+		Movable			=	0x2,			//< Item can be moved
+		Rotatable		=	0x4				//< Item can be rotated
+	};
+	
 	// constrution / destruction
 	CqItem( QGraphicsItem* parent = NULL );
 	virtual ~CqItem();
@@ -51,10 +59,15 @@ public:
 	void setSimulation( CqSimulation* pSimulation ) { _pSimulation = pSimulation; }
 	CqSimulation* simulation() { return _pSimulation; }
 	const CqSimulation* simulation() const { return _pSimulation; }
-	virtual void setWorld ( CqWorld* pWorld ){};		///< Sets world
+	
+	virtual void setWorld ( CqWorld* pWorld );			///< Sets world
+	CqWorld* world() { return _pWorld; }				///< Returns world
 	
 	virtual void setRotationRadians( double radians );	///< sets rotation in radians
 	virtual double rotationRadians() const { return _rotation; } ///< Retuens rotation
+	
+	int cqFlags() const { return _flags; }				///< Retuns flags
+	void setCqFlags( int flags ) { _flags = flags; }	///< Sets flags
 	
 	// mapping coordinates 
 	QPointF mapToPhysical( const QPointF& local );		///< Maps local to physical scene
@@ -67,11 +80,11 @@ public:
 	virtual void setPhysicalRotation( double radians );		///< Rotates item
 	virtual void setPhysicalPos( const QPointF& pos );		///< changes item position
 	
-	// editability info
-	virtual bool canBeSelected() const { return false; }
-	virtual bool canBeMoved() const { return false; }
+	// Editability info. Reimplement only if really custom beahvior needed
+	virtual bool canBeSelected() const;
+	virtual bool canBeMoved() const;
 	virtual bool canBeMovedHere( const QPointF& scenePos );
-	virtual bool canBeRotated() const { return false; }
+	virtual bool canBeRotated() const;
 	
 	// geometrical properties
 	
@@ -83,6 +96,7 @@ public:
 	// child / parent relationship
 	QList< CqItem* > physicalChildren();			///< Return list of CqItem children
 	CqItem* physicalParent();						///< return CqItem parent
+	const CqItem* physicalParent() const;			///< return CqItem parent
 	
 	virtual void updatePhysicalPos();				///< Updates physical pos to item pos/rotation
 	
@@ -93,7 +107,7 @@ protected:
 	virtual void mouseMoveEvent ( QGraphicsSceneMouseEvent * event );
 	virtual void mousePressEvent ( QGraphicsSceneMouseEvent * event );
 	virtual void mouseReleaseEvent ( QGraphicsSceneMouseEvent * event );
-
+	
 private:
 
 	// methods
@@ -103,7 +117,10 @@ private:
 	// data
 	
 	CqSimulation*	_pSimulation;						///< Simulation
+	CqWorld*		_pWorld;							///< Physical world
 	double			_rotation;							///< Rotation
+	int				_flags;								///< Behavior flags
+
 };
 
 #endif // CQITEM_H
