@@ -27,14 +27,14 @@
 // =========================== constructor ===================
 CqJoint::CqJoint(CqWorld* world)
 	: CqItem()
-	, _pWorld( world )
+	, world()( world )
 {
 	init();
 }
 // =========================== constructor ===================
 CqJoint::CqJoint(QGraphicsItem* parent, CqWorld* world)
 	: CqItem(parent)
-	, _pWorld( world )
+	, world()( world )
 {
 	init();
 }
@@ -44,8 +44,8 @@ CqJoint::~CqJoint()
 {
 	if ( _pJoint )
 	{
-		Q_ASSERT( _pWorld );
-		destroyJoint( _pWorld );
+		Q_ASSERT( world() );
+		destroyJoint( world() );
 	}
 }
 
@@ -60,13 +60,13 @@ void CqJoint::init()
 // =========================== assure joint created  ===================
 void CqJoint::assureJointCreated()
 {
-	Q_ASSERT( _pWorld );
+	Q_ASSERT( world() );
 	Q_ASSERT( _pBody1 );
 	Q_ASSERT( _pBody2 );
 	
 	if ( ! _pJoint )
 	{
-		_pJoint = createJoint(_pWorld);
+		_pJoint = createJoint(world());
 	}
 }
 
@@ -79,13 +79,6 @@ void CqJoint::setConnectedBodies( CqPhysicalBody* pBody1, CqPhysicalBody* pBody2
 	// let bodoes know they have new joint
 	_pBody1->addJoint( this );
 	_pBody2->addJoint( this );
-}
-
-// ============================== set world ==================
-void CqJoint::setWorld ( CqWorld* pWorld )
-{
-	// TODO this could be more smart
-	_pWorld = pWorld;
 }
 
 // =========================== destroy joint  ===================
@@ -109,7 +102,7 @@ int CqJoint::type() const
 /// Breaks the joint, frees objectm removes it from scene etc
 void CqJoint::breakJoint()
 {
-	Q_ASSERT( _pWorld );
+	Q_ASSERT( world() );
 	
 	// remove from body lists
 	if ( _pBody1 ) _pBody1->removeJoint( this );

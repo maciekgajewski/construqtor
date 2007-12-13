@@ -60,37 +60,6 @@ public:
 	
 private:
 
-	// sub - elements
-	class Engine : public CqPhysicalBox
-	{
-		public:
-		
-		Engine( CqWheelWithEngine* parent );
-		virtual ~Engine(){}
-		
-		// operations
-		virtual void paint
-			( QPainter * painter
-			, const QStyleOptionGraphicsItem * option
-			, QWidget * widget = 0 );
-		
-	};
-	
-	// TODO be able to use stock wheel here
-	class Wheel : public CqPhysicalDisk
-	{
-		public:
-		
-		Wheel( CqWheelWithEngine* parent );
-		virtual ~Wheel(){}
-		
-		// operations
-		virtual void paint
-			( QPainter * painter
-			, const QStyleOptionGraphicsItem * option
-			, QWidget * widget = 0 );
-	};
-	
 	class Motor : public CqRevoluteJoint
 	{
 		public:
@@ -115,12 +84,9 @@ private:
 	
 	// data
 	
-	Engine	_engine;			///< Engine sub-element
-	Wheel	_wheel;				///< Wheel sub-element
-	
-	Motor	_motor;		///< Joint
-	
-
+	CqPhysicalBox	_engine;	///< Engine sub-element
+	CqWheel			_wheel;		///< Wheel sub-element
+	Motor			_motor;
 };
 
 #endif // CQWHEELWITHENGINE_H

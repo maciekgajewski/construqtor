@@ -42,8 +42,11 @@ CqItem::~CqItem()
 void CqItem::init()
 {
 	setFlag( QGraphicsItem::ItemIsSelectable, true ); // TODO test - maybe better would be to turn it off and use own selection
-	_pSimulation = NULL;
 	setAcceptedMouseButtons( Qt::NoButton );
+	
+	_pSimulation = NULL;
+	_pWorld = NULL;
+	_flags = 0; // no flag set by default
 }
 
 // =========================== simulation step ===================
@@ -84,12 +87,32 @@ void CqItem::mousePressEvent ( QGraphicsSceneMouseEvent * pEvent )
 // ============================== mouse release ==================
 void CqItem::mouseReleaseEvent ( QGraphicsSceneMouseEvent *  )
 {
+	// nope
 }
 
 // ======================== can item be moved here? =============
 bool CqItem::canBeMovedHere( const QPointF& scenePos )
 {
-	return _pSimulation->canBeMovedHere( this, scenePos );
+	return canBeMoved() && _pSimulation->canBeMovedHere( this, scenePos );
+}
+
+// ============================ can be selected =====================
+bool CqItem::canBeSelected() const
+{
+	// only top-level items shoud be selected
+	return ( _flags & Selectable ) && ( physicalParent() == NULL ) && _pSimulation->canBeSelected( this );
+}
+
+// ================================== can be moved ==================
+bool CqItem::canBeMoved() const
+{
+	return ( _flags & Movable ) && _pSimulation->canBeMoved( this );
+}
+
+// ==================================== can be rotated ==============
+bool CqItem::canBeRotated() const
+{
+	return ( _flags && Rotatable ) && _pSimulation->canBeRotated( this );
 }
 
 // ============================== set physical pos ===============
@@ -130,6 +153,12 @@ QList< CqItem* > CqItem::physicalChildren()
 CqItem* CqItem::physicalParent()
 {
 	return dynamic_cast< CqItem* >( parentItem() );
+}
+
+// ============================== physical parent (const) ======================
+const CqItem* CqItem::physicalParent() const
+{
+	return dynamic_cast< const CqItem* >( parentItem() );
 }
 
 // ======================= set rotation [radians] ==========================
@@ -198,6 +227,19 @@ void CqItem::updatePhysicalPos()
 		pChild->updatePhysicalPos();
 	}
 	
+}
+
+// ================================ set world ===================================
+void CqItem::setWorld ( CqWorld* pWorld )
+{
+	_pWorld = pWorld;
+
+	QList< CqItem* > children = physicalChildren();
+	
+	foreach( CqItem* pItem, children )
+	{
+		pItem->setWorld( pItem );
+	}	
 }
 
 // EOF

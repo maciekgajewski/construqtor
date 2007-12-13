@@ -36,7 +36,7 @@
       <version>4</version>
       <includestyle>4</includestyle>
       <designerintegration>ExternalDesigner</designerintegration>
-      <qmake>/usr/local/Trolltech/Qt-4.3.0/bin/qmake</qmake>
+      <qmake>/usr/bin/qmake-qt4</qmake>
       <designer>/usr/bin/designer-qt4</designer>
       <root>/usr/lib/qt4</root>
       <designerpluginpaths/>
@@ -63,6 +63,8 @@
       <usePermanentCaching>true</usePermanentCaching>
       <alwaysIncludeNamespaces>false</alwaysIncludeNamespaces>
       <includePaths>.;</includePaths>
+      <parseMissingHeadersExperimental>false</parseMissingHeadersExperimental>
+      <resolveIncludePathsUsingMakeExperimental>false</resolveIncludePathsUsingMakeExperimental>
     </codecompletion>
     <creategettersetter>
       <prefixGet/>
@@ -77,9 +79,7 @@
       <synchronize>true</synchronize>
       <orientation>Vertical</orientation>
     </splitheadersource>
-    <references>
-      <pcs>Qt4</pcs>
-    </references>
+    <references/>
   </kdevcppsupport>
   <kdevdoctreeview>
     <ignoretocs>
@@ -131,6 +131,7 @@
       <configGdbScript/>
       <runShellScript/>
       <runGdbScript/>
+      <raiseGDBOnStart>false</raiseGDBOnStart>
     </general>
     <display>
       <staticmembers>false</staticmembers>
@@ -141,7 +142,7 @@
   </kdevdebugger>
   <kdevtrollproject>
     <run>
-      <mainprogram>/home/maciek/projekty/qrayon/bin/construqtor</mainprogram>
+      <mainprogram>/home/gajewskim/src/qrayon/bin/construqtor</mainprogram>
       <programargs/>
       <directoryradio>executable</directoryradio>
       <runarguments>
@@ -166,9 +167,7 @@
       <autocompile>false</autocompile>
       <autoinstall>false</autoinstall>
       <autokdesu>false</autokdesu>
-      <envvars>
-        <envvar value="/usr/local/Trolltech/Qt-4.3.0/lib" name="LD_LIBRARY_PATH" />
-      </envvars>
+      <envvars/>
     </run>
     <general>
       <activedir>construqtor</activedir>
@@ -186,6 +185,7 @@
       <savebehaviour>2</savebehaviour>
       <replacePaths>false</replacePaths>
       <disableDefaultOpts>true</disableDefaultOpts>
+      <enableFilenamesOnly>false</enableFilenamesOnly>
     </qmake>
     <subclassing/>
   </kdevtrollproject>
@@ -204,8 +204,9 @@
   </kdevfilecreate>
   <kdevdocumentation>
     <projectdoc>
-      <docsystem>Doxygen Documentation Collection</docsystem>
+      <docsystem>Kolekcja dokumentacji programu Doxygen</docsystem>
       <docurl>physics.tag</docurl>
+      <usermanualurl/>
     </projectdoc>
   </kdevdocumentation>
   <substmap>

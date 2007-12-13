@@ -28,6 +28,12 @@ CqWheel::CqWheel( double diameter ) : CqPhysicalDisk()
 	setDiameter( diameter );
 }
 
+// ============================== constructor ===============
+CqWheel::CqWheel( QGraphicsItem* parent ) : CqPhysicalDisk( parent )
+{
+	setDiameter( 0.0 );
+}
+
 // ============================ destructor ==================
 CqWheel::~CqWheel()
 {
