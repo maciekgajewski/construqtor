@@ -37,6 +37,7 @@ MainWindow::MainWindow(QWidget *parent)
 // =========================== start =======================
 void MainWindow::on_buttonStart_clicked()
 {
+	simulationStarted();
 	simulation->start();
 }
 
@@ -44,6 +45,29 @@ void MainWindow::on_buttonStart_clicked()
 void MainWindow::on_buttonStop_clicked()
 {
 	simulation->stop();
+	simulationPaused();
+}
+
+// ================================= on start =============
+void MainWindow::simulationStarted()
+{
+	buttonGirder100->setEnabled(false);
+	buttonGirder200->setEnabled(false);
+	buttonGirder300->setEnabled(false);
+	buttonNail->setEnabled(false);
+	buttonWheel40->setEnabled(false);
+	buttonWheel80->setEnabled(false);
+}
+
+// =================================== on stop ============
+void MainWindow::simulationPaused()
+{
+	buttonGirder100->setEnabled(true);
+	buttonGirder200->setEnabled(true);
+	buttonGirder300->setEnabled(true);
+	buttonNail->setEnabled(true);
+	buttonWheel40->setEnabled(true);
+	buttonWheel80->setEnabled(true);
 }
 
 // =========================== pointer pos  =======================

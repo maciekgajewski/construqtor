@@ -35,6 +35,7 @@ CqPhysicalBody::CqPhysicalBody( QGraphicsItem* parent, CqWorld* world )
 	setWorld( world );
 }
 
+// ========================== constructor =================================
 CqPhysicalBody::CqPhysicalBody( CqWorld* world )
 	: CqItem( NULL )
 {
