@@ -34,18 +34,16 @@ CqGirder::~CqGirder()
 	// nope
 }
 
-// ======================== can be selected =============
-bool CqGirder::canBeSelected() const
-{
-	// of course, id simulation permits
-	return simulation()->canBeSelected( this );
-}
-
 // ========================= can be moved ================
 bool CqGirder::canBeMoved() const
 {
 	// if there is no joins, then yes
 	return _joints.empty()  && simulation()->canBeMoved( this );
+}
+
+// ========================= can be rotated ================
+bool CqGirder::canBeRotated() const
+{
 }
 
 // EOF

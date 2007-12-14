@@ -215,7 +215,12 @@ void MainView::unselectAll()
 	QList<QGraphicsItem *> itemList = items();
 	foreach( QGraphicsItem* pItem, itemList )
 	{
-		pItem->setSelected( false );
+		CqItem* pCqItem = dynamic_cast<CqItem*>( pItem );
+		
+		if ( pCqItem )
+		{
+			pCqItem->setSelected( false );
+		}
 	}
 	
 	// destroy editor
