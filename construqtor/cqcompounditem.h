@@ -37,6 +37,7 @@ public:
 	void addChild( CqItem* pChild );
 	virtual void setWorld ( CqWorld* pWorld );			///< Sets world
 	virtual void setSelected( bool selected );			///< Selects
+	virtual void setSimulation( CqSimulation* pSimulation );
 					
 	/// Return list of CqItem children
 	QList< CqItem* > physicalChildren(){ return _children; }
@@ -48,6 +49,14 @@ public:
 	
 	virtual void updatePhysicalPos();
 	
+	// followed child
+	void setFollowedChild( CqItem* child ){ _followedChild = child; }
+	CqItem* followedChild() { return _followedChild; }
+	const CqItem* followedChild() const { return _followedChild; }
+	
+	// signals from simulation
+	virtual void updatePosToPhysical();		///< Updates position and rotation to physical
+
 private:
 
 	// methods
@@ -56,7 +65,8 @@ private:
 	
 	// data
 	
-	QList<CqItem*> _children;						///< Child items
+	QList<CqItem*> 	_children;						///< Child items
+	CqItem*			_followedChild;					///< Followed child. ITem with follow this child
 };
 
 #endif // CQCOMPOUNDITEM_H

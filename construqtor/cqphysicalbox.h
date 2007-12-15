@@ -48,9 +48,7 @@ public:
 		, QWidget * widget = 0 );
 		
     virtual QRectF boundingRect() const;
-    virtual QPainterPath shape() const;
-	
-	virtual CqPhysicalBody* bodyHere( const QPointF& scenePoint ) { return this; }
+	virtual CqPhysicalBody* bodyHere( const QPointF& /*worldPoint*/ ) { return this; }
 	
 protected:
 

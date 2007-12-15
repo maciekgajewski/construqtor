@@ -21,13 +21,13 @@
 #define CQWHEELWITHENGINE_H
 
 // Local
-#include "cqphysicalbox.h"
+#include "cqgirder.h"
 #include "cqwheel.h"
 #include "cqrevolutejoint.h"
 #include "cqcompounditem.h"
 
 /**
-	 complex item. Consist of 'motor' and 'wheel' conected wityh motorized
+	 Compound item. Consist of 'motor' and 'wheel' conected wityh motorized
 	 revolute joint.
 	 
 	@author Maciek Gajewski <maciej.gajewski0@gmail.com>
@@ -39,11 +39,10 @@ public:
 	virtual ~CqWheelWithEngine();
 	
 	/// If connection (nail/bolt/...) can be attached at this point
-	virtual bool canConnectHere( const QPointF& scenePoint );
+	virtual bool canConnectHere( const QPointF& worldPoint );
 	/// Physical body connected to joint in this location
 	virtual CqPhysicalBody* bodyHere( const QPointF& scenePoint );
 
-	
 private:
 
 	class Motor : public CqRevoluteJoint
@@ -70,7 +69,7 @@ private:
 	
 	// data
 	
-	CqPhysicalBox*	_pEngine;		///< Engine sub-element
+	CqGirder*		_pEngine;		///< Engine sub-element
 	CqWheel*		_pWheel;		///< Wheel sub-element
 	Motor*			_pMotor;		///< Motorized revolute joint
 	

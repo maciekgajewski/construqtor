@@ -38,8 +38,8 @@ class CqItem : public QGraphicsItem
 {
 public:
 
-	// flags
-	enum ItemFlag {
+	/// Flags describing editing this item
+	enum EditorFlag {
 		Selectable		=	0x1,			//< Item can be selected
 		Movable			=	0x2,			//< Item can be moved
 		Rotatable		=	0x4				//< Item can be rotated
@@ -49,14 +49,13 @@ public:
 	CqItem( QGraphicsItem* parent = NULL );
 	virtual ~CqItem();
 	
-	
 	// signals form simulation
 	virtual void simulationStep();						///< Called after simulation step
 	virtual void simulationStarted();					///< Caled when simulatio is started
 	virtual void simulationStopped();					///< Caled when simulatio is started
 	
 	// properties
-	void setSimulation( CqSimulation* pSimulation ) { _pSimulation = pSimulation; }
+	virtual void setSimulation( CqSimulation* pSimulation ) { _pSimulation = pSimulation; }
 	CqSimulation* simulation() { return _pSimulation; }
 	const CqSimulation* simulation() const { return _pSimulation; }
 	
@@ -66,8 +65,8 @@ public:
 	virtual void setRotationRadians( double radians );	///< sets rotation in radians
 	virtual double rotationRadians() const { return _rotation; } ///< Retuens rotation
 	
-	int cqFlags() const { return _flags; }				///< Retuns flags
-	void setCqFlags( int flags ) { _flags = flags; }	///< Sets flags
+	int editorFlags() const { return _flags; }				///< Retuns flags
+	void setEditorFlags( int flags ) { _flags = flags; }	///< Sets flags
 	
 	virtual void setSelected( bool selected );
 	bool selected() const { return _selected; }
@@ -96,9 +95,9 @@ public:
 	// geometrical properties
 	
 	/// If connection (nail/bolt/...) can be attached at this point
-	virtual bool canConnectHere( const QPointF& scenePoint ) { return false; }
+	virtual bool canConnectHere( const QPointF& /*worldPoint*/ ) { return false; }
 	/// Physical body connected to joint in this location
-	virtual CqPhysicalBody* bodyHere( const QPointF& scenePoint ) { return NULL; }
+	virtual CqPhysicalBody* bodyHere( const QPointF& /*worldPoint*/ ) { return NULL; }
 	
 	// child / parent relationship
 	CqItem* physicalParent(){ return _pPhysicalParent; }
@@ -106,6 +105,7 @@ public:
 	void setPhysicalParent( CqItem* pParent ){ _pPhysicalParent = pParent; }
 	
 	virtual void updatePhysicalPos(){};				///< Updates physical pos to item pos/rotation
+	virtual void updatePosToPhysical(){};			///< Updates item pos to physical pos (after simulation step)
 	
 protected:
 	

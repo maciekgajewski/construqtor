@@ -1,0 +1,46 @@
+Planned features fo first release. Features marked with (low) can be dropped, 
+marked with (ff) are future feature and are not likely to be implemented.
+
+Editor
+[ ] Deleting elements
+[ ] Group selection (ruber band), moving and rotating
+[ ] Rotating elements with one revolute joint (low)
+[ ] Zoom-to-pointer instead of zoom-to center with mouse wheel
+[ ] Scrolling by dragging
+[ ] Ground editor - possinbly separate application (low)
+
+Elements
+[ ] Wheel + engine - different sizes
+[ ] Hydraulic cylinder - different sizes
+[ ] Small rods
+[ ] Wheel with suspension (low)
+[ ] Hinge with motor (low)
+[ ] Winder - two elements connected by rope (low)
+[ ] Box - a "game" element, not editable
+[ ] Pallet - for box
+[ ] Forklift's fork - to carry pallet
+[ ] Bolt - non-rotatable nail
+[ ] Editable small polygonal objects - limited size and propably number of sides (ff)
+[ ] Rocket engine (ff)
+[ ] Spring (ff)
+
+World
+[ ] Polygonanl pody - uses triangulation
+[ ] Controllers - framework for controllnig motorized objects, with UI
+[ ] Random gorund bodym wuth some terrain
+[ ] Some randon stones on ground (low)
+[ ] Saving and loading world state to file  - propably XML
+[ ] Breakable nails / bolts (low)
+[ ] Breakable girdes/rods (ff)
+[ ] Editable area
+[ ] Reset
+
+Controllers
+[ ] Business logic - framework connecting motorized elements with UI. Cotrolling velocity or position
+[ ] Dyamically created UI widgets for each motor
+[ ] UI : input widget - slider or dial
+[ ] UI : displaying of current value agains desired value (low)
+[ ] UI : displaying current torue/force (low)
+[ ] UI : assiging keyboard shortcuts to motors (low)
+[ ] UI : assigning joystick actions to motors (ff)
+

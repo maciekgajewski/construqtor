@@ -28,14 +28,14 @@
 CqNail::CqNail( CqWorld* world  )
 	: CqRevoluteJoint(world)
 {
-	// nope
+	init();
 }
 
 // ========================= construction ======================
 CqNail::CqNail( QGraphicsItem* parent, CqWorld* world  )
 	:CqRevoluteJoint( parent, world )
 {
-	// nope
+	init();
 }
 
 // ========================= destruction ======================
@@ -44,20 +44,24 @@ CqNail::~CqNail()
 	// nope
 }
 
+// =========================== init ===========================
+void CqNail::init()
+{
+	setZValue( 2.0 );
+}
+
 // ========================= paint ======================
 void CqNail::paint
 	( QPainter * painter
-	, const QStyleOptionGraphicsItem * option
-	, QWidget * widget)
+	, const QStyleOptionGraphicsItem * /*option*/
+	, QWidget * /*widget*/)
 {
-	//painter->drawEllipse( QRectF( pos() - QPointF( 0.01, 0.01 ), QSizeF( 0.02, 0.02 ) ) );
 	painter->drawEllipse( QRectF( - QPointF( 0.01, 0.01 ), QSizeF( 0.02, 0.02 ) ) );
 }
 	
 // ========================= bounding rect ======================
 QRectF CqNail::boundingRect() const
 {
-	//return QRectF( pos() - QPointF( 0.2, 0.2 ), QSizeF( 0.4, 0.4 ) );
 	return QRectF( - QPointF( 0.2, 0.2 ), QSizeF( 0.4, 0.4 ) );
 }
 

@@ -42,7 +42,11 @@ public:
 		, const QStyleOptionGraphicsItem * option
 		, QWidget * widget = 0 );
 		
-    virtual QRectF boundingRect() const;
+	virtual QRectF boundingRect() const;
+
+private:
+
+	void init();
 
 };
 

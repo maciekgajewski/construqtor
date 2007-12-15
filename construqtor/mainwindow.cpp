@@ -21,6 +21,7 @@
 #include "cqnail.h"
 #include "cqgirder.h"
 #include "cqwheel.h"
+#include "cqwheelwithengine.h"
 
 #include "mainwindow.h"
 
@@ -118,5 +119,13 @@ void MainWindow::on_buttonWheel80_clicked()
 	view->toolAddObject( pWheel );
 }
 
+// ============================= Wheel with engine =======================
+void MainWindow::on_buttonWwE_clicked()
+{
+	CqWheelWithEngine* pWwE = new CqWheelWithEngine( 0.80 );
+	view->toolAddObject( pWwE );
+}
+
 
 // EOF
+

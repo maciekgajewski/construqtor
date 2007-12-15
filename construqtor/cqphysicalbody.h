@@ -76,8 +76,8 @@ public:
 	
 	// signals from simulation
 	
-	void simulationStep();					///< Called after simulation step
-	void assureBodyCreated();				///< Makes sure that body was created
+	virtual void updatePosToPhysical();		///< Updates position and rotation to physical
+	virtual void assureBodyCreated();		///< Makes sure that body was created
 	virtual void updatePhysicalPos();		///< Updates body pos to item positon/rotation
 	
 	// signals from joint

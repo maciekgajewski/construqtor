@@ -46,6 +46,7 @@ CeEditorItem::CeEditorItem( CqItem* pItem )
 	_pRotateHandler	= NULL;
 	createHandles();
 	setPos( 0, 0); // sit exactly on edited item
+	setZValue( 10.0 ); // TODO manage layers or what
 }
 
 
@@ -171,9 +172,19 @@ void CeEditorItem::RotateHandler::adjustPosToAngle()
 	Q_ASSERT( _pItem );
 	
 	double angle = _pItem->rotationRadians();
-	QPointF newPos = QPointF( CeEditorItem::SIZE * cos( angle) / 2, CeEditorItem::SIZE * sin( angle ) / 2 );
 	
-	setPos( newPos );
+	// 
+	// TODO remove, don't move. rotate instead
+	//QPointF newPos = QPointF( CeEditorItem::SIZE * cos( angle) / 2, CeEditorItem::SIZE * sin( angle ) / 2 );
+	//setPos( newPos );
+	
+	setPos( CeEditorItem::SIZE / 2.0, 0 );
+	
+	/* TODO abandoned
+	QTransform t;
+	t.rotateRadians( -angle );
+	parentItem()->setTransform( t );
+	*/
 }
 
 // =========================== Rotate Hndler: paint ==================================
@@ -198,8 +209,13 @@ void CeEditorItem::RotateHandler::mouseMoveEvent ( QGraphicsSceneMouseEvent * pE
 {
 	if ( _dragging )
 	{
-		QPointF parentPos = mapToParent( pEvent->pos() );
-		double angle = atan2( parentPos.y(), parentPos.x() );
+		Q_ASSERT( _pItem );
+		
+		QPointF pointerPos	= mapToScene( pEvent->pos() );
+		QPointF pivot		= _pItem->scenePos();
+		
+		
+		double angle = atan2( (pivot-pointerPos).y(), (pivot-pointerPos).x() );
 		
 		_pItem->setPhysicalRotation( angle );
 		adjustPosToAngle();

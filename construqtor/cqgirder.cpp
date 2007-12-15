@@ -26,6 +26,7 @@
 CqGirder::CqGirder( double length, double width ) : CqPhysicalBox()
 {
 	setSize( QSizeF(length, width) );
+	setEditorFlags( editorFlags() | Selectable | Movable | Rotatable );
 }
 
 // ============================ destructor ==================
@@ -38,12 +39,14 @@ CqGirder::~CqGirder()
 bool CqGirder::canBeMoved() const
 {
 	// if there is no joins, then yes
-	return _joints.empty()  && simulation()->canBeMoved( this );
+	return _joints.empty()  && CqPhysicalBox::canBeMoved();
 }
 
 // ========================= can be rotated ================
 bool CqGirder::canBeRotated() const
 {
+	// if there is no joins, then yes
+	return _joints.empty()  && CqPhysicalBox::canBeRotated();
 }
 
 // EOF

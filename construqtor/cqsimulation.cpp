@@ -107,7 +107,7 @@ void CqSimulation::simulationTimerTimeout()
 	{
 		CqItem* pBody = dynamic_cast<CqItem*>( pItem );
 		
-		if ( pBody )
+		if ( pBody && pBody->physicalParent() == NULL ) // only top-level items
 		{
 			pBody->simulationStep();
 		}

@@ -50,6 +50,8 @@ public slots:
 	
 	void on_buttonNail_clicked();
 	
+	void on_buttonWwE_clicked();
+	
 	void scenePointerPos( double x, double y );
 	
 	void simulationStarted();
