@@ -1,0 +1,8 @@
+This is qrayon's source code
+
+subdirectories:
+- construqtor - main app
+- src - qrayon source
+- bin - output files
+- box2d - verbatim copy of Box2D 1.4.3 (http://www.box2d.org)
+- gpc - verbatim copy of GPC polygon clipping library 2.32. (http://www.cs.man.ac.uk/~toby/alan/software/)
