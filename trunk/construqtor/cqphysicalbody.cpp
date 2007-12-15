@@ -54,7 +54,7 @@ void CqPhysicalBody::init()
 	_pBody = NULL;
 	
 	// make rotatable
-	setCqFlags( cqFlags() | Rotatable );
+	setEditorFlags( editorFlags() | Rotatable );
 }
 
 // =========================== set world ===================================
@@ -93,8 +93,8 @@ void CqPhysicalBody::createBody( CqWorld* pWorld )
 	bodyDef.userData = this;
 	
 	// damping TODO: experimental
-	bodyDef.linearDamping	= 0.01;
-	bodyDef.angularDamping	= 0.01;
+	bodyDef.linearDamping	= 0.002;
+	bodyDef.angularDamping	= 0.002;
 	
 	// create body
 	_pBody = pWorld->CreateBody(&bodyDef);
@@ -110,14 +110,9 @@ void CqPhysicalBody::createBody( CqWorld* pWorld )
 	
 }
 
-// =========================== simulaton step ===================================
-/// Called by simulation after each simulation step.
-/// Updates Grpahics ITem position and rotation to body's
-void CqPhysicalBody::simulationStep()
+// =========================== update to physical ===================================
+void CqPhysicalBody::updatePosToPhysical()
 {
-	// call inherited
-	CqItem::simulationStep();
-	
 	if ( _pBody )
 	{
 		b2Vec2		b2pos		= _pBody->GetCenterPosition();
@@ -178,13 +173,8 @@ void CqPhysicalBody::updatePhysicalPos()
 	CqItem::updatePhysicalPos();
 	if ( _pBody )
 	{
-		// translate coords to physical
-		//QPointF pp	= mapToWorld( pos() );
-		//double r	= mapToWorld( rotationRadians() );
-		
 		QPointF pp	= worldPos();
 		double r	= worldRotation();
-
 		
 		_pBody->SetCenterPosition( b2Vec2( pp.x(), pp.y() ), r );
 		update();

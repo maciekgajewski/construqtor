@@ -52,7 +52,7 @@ public:
     virtual QPainterPath shape() const;
 	
 	/// Returns body under poitn - single body everywhere
-	virtual CqPhysicalBody* bodyHere( const QPointF& scenePoint ) { return this; }
+	virtual CqPhysicalBody* bodyHere( const QPointF& /*worldPoint*/ ) { return this; }
 	
 protected:
 

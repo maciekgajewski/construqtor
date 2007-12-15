@@ -308,7 +308,7 @@ void MainView::toolAddObject( CqItem* pItem )
 }
 
 // ============================ show event ==============================
-void MainView::showEvent( QShowEvent* pEvent )
+void MainView::showEvent( QShowEvent* /*pEvent*/ )
 {
 	ensureVisible( -6, 1, 8, 8 );
 }
@@ -323,12 +323,14 @@ bool MainView::canAddNail( const QPointF& point ) const
 	foreach( QGraphicsItem* pItem, itemsHere )
 	{
 		CqItem* pCqItem = dynamic_cast<CqItem*>( pItem );
-		if ( pCqItem && pCqItem->canConnectHere( point ) )
+		// connect only top-level items
+		if ( pCqItem && ( pCqItem->physicalParent() == NULL ) && pCqItem->canConnectHere( point ) )
 		{
 			iNailableHere++;
 		}
 	}
 	
+	//qDebug("nailable here: %d", iNailableHere ); // TODO remove
 	return iNailableHere == 2;
 }
 
@@ -350,7 +352,7 @@ void MainView::addNail( QPointF& point, CqRevoluteJoint* pNail )
 		}
 		
 		CqItem* pCqItem = dynamic_cast<CqItem*>( pItem );
-		if ( pCqItem && pCqItem->canConnectHere( point ) )
+		if ( pCqItem && ( pCqItem->physicalParent() ==  NULL ) && pCqItem->canConnectHere( point ) )
 		{
 			pBody[ iNailableHere++ ] = pCqItem->bodyHere( point );
 		}
@@ -359,7 +361,7 @@ void MainView::addNail( QPointF& point, CqRevoluteJoint* pNail )
 	
 	// create nail
 	pNail->setConnectedBodies( pBody[0], pBody[1] );
-	pNail->setAnchorPoint( point );
+	pNail->setWorldPos( point );
 	_pSimulation->addItem( pNail );
 	
 }

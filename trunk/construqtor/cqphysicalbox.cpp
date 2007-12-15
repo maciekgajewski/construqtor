@@ -81,12 +81,7 @@ void CqPhysicalBox::paint
 	, const QStyleOptionGraphicsItem * /*pOption*/
 	, QWidget * /*pWidget*/ )
 {
-	QTransform t;
-	t.rotateRadians( rotationRadians() );
-	
 	QRectF box = QRectF( QPointF( - _size.width()/2.0, - _size.height()/2.0), _size );
-	QPolygonF rotatedBox = t.map( QPolygonF( box ) );
-	
 	
 	// simple selection indicator
 	QBrush b = brush();
@@ -97,49 +92,24 @@ void CqPhysicalBox::paint
 	
 	pPainter->setPen( pen() );
 	pPainter->setBrush( b );
-	pPainter->drawPolygon( rotatedBox );
+	pPainter->drawRect( box );
 }
 
 
 // ======================== bounding rect  ==================
 QRectF CqPhysicalBox::boundingRect() const
 {
-	QTransform t;
-	t.rotateRadians( rotationRadians() );
-	
-	QRectF box = QRectF
+	QSizeF bbs = _size * 1.1; // enlarge size a bit
+	return QRectF
 		( QPointF
 			( - _size.width()/2.0
 			, - _size.height()/2.0
 			)
 		, _size
 		);
-	QPolygonF rotatedBox = t.map( QPolygonF( box ) );
 	
-	return rotatedBox.boundingRect();
 }
 
-// ============================== shape ==============================
-QPainterPath CqPhysicalBox::shape() const
-{
-	QTransform t;
-	t.rotateRadians( rotationRadians() );
-	
-	QRectF box = QRectF
-		( QPointF
-			( - _size.width()/2.0
-			, - _size.height()/2.0
-			)
-		, _size
-		);
-	QPolygonF rotatedBox = t.map( QPolygonF( box ) );
-	
-	QPainterPath path;
-	path.addPolygon( rotatedBox );
-	
-	return path;
-	// TODO optimization idea: cache rotatedBox, update on ratotion
-}
 
 
 // EOF

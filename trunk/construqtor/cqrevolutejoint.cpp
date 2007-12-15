@@ -50,6 +50,7 @@ void CqRevoluteJoint::init()
 {
 	_enableMotor	= false;
 	_enableLimits	= false;
+	_anchorPoint	= QPointF( 0, 0 );
 }
 
 // =========================== create joint ===================
@@ -63,9 +64,13 @@ b2Joint* CqRevoluteJoint::createJoint(CqWorld* pWorld)
 		jointDef.body1 = body1()->b2body();
 		jointDef.body2 = body2()->b2body();
 		
+		Q_ASSERT( jointDef.body1 );
+		Q_ASSERT( jointDef.body2 );
+		
+		
 		jointDef.collideConnected = false;
 		
-		QPointF a = anchorPoint(); // TODO some ptranslation here?
+		QPointF a = mapToWorld( _anchorPoint );
 		jointDef.anchorPoint = b2Vec2( a.x(), a.y() );
 		
 		// motor
@@ -84,28 +89,14 @@ b2Joint* CqRevoluteJoint::createJoint(CqWorld* pWorld)
 	return NULL;
 }
 
-// ===========================set anchor ===================
-void CqRevoluteJoint::setAnchorPoint( const QPointF& point )
-{
-	setPos( point );
-}
-
-// =========================== get anchor ==================
-QPointF CqRevoluteJoint::anchorPoint() const
-{
-	return pos();
-}
-
-// =========================== simulation step ==================
-void CqRevoluteJoint::simulationStep()
+// ======================== update pos to physical ================
+void CqRevoluteJoint::updatePosToPhysical()
 {
 	if ( b2joint() )
 	{
 		b2RevoluteJoint* pJoint = (b2RevoluteJoint*)b2joint();
-		
 		b2Vec2 pos = pJoint->GetAnchor1();
-		
-		setWorldPos( QPointF(pos.x, pos.y) );
+		setWorldPos( QPointF(pos.x, pos.y) - _anchorPoint );
 	}
 }
 

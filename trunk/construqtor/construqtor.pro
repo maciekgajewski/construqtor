@@ -61,3 +61,5 @@ LIBS += ../box2d/libbox2d.a
 
 TARGETDEPS += ../box2d/libbox2d.a
 
+DISTFILES += FETUREPLAN
+

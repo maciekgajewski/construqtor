@@ -38,9 +38,13 @@ public:
 	virtual ~CqWheel();
 	
 	// editor flags
-	virtual bool canBeSelected() const;
 	virtual bool canBeMoved() const;
-	virtual bool canConnectHere( const QPointF& scenePoint ) { return true; } // connect on entire surface
+	virtual bool canBeRotated() const;
+	virtual bool canConnectHere( const QPointF& /*worldPoint*/ ) { return true; } // connect on entire surface
+
+private:
+
+	void init();
 };
 
 

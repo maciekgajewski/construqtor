@@ -44,39 +44,51 @@ void CqWheelWithEngine::init()
 {
 	// init wheel
 	_pWheel = new CqWheel( _wheelDiameter );
-	_pWheel->setCqFlags( _pWheel->flags() & ~Selectable );
+	_pWheel->setEditorFlags( _pWheel->editorFlags() & ~Selectable );
+	_pWheel->setZValue( 0.7 );
 	
 	// init engine
-	_pEngine = new CqPhysicalBox();
-	_pEngine->setSize( QSizeF( _wheelDiameter / 4, _wheelDiameter /2 ) );
+	_pEngine = new CqGirder(_wheelDiameter / 2, _wheelDiameter );
 	_pEngine->setPos( 0, _wheelDiameter * 0.4 );
+	_pEngine->setBrush( QColor( 0x80, 0x80, 0x80, 0x80 ) ); // semitransparent gray
+	_pEngine->setMaterial( CqMaterial( 5.0, 0.2, 0.1 ) );
+	_pEngine->setZValue( 0.5 );
 	
 	// init joint
 	_pMotor = new Motor();
 	_pMotor->setAnchorPoint( QPointF(0,0) );
 	_pMotor->setConnectedBodies( _pWheel,  _pEngine );
 	_pMotor->setMotorEnabled( true, 1.0, 10.0 );
+	_pMotor->setZValue( 0.9 );
 	
 	addChild( _pWheel );
 	addChild( _pMotor );
-	addChild( _pWheel );
+	addChild( _pEngine );
+	
+	setFollowedChild( _pMotor );
 	
 	// flags
-	setCqFlags( cqFlags() | Selectable | Movable | Rotatable );
+	setEditorFlags( editorFlags() | Selectable | Movable | Rotatable );
 	
 }
 
 // ======================== constructor ===================
-CqPhysicalBody* CqWheelWithEngine::bodyHere( const QPointF& /*scenePoint*/ )
+CqPhysicalBody* CqWheelWithEngine::bodyHere( const QPointF& worldPoint )
 {
-	// TODO
+	if ( _pEngine->contains( _pEngine->mapFromWorld( worldPoint ) ) )
+	{
+		return _pEngine;
+	}
+	
 	return NULL;
 }
 
 // =========================== can connect here ===================
-bool CqWheelWithEngine::canConnectHere( const QPointF& scenePoint )
+bool CqWheelWithEngine::canConnectHere( const QPointF& worldPoint )
 {
-	return false;
+	Q_ASSERT( _pEngine );
+	QPointF enginePoint = _pEngine->mapFromWorld( worldPoint );
+	bool contains =  _pEngine->contains( enginePoint );
 }
 
 // ======================== Motor : constructor ============

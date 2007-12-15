@@ -55,7 +55,8 @@ void CqItem::init()
 // =========================== simulation step ===================
 void CqItem::simulationStep()
 {
-	// nothing here
+	updatePosToPhysical();
+	// TODO split these two
 }
 
 // =========================== simulationstarted ===================
@@ -141,6 +142,9 @@ void CqItem::setRotationRadians( double radians )
 	{
 		prepareGeometryChange();
 		_rotation = radians;
+		QTransform t;
+		t.rotateRadians( _rotation );
+		setTransform( t );
 	}
 }
 
@@ -194,21 +198,16 @@ void CqItem::setWorld ( CqWorld* pWorld )
 {
 	_pWorld = pWorld;
 
-	/* TODO move to compound item
-	QList< CqItem* > children = physicalChildren();
-	
-	foreach( CqItem* pItem, children )
-	{
-		pItem->setWorld( pWorld );
-	}
-	*/
 }
 
 // ============================== set selected =============================
 void CqItem::setSelected( bool selected )
 {
-	_selected = selected;
-	update();
+	if ( _selected != selected )
+	{
+		_selected = selected;
+		update();
+	}
 }
 
 // ============================== world pos =========================
@@ -240,7 +239,8 @@ void CqItem::setWorldPos( const QPointF pos )
 {
 	if ( _pPhysicalParent )
 	{
-		setPos( _pPhysicalParent->mapFromWorld( pos ) );
+		QPointF p = _pPhysicalParent->mapFromWorld( pos );
+		setPos( p );
 	}
 	else
 	{

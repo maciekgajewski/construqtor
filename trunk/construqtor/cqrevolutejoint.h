@@ -39,8 +39,10 @@ public:
 	
 	// properties
 	
-	void setAnchorPoint( const QPointF& point );	///< Sets anchor point
-	QPointF anchorPoint() const;					///< Returns anchor point
+	/// Sets anchor point (in local coords)
+	void setAnchorPoint( const QPointF& point ) { _anchorPoint = point; }
+	/// Returns anchor point (in local coords)
+	QPointF anchorPoint() const { return _anchorPoint; }
 	/// Enables and configures motor
 	void setMotorEnabled( bool enabled, double speed, double torque );
 	/// Enables and configures motor limits
@@ -48,15 +50,17 @@ public:
 
 	// signal from simulation
 
-	virtual void simulationStep();			///< Called after simulation step
+	virtual void updatePosToPhysical();		///< Updates position and rotation to physical
 
 protected:
 
 	// methods
 	void init();
 	
-	
     virtual b2Joint* createJoint( CqWorld* pWorld );	///< Creates joint
+		
+		
+	QPointF	_anchorPoint;							///< Anchor point, in local coords
 		
 	// motor specfication
 	bool	_enableMotor;							///< Flag - create joint with motor

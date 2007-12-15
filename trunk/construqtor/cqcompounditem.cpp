@@ -37,7 +37,7 @@ CqCompoundItem::~CqCompoundItem()
 // ================================== init =====================
 void CqCompoundItem::init()
 {
-	// none
+	_followedChild = NULL;
 }
 
 // =============================== add child =====================
@@ -46,7 +46,7 @@ void CqCompoundItem::addChild( CqItem* pChild )
 	Q_ASSERT( pChild );
 	
 	// sanitize child
-	pChild->setCqFlags( pChild->cqFlags() & ~Selectable );
+	pChild->setEditorFlags( pChild->editorFlags() & ~Selectable );
 	
 	// make QGraphicsITem child
 	pChild->setParentItem( this );
@@ -56,6 +56,16 @@ void CqCompoundItem::addChild( CqItem* pChild )
 	
 	// introduce yourself to the child: "Luke, I am your father"
 	pChild->setPhysicalParent( this );
+	
+	// if world and/or simulation know, show it to the children
+	if ( world() )
+	{
+		pChild->setWorld( world() );
+	}
+	if ( simulation() )
+	{
+		pChild->setSimulation( simulation() );
+	}
 }
 
 // =============================== set world ====================
@@ -109,10 +119,13 @@ QPainterPath CqCompoundItem::shape() const
 	
 	foreach ( CqItem* pChild, _children )
 	{
+		QMatrix m;
+		m.translate( pChild->pos().x(), pChild->pos().y() );
 		QPainterPath childShape = pChild->shape();
-		s.moveTo( pChild->pos() );
-		s.addPath( childShape );
+		s.addPath( m.map( childShape ) );
 	}
+	
+	s.setFillRule( Qt::WindingFill ); // fille entire shape
 	
 	return s;
 }
@@ -123,14 +136,55 @@ void CqCompoundItem::updatePhysicalPos()
 	CqItem::updatePhysicalPos();
 	
 	// update children
-	
 	foreach( CqItem* pChild, _children )
 	{
 		pChild->updatePhysicalPos();
 	}
-	
 }
 
+// ================================== update pos to physical =====================
+void CqCompoundItem::updatePosToPhysical()
+{
+	CqItem::updatePosToPhysical();
+	
+	// first - update followed child (if any)
+	if ( _followedChild )
+	{
+		QPointF posBefore = _followedChild->pos(); // position before updating
+		QPointF posBeforeInParent = mapToParent( posBefore );
+		_followedChild->updatePosToPhysical();
+		QPointF posAfterInParent = mapToParent( _followedChild->pos() );
+		
+		QPointF diff = posAfterInParent - posBeforeInParent;
+		// follow child
+		moveBy( diff.x(), diff.y() );
+		
+		// put child back on start pos
+		_followedChild->setPos( posBefore );
+	}
+	
+	// update children
+	foreach( CqItem* pChild, _children )
+	{
+		if ( pChild != _followedChild ) // omit follwoed child
+		{
+			pChild->updatePosToPhysical();
+		}
+	}
+}
+
+// ================================ set simulation ===============================
+void CqCompoundItem::setSimulation( CqSimulation* pSimulation )
+{
+	CqItem::setSimulation(pSimulation);
+	
+	// update children
+	
+	foreach( CqItem* pChild, _children )
+	{
+		pChild->setSimulation(pSimulation);
+	}
+}
 
 // EOF
 

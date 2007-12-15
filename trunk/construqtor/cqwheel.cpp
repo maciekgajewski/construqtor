@@ -25,12 +25,14 @@
 // ============================== constructor ===============
 CqWheel::CqWheel( double diameter ) : CqPhysicalDisk()
 {
+	init();
 	setDiameter( diameter );
 }
 
 // ============================== constructor ===============
 CqWheel::CqWheel( QGraphicsItem* parent ) : CqPhysicalDisk( parent )
 {
+	init();
 	setDiameter( 0.0 );
 }
 
@@ -40,18 +42,24 @@ CqWheel::~CqWheel()
 	// nope
 }
 
-// ======================== can be selected =============
-bool CqWheel::canBeSelected() const
+// ================================ init ====================
+void CqWheel::init()
 {
-	// of course, id simulation permits
-	return simulation()->canBeSelected( this );
+	setEditorFlags( editorFlags() | Selectable | Movable );
 }
 
 // ========================= can be moved ================
 bool CqWheel::canBeMoved() const
 {
 	// if there is no joins, then yes
-	return _joints.empty()  && simulation()->canBeMoved( this );
+	return _joints.empty()  && CqPhysicalDisk::canBeMoved();
+}
+
+// ========================= can be rotated ================
+bool CqWheel::canBeRotated() const
+{
+	// if there is no joins, then yes
+	return _joints.empty()  && CqPhysicalDisk::canBeRotated();
 }
 
 // EOF

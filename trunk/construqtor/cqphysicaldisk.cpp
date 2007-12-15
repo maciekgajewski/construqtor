@@ -86,7 +86,7 @@ void CqPhysicalDisk::paint
 	
 	// simple selection indicator
 	QBrush b = brush();
-	if ( isSelected() )
+	if ( selected() )
 	{
 		b = Qt::gray;
 	}
