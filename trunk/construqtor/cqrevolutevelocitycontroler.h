@@ -17,72 +17,42 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef CQWHEELWITHENGINE_H
-#define CQWHEELWITHENGINE_H
+#ifndef CQREVOLUTEVELOCITYCONTROLER_H
+#define CQREVOLUTEVELOCITYCONTROLER_H
 
-// Local
-#include "cqgirder.h"
-#include "cqwheel.h"
+// local
+#include "cqmotorcontroller.h"
 #include "cqrevolutejoint.h"
-#include "cqcompounditem.h"
-#include "cqrevolutevelocitycontroler.h"
 
 /**
-	 Compound item. Consist of 'motor' and 'wheel' conected wityh motorized
-	 revolute joint.
-	 
+	Revolute joint motor controller. Controls motor velocity
 	@author Maciek Gajewski <maciej.gajewski0@gmail.com>
 */
-class CqWheelWithEngine : public CqCompoundItem
+class CqRevoluteVelocityControler : public CqMotorController
 {
+Q_OBJECT
 public:
-	CqWheelWithEngine( double wheelDiameter );
-	virtual ~CqWheelWithEngine();
+	CqRevoluteVelocityControler( QObject* parent = NULL );
+	CqRevoluteVelocityControler( CqRevoluteJoint* pJoint, QObject* parent = NULL );
+	virtual ~CqRevoluteVelocityControler();
 	
-	/// If connection (nail/bolt/...) can be attached at this point
-	virtual bool canConnectHere( const QPointF& worldPoint );
-	/// Physical body connected to joint in this location
-	virtual CqPhysicalBody* bodyHere( const QPointF& scenePoint );
+	virtual double getCurrentForce() const;
+	virtual double getCurrentValue() const;
+	virtual double getDesiredValue() const;
+	virtual void setDesiredValue(double value);
 	
-	/// Extends base implementation by adding controller to simulation
-	virtual void setSimulation( CqSimulation* pSimulation );
+	void setJoint( CqRevoluteJoint* pJoint );
+	CqRevoluteJoint* joint() const { return _pJoint; }
 
 private:
 
-	class Motor : public CqRevoluteJoint
-	{
-		public:
-		
-		Motor( CqWheelWithEngine* parent = 0 );
-		virtual ~Motor(){}
-		
-		// operations
-		virtual void paint
-			( QPainter * painter
-			, const QStyleOptionGraphicsItem * option
-			, QWidget * widget = 0 );
-			
-		virtual QRectF boundingRect() const;
-	
-		
-	};
+	void init();
 
-	// methods
-	
-	void init();				///< Init
-	
-	// data
-	
-	CqGirder*		_pEngine;		///< Engine sub-element
-	CqWheel*		_pWheel;		///< Wheel sub-element
-	Motor*			_pMotor;		///< Motorized revolute joint
-	
-	CqRevoluteVelocityControler _controller;	///< Motor controller
-	
-	double _wheelDiameter;
+	CqRevoluteJoint*	_pJoint;
+	double				_desiredVelocity;
 };
 
-#endif // CQWHEELWITHENGINE_H
+#endif // CQREVOLUTEVELOCITYCONTROLER_H
 
 // EOF
 

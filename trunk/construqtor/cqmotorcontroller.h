@@ -17,72 +17,47 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef CQWHEELWITHENGINE_H
-#define CQWHEELWITHENGINE_H
+#ifndef CQMOTORCONTROLLER_H
+#define CQMOTORCONTROLLER_H
 
-// Local
-#include "cqgirder.h"
-#include "cqwheel.h"
-#include "cqrevolutejoint.h"
-#include "cqcompounditem.h"
-#include "cqrevolutevelocitycontroler.h"
+// Qt
+#include <QObject>
 
 /**
-	 Compound item. Consist of 'motor' and 'wheel' conected wityh motorized
-	 revolute joint.
-	 
+	Common interface for al motor controlls. Contains generic methods used by 
+	GUI to query and set motor controller state.
 	@author Maciek Gajewski <maciej.gajewski0@gmail.com>
 */
-class CqWheelWithEngine : public CqCompoundItem
+class CqMotorController : public QObject
 {
+Q_OBJECT
 public:
-	CqWheelWithEngine( double wheelDiameter );
-	virtual ~CqWheelWithEngine();
+	CqMotorController(QObject* parent = NULL);
+	virtual ~CqMotorController();
 	
-	/// If connection (nail/bolt/...) can be attached at this point
-	virtual bool canConnectHere( const QPointF& worldPoint );
-	/// Physical body connected to joint in this location
-	virtual CqPhysicalBody* bodyHere( const QPointF& scenePoint );
+	// controlled value
+	virtual void setDesiredValue( double value ) = 0;
+	virtual double getDesiredValue() const = 0;
+	virtual double getCurrentValue() const = 0;
+	double getMaxValue() const { return _valueMax; }
+	double getMinValue() const { return _valueMin; }
 	
-	/// Extends base implementation by adding controller to simulation
-	virtual void setSimulation( CqSimulation* pSimulation );
+	// force / torque
+	double getMaxForce() const { return _forceMax; }
+	double getMinForce() const { return _forceMin; }
+	virtual double getCurrentForce() const = 0;
+	
+	
+protected:
 
-private:
+	// static parameters, set by derrived classe
+	
+	double _forceMax, _forceMin;			///< force limits
+	double _valueMax, _valueMin;			///< Value limits
 
-	class Motor : public CqRevoluteJoint
-	{
-		public:
-		
-		Motor( CqWheelWithEngine* parent = 0 );
-		virtual ~Motor(){}
-		
-		// operations
-		virtual void paint
-			( QPainter * painter
-			, const QStyleOptionGraphicsItem * option
-			, QWidget * widget = 0 );
-			
-		virtual QRectF boundingRect() const;
-	
-		
-	};
-
-	// methods
-	
-	void init();				///< Init
-	
-	// data
-	
-	CqGirder*		_pEngine;		///< Engine sub-element
-	CqWheel*		_pWheel;		///< Wheel sub-element
-	Motor*			_pMotor;		///< Motorized revolute joint
-	
-	CqRevoluteVelocityControler _controller;	///< Motor controller
-	
-	double _wheelDiameter;
 };
 
-#endif // CQWHEELWITHENGINE_H
+#endif // CQMOTORCONTROLLER_H
 
 // EOF
 

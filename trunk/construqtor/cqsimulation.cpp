@@ -26,10 +26,11 @@
 #include "cqsimulation.h"
 #include "cqnail.h"
 #include "cqphysicalbox.h" 
+#include "cqmotorcontroller.h"
 
 // constants
 static const int SIMULATION_INTERVAL	= 100;	// [ms]
-static const double B2D_SPS				= 30.0;	// Box2D simulation steps per second
+static const double B2D_SPS				= 60.0;	// Box2D simulation steps per second
 
 // ===================== constructor =================
 CqSimulation::CqSimulation(QObject* parent): QObject(parent)
@@ -112,6 +113,8 @@ void CqSimulation::simulationTimerTimeout()
 			pBody->simulationStep();
 		}
 	}
+	
+	emit simulationStep();
 }
 
 // =========================== timer timeout =============
@@ -220,6 +223,26 @@ bool CqSimulation::canAddHere( const CqItem* pItem, const QPointF& pos ) const
 {
 	// TODO 'edit' area here
 	return ! isRunning();
+}
+
+// ============================== cotroller destroyed ==================
+void CqSimulation::controllerDestroyed( QObject* p )
+{
+	_controllers.removeAll( qobject_cast<CqMotorController*>(p) );
+}
+
+// =============================== add controller ========================
+void CqSimulation::addController( CqMotorController* pController )
+{
+	Q_ASSERT( pController );
+	
+	if ( ! _controllers.contains( pController ) )
+	{
+		_controllers.append( pController );
+		connect( pController, SIGNAL(destroyed(QObject*)), SLOT(controllerDestroyed(QObject*)) );
+	
+		emit motorControllerCreated( pController );
+	}
 }
 
 // EOF

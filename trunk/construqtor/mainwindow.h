@@ -23,6 +23,7 @@
 // local
 #include "cqsimulation.h"
 #include "ui_mainwindow.h"
+class CqMotorController;
 
 class MainWindow: public QWidget, public Ui::MainWindow
 {
@@ -30,7 +31,7 @@ Q_OBJECT
 public:
 	MainWindow( QWidget *parent = 0 );
 	
-	CqSimulation* simulation;
+	void setSimulation( CqSimulation* pSimulation );
 	
 public slots:
 	
@@ -56,6 +57,12 @@ public slots:
 	
 	void simulationStarted();
 	void simulationPaused();
+	
+	// signals from simulation
+	void controllerCreated( CqMotorController* pCtrl );
+	
+private:
+	CqSimulation* _pSimulation;
 };
 
 #endif

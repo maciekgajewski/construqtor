@@ -36,7 +36,9 @@ CqWheelWithEngine::CqWheelWithEngine( double wheelDiameter )
 // =========================== destructor ====================
 CqWheelWithEngine::~CqWheelWithEngine()
 {
-	// nothing
+	delete _pWheel;
+	delete _pEngine;
+	delete _pMotor;
 }
 
 // ======================== init ===================
@@ -58,7 +60,7 @@ void CqWheelWithEngine::init()
 	_pMotor = new Motor();
 	_pMotor->setAnchorPoint( QPointF(0,0) );
 	_pMotor->setConnectedBodies( _pWheel,  _pEngine );
-	_pMotor->setMotorEnabled( true, 1.0, 10.0 );
+	_pMotor->setMotorEnabled( true, 50.0, 50.0 );
 	_pMotor->setZValue( 0.9 );
 	
 	addChild( _pWheel );
@@ -70,6 +72,8 @@ void CqWheelWithEngine::init()
 	// flags
 	setEditorFlags( editorFlags() | Selectable | Movable | Rotatable );
 	
+	// controller
+	_controller.setJoint( _pMotor );
 }
 
 // ======================== constructor ===================
@@ -112,6 +116,15 @@ QRectF CqWheelWithEngine::Motor::boundingRect() const
 {
 	// TODO temporary
 	return QRectF( -0.05, -0.05, 0.10, 0.10 );
+}
+
+// ======================= set simualtion ========================
+void CqWheelWithEngine::setSimulation( CqSimulation* pSimulation )
+{
+	Q_ASSERT( pSimulation );
+	CqCompoundItem::setSimulation( pSimulation );
+	
+	pSimulation->addController( &_controller );
 }
 
 // EOF

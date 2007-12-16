@@ -17,9 +17,12 @@ cqgirder.cpp \
 cqphysicaldisk.cpp \
 cqwheel.cpp \
 cqwheelwithengine.cpp \
-cqcompounditem.cpp
-FORMS += mainwindow.ui
-
+cqcompounditem.cpp \
+cqmotorcontroller.cpp \
+cqrevolutevelocitycontroler.cpp \
+controllerwidget.cpp
+FORMS += mainwindow.ui \
+ControllerWidget.ui
 HEADERS += mainwindow.h \
 cqworld.h \
 cqsimulation.h \
@@ -37,7 +40,10 @@ cqgirder.h \
 cqphysicaldisk.h \
 cqwheel.h \
 cqwheelwithengine.h \
-cqcompounditem.h
+cqcompounditem.h \
+cqmotorcontroller.h \
+cqrevolutevelocitycontroler.h \
+controllerwidget.h
 CONFIG += debug \
 qt \
 warn_on \

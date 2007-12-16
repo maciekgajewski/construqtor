@@ -22,6 +22,7 @@
 #include "cqgirder.h"
 #include "cqwheel.h"
 #include "cqwheelwithengine.h"
+#include "controllerwidget.h"
 
 #include "mainwindow.h"
 
@@ -30,7 +31,7 @@ MainWindow::MainWindow(QWidget *parent)
     : QWidget( parent ), Ui::MainWindow()
 {
 	setupUi( this );
-	simulation = NULL;
+	_pSimulation = NULL;
 	
 	connect( view, SIGNAL(pointerPos(double,double)), SLOT(scenePointerPos(double,double)));
 }
@@ -39,13 +40,13 @@ MainWindow::MainWindow(QWidget *parent)
 void MainWindow::on_buttonStart_clicked()
 {
 	simulationStarted();
-	simulation->start();
+	_pSimulation->start();
 }
 
 // =========================== stop =======================
 void MainWindow::on_buttonStop_clicked()
 {
-	simulation->stop();
+	_pSimulation->stop();
 	simulationPaused();
 }
 
@@ -58,6 +59,7 @@ void MainWindow::simulationStarted()
 	buttonNail->setEnabled(false);
 	buttonWheel40->setEnabled(false);
 	buttonWheel80->setEnabled(false);
+	buttonWwE->setEnabled(false);
 }
 
 // =================================== on stop ============
@@ -69,6 +71,7 @@ void MainWindow::simulationPaused()
 	buttonNail->setEnabled(true);
 	buttonWheel40->setEnabled(true);
 	buttonWheel80->setEnabled(true);
+	buttonWwE->setEnabled(true);
 }
 
 // =========================== pointer pos  =======================
@@ -126,6 +129,29 @@ void MainWindow::on_buttonWwE_clicked()
 	view->toolAddObject( pWwE );
 }
 
+// ============================= controller cretaed ========================
+void MainWindow::controllerCreated( CqMotorController* pCtrl )
+{
+	ControllerWidget* pCW = new ControllerWidget( boxControllers );
+	boxControllers->layout()->addWidget( pCW );
+	pCW->setController( pCtrl, _pSimulation );
+	pCW->show();
+	
+	
+}
+
+// ========================== set simulation ==================================
+void MainWindow::setSimulation( CqSimulation* pSimulation )
+{
+	Q_ASSERT( pSimulation );
+	
+	_pSimulation = pSimulation;
+	
+	connect( pSimulation
+		, SIGNAL(motorControllerCreated(CqMotorController*))
+		, SLOT(controllerCreated(CqMotorController*))
+		);
+}
 
 // EOF
 
