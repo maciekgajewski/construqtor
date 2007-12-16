@@ -6,7 +6,7 @@
     <x>0</x>
     <y>0</y>
     <width>699</width>
-    <height>636</height>
+    <height>679</height>
    </rect>
   </property>
   <property name="windowTitle" >
@@ -113,7 +113,14 @@
       </layout>
      </item>
      <item>
-      <widget class="MainView" name="view" />
+      <widget class="MainView" name="view" >
+       <property name="sizePolicy" >
+        <sizepolicy vsizetype="Expanding" hsizetype="Expanding" >
+         <horstretch>5</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>
@@ -140,6 +147,37 @@
       </spacer>
      </item>
     </layout>
+   </item>
+   <item>
+    <widget class="QWidget" native="1" name="boxControllers" >
+     <property name="sizePolicy" >
+      <sizepolicy vsizetype="Fixed" hsizetype="Preferred" >
+       <horstretch>0</horstretch>
+       <verstretch>1</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize" >
+      <size>
+       <width>0</width>
+       <height>100</height>
+      </size>
+     </property>
+     <layout class="QHBoxLayout" >
+      <item>
+       <spacer>
+        <property name="orientation" >
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" >
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
+    </widget>
    </item>
   </layout>
  </widget>

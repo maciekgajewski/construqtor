@@ -30,6 +30,7 @@ class b2World;
 
 // local
 class CqItem;
+class CqMotorController;
 #include "cqworld.h"
 
 /**
@@ -62,15 +63,22 @@ public:
 	bool canBeRotated( const CqItem* pItem ) const;		///< If item can be rotated
 	/// Can item be added here now?
 	bool canAddHere( const CqItem* pItem, const QPointF& pos ) const;
+	
+	void addController( CqMotorController* pController );	///< adds controler ot controller list
 
 signals:
 
 	void simulationStarted();
 	void simulationPaused();
+	
+	void simulationStep();
+	
+	void motorControllerCreated( CqMotorController* );
 
 private slots:
 
 	void simulationTimerTimeout();	///< Timer handler
+	void controllerDestroyed( QObject* p );	///< removes destroyed
 
 private:
 
@@ -85,6 +93,7 @@ private:
 	CqWorld*		_pPhysicalWorld;		///< Physical world
 	QTimer			_simulationTimer;		///< Simulation timer
 	QGraphicsScene	_scene;					///< Simulation scene
+	QList<CqMotorController*>	_controllers;	///< Set of motor controllers
 };
 
 #endif

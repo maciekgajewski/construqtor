@@ -27,7 +27,7 @@ int main(int argc, char *argv[])
 	QApplication app(argc, argv);
 	MainWindow window;
 	CqSimulation simulation;
-	window.simulation = &simulation;
+	window.setSimulation( &simulation );
 	
 	// configure view
 	window.view->setSimulation( &simulation );

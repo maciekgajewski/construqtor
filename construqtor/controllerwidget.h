@@ -17,77 +17,33 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef CQMATERIAL_H
-#define CQMATERIAL_H
+#ifndef CONTROLLERWIDGET_H
+#define CONTROLLERWIDGET_H
 
-// box 2d
-class b2ShapeDef;
+// local
+class CqMotorController;
+class CqSimulation;
+#include "ui_ControllerWidget.h"
 
-/**
-	Material description record.
-	
-	@author Maciek Gajewski <maciej.gajewski0@gmail.com>
-*/
-class CqMaterial
+
+class ControllerWidget: public QWidget, public Ui::ControllerWidget
 {
+Q_OBJECT
 public:
+	ControllerWidget(QWidget *parent = 0 );
 	
-	// construction / destruction
-	CqMaterial( double d = 1.0, double f = 0.9, double r = 0.1){ density = d; friction = f; restitution = r;}
-	~CqMaterial(){}
+	void setController( CqMotorController* pController, CqSimulation* pSimulation );
+	
+private slots:
+	void on_sliderDesiredValue_valueChanged( int value );
+	void simulationStep();
+	void controllerDestroyed();
 
-	enum Type { Steel, Rubber, Wood, Custom };
-	
-	Type type;					/// Well known material type
-	
-	double friction;			///< Friction [0.0->1.0]
-	double restitution;			///< Restotution ("bounciness")[0.0->1.0]
-	double density;				///< Density [kg/m2]
-	
-	/// Copies material spec to shape
-	void copyToShapeDef( b2ShapeDef* pShape ) const;
-	
-	/// Rubber definiton
-	inline static CqMaterial rubber()
-	{
-		CqMaterial m;
-		m.density		= 1.0;
-		m.friction		= 1.0;
-		m.restitution	= 0.5;
-		
-		m.type = Rubber;
-		
-		return m;
-	}
-	
-	/// Steel definition
-	inline static CqMaterial steel()
-	{
-		CqMaterial m;
-		m.density		= 5.0;
-		m.friction		= 0.2;
-		m.restitution	= 0.3;
-		
-		m.type = Steel;
-		
-		return m;
-	}
-
-	/// Wood definition
-	inline static CqMaterial wood()
-	{
-		CqMaterial m;
-		m.density		= 2.0;
-		m.friction		= 0.7;
-		m.restitution	= 0.1;
-		
-		m.type = Wood;
-		
-		return m;
-	}
+private:
+	CqMotorController* _pController;	///< Associated motor controler
 };
 
-#endif // CQMATERIAL_H
+#endif // CONTROLLERWIDGET_H
 
 // EOF
 

@@ -51,6 +51,7 @@ void CqRevoluteJoint::init()
 	_enableMotor	= false;
 	_enableLimits	= false;
 	_anchorPoint	= QPointF( 0, 0 );
+	_initialSpeed	= 0.0;
 }
 
 // =========================== create joint ===================
@@ -104,7 +105,7 @@ void CqRevoluteJoint::updatePosToPhysical()
 void CqRevoluteJoint::setMotorEnabled( bool enabled, double speed, double torque )
 {
 	_enableMotor	= enabled;
-	_initialSpeed	= speed;
+	_maxSpeed		= speed;
 	_maxTorque		= torque; // TODO stil ot sure if it is max torque
 }
 

@@ -47,6 +47,11 @@ public:
 	void setMotorEnabled( bool enabled, double speed, double torque );
 	/// Enables and configures motor limits
 	void setLimits( bool limits, double upper, double lower );
+	
+	bool motorEnabled() const { return _enableMotor; }
+	
+	double maxTorque() const { return _maxTorque; }
+	double maxSpeed() const { return _maxSpeed; }
 
 	// signal from simulation
 
@@ -68,6 +73,7 @@ protected:
 	double	_upperLimit, _lowerLimit;
 	
 	double	_maxTorque;
+	double	_maxSpeed;
 	double	_initialSpeed;
 
 };

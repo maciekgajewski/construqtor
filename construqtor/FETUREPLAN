@@ -1,6 +1,11 @@
 Planned features fo first release. Features marked with (low) can be dropped, 
 marked with (ff) are future feature and are not likely to be implemented.
 
+Short term goals
+[ ] Making wheel from wheel+engine setup connectable
+[ ] Makig only part of engine from wheel+engine setup which is outside of wheel connectable
+[ ] use some color code to indicate connectable areas
+
 Editor
 [ ] Deleting elements
 [ ] Group selection (ruber band), moving and rotating
@@ -8,6 +13,7 @@ Editor
 [ ] Zoom-to-pointer instead of zoom-to center with mouse wheel
 [ ] Scrolling by dragging
 [ ] Ground editor - possinbly separate application (low)
+[ ] Scorrling/zooming limited to world boundaries
 
 Elements
 [ ] Wheel + engine - different sizes
@@ -27,7 +33,7 @@ Elements
 World
 [ ] Polygonanl pody - uses triangulation
 [ ] Controllers - framework for controllnig motorized objects, with UI
-[ ] Random gorund bodym wuth some terrain
+[ ] Random gorund bodym with some terrain
 [ ] Some randon stones on ground (low)
 [ ] Saving and loading world state to file  - propably XML
 [ ] Breakable nails / bolts (low)
@@ -36,11 +42,11 @@ World
 [ ] Reset
 
 Controllers
-[ ] Business logic - framework connecting motorized elements with UI. Cotrolling velocity or position
-[ ] Dyamically created UI widgets for each motor
-[ ] UI : input widget - slider or dial
-[ ] UI : displaying of current value agains desired value (low)
-[ ] UI : displaying current torue/force (low)
+[*] Business logic - framework connecting motorized elements with UI. Cotrolling velocity or position
+[*] Dyamically created UI widgets for each motor
+[*] UI : input widget - slider or dial
+[*] UI : displaying of current value agains desired value (low)
+[*] UI : displaying current torue/force (low)
 [ ] UI : assiging keyboard shortcuts to motors (low)
 [ ] UI : assigning joystick actions to motors (ff)
 
