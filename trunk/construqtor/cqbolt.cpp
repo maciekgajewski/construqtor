@@ -17,78 +17,59 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef CQMATERIAL_H
-#define CQMATERIAL_H
 
-// box 2d
-class b2ShapeDef;
+// Qt
+#include <QPainter>
 
-/**
-	Material description record.
-	
-	@author Maciek Gajewski <maciej.gajewski0@gmail.com>
-*/
-class CqMaterial
+// local
+#include "cqbolt.h"
+
+static const QSizeF SIZE = QSizeF( 0.05, 0.05 );
+
+// =================== constructor =======================
+CqBolt::CqBolt(CqWorld* world): CqRevoluteJoint(world)
 {
-public:
-	
-	// construction / destruction
-	CqMaterial( double d = 50.0, double f = 0.9, double r = 0.1){ density = d; friction = f; restitution = r;}
-	~CqMaterial(){}
+	init();
+}
 
-	enum Type { Steel, Rubber, Wood, Custom };
-	
-	Type type;					/// Well known material type
-	
-	double friction;			///< Friction [0.0->1.0]
-	double restitution;			///< Restotution ("bounciness")[0.0->1.0]
-	double density;				///< Density [kg/m2]
-	
-	/// Copies material spec to shape
-	void copyToShapeDef( b2ShapeDef* pShape ) const;
-	
-	/// Rubber definiton
-	inline static CqMaterial rubber()
-	{
-		CqMaterial m;
-		m.density		= 50.0;
-		m.friction		= 1.0;
-		m.restitution	= 0.5;
-		
-		m.type = Rubber;
-		
-		return m;
-	}
-	
-	/// Steel definition
-	inline static CqMaterial steel()
-	{
-		CqMaterial m;
-		m.density		= 250.0;
-		m.friction		= 0.2;
-		m.restitution	= 0.3;
-		
-		m.type = Steel;
-		
-		return m;
-	}
+// =================== constructor =======================
+CqBolt::CqBolt(QGraphicsItem* parent, CqWorld* world): CqRevoluteJoint(parent, world)
+{
+	init();
+}
 
-	/// Wood definition
-	inline static CqMaterial wood()
-	{
-		CqMaterial m;
-		m.density		= 100.0;
-		m.friction		= 0.7;
-		m.restitution	= 0.1;
-		
-		m.type = Wood;
-		
-		return m;
-	}
-};
+// ============================ init ======================
+void CqBolt::init()
+{
+	setZValue( 2.0 );
+	setLimits( true, 0.0, 0.0 ); // this should block any rotations
+	
+	// TODO random rotation
+}
 
-#endif // CQMATERIAL_H
+// =================== destructor =======================
+CqBolt::~CqBolt()
+{
+	// nope
+}
+
+// ====================== paint =================
+void CqBolt::paint
+	( QPainter * pPainter
+	, const QStyleOptionGraphicsItem * /*option*/
+	, QWidget * /*widget*/ )
+{
+	pPainter->drawEllipse( QRectF( - QPointF( SIZE.width(), SIZE.height() ) / 2, SIZE ) );
+	pPainter->drawLine( QPointF( -SIZE.width()/2, 0),  QPointF(SIZE.width()/2, 0 ) ); 
+}
+	
+// ================= boundiong rect =============
+QRectF CqBolt::boundingRect() const
+{
+	QSizeF bbs = SIZE *1.1;
+	return QRectF( - QPointF( bbs.width(), bbs.height() ) / 2, bbs );
+}
+
 
 // EOF
-
 

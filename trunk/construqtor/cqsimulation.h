@@ -65,6 +65,8 @@ public:
 	bool canAddHere( const CqItem* pItem, const QPointF& pos ) const;
 	
 	void addController( CqMotorController* pController );	///< adds controler ot controller list
+	
+	QRectF worldRect() const { return _worldRect; }
 
 signals:
 
@@ -94,6 +96,7 @@ private:
 	QTimer			_simulationTimer;		///< Simulation timer
 	QGraphicsScene	_scene;					///< Simulation scene
 	QList<CqMotorController*>	_controllers;	///< Set of motor controllers
+	QRectF			_worldRect;				///< world rectangle
 };
 
 #endif

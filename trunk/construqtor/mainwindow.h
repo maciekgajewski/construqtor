@@ -50,6 +50,7 @@ public slots:
 	void on_buttonWheel80_clicked();
 	
 	void on_buttonNail_clicked();
+	void on_buttonBolt_clicked();
 	
 	void on_buttonWwE_clicked();
 	
