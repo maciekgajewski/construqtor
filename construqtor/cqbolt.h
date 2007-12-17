@@ -17,77 +17,38 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef CQMATERIAL_H
-#define CQMATERIAL_H
+#ifndef CQBOLT_H
+#define CQBOLT_H
 
-// box 2d
-class b2ShapeDef;
+#include <cqrevolutejoint.h>
 
 /**
-	Material description record.
+	Bolt is a revolute jont, similar to nail, but disallowing rotations.
 	
 	@author Maciek Gajewski <maciej.gajewski0@gmail.com>
 */
-class CqMaterial
+class CqBolt : public CqRevoluteJoint
 {
 public:
-	
 	// construction / destruction
-	CqMaterial( double d = 50.0, double f = 0.9, double r = 0.1){ density = d; friction = f; restitution = r;}
-	~CqMaterial(){}
+	CqBolt(CqWorld* world = NULL );
+	CqBolt(QGraphicsItem* parent, CqWorld* world = NULL );
+	virtual ~CqBolt();
 
-	enum Type { Steel, Rubber, Wood, Custom };
-	
-	Type type;					/// Well known material type
-	
-	double friction;			///< Friction [0.0->1.0]
-	double restitution;			///< Restotution ("bounciness")[0.0->1.0]
-	double density;				///< Density [kg/m2]
-	
-	/// Copies material spec to shape
-	void copyToShapeDef( b2ShapeDef* pShape ) const;
-	
-	/// Rubber definiton
-	inline static CqMaterial rubber()
-	{
-		CqMaterial m;
-		m.density		= 50.0;
-		m.friction		= 1.0;
-		m.restitution	= 0.5;
+	// operations 
+	virtual void paint
+		( QPainter * painter
+		, const QStyleOptionGraphicsItem * option
+		, QWidget * widget = 0 );
 		
-		m.type = Rubber;
-		
-		return m;
-	}
-	
-	/// Steel definition
-	inline static CqMaterial steel()
-	{
-		CqMaterial m;
-		m.density		= 250.0;
-		m.friction		= 0.2;
-		m.restitution	= 0.3;
-		
-		m.type = Steel;
-		
-		return m;
-	}
+	virtual QRectF boundingRect() const;
 
-	/// Wood definition
-	inline static CqMaterial wood()
-	{
-		CqMaterial m;
-		m.density		= 100.0;
-		m.friction		= 0.7;
-		m.restitution	= 0.1;
-		
-		m.type = Wood;
-		
-		return m;
-	}
+private:
+
+	void init();
 };
 
-#endif // CQMATERIAL_H
+#endif // CQBOLT_H
 
 // EOF
 

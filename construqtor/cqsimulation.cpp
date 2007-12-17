@@ -122,10 +122,11 @@ void CqSimulation::InitWorld()
 {
 	// TODO define outside
 	
+	_worldRect = QRect( -500, -100, 1000, 200 );
 	// world size spec
 	b2AABB worldAABB;
-	worldAABB.minVertex.Set(-100.0, -100.0);
-	worldAABB.maxVertex.Set(100.0, 100.0);
+	worldAABB.minVertex.Set(-500.0, -100.0);
+	worldAABB.maxVertex.Set(500.0, 100.0);
 	
 	// gravity
 	b2Vec2 gravity(0.0, -10.0);

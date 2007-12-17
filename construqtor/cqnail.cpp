@@ -24,6 +24,9 @@
 // local
 #include "cqnail.h"
 
+
+static const QSizeF SIZE = QSizeF( 0.02, 0.02 );
+
 // ========================= construction ======================
 CqNail::CqNail( CqWorld* world  )
 	: CqRevoluteJoint(world)
@@ -56,13 +59,14 @@ void CqNail::paint
 	, const QStyleOptionGraphicsItem * /*option*/
 	, QWidget * /*widget*/)
 {
-	painter->drawEllipse( QRectF( - QPointF( 0.01, 0.01 ), QSizeF( 0.02, 0.02 ) ) );
+	painter->drawEllipse( QRectF( - QPointF( SIZE.width(), SIZE.height() ) / 2, SIZE ) );
 }
 	
 // ========================= bounding rect ======================
 QRectF CqNail::boundingRect() const
 {
-	return QRectF( - QPointF( 0.2, 0.2 ), QSizeF( 0.4, 0.4 ) );
+	QSizeF bbs = SIZE *1.1;
+	return QRectF( - QPointF( bbs.width(), bbs.height() ) / 2, bbs );
 }
 
 

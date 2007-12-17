@@ -310,7 +310,7 @@ void MainView::toolAddObject( CqItem* pItem )
 // ============================ show event ==============================
 void MainView::showEvent( QShowEvent* /*pEvent*/ )
 {
-	ensureVisible( -6, 1, 8, 8 );
+	ensureVisible( -6, -5, 12, 12 );
 }
 
 // ============================ can add nail ==============================
@@ -383,11 +383,13 @@ void MainView::setMode( Mode mode )
 		{
 			delete _addedNail;
 			_addedNail = NULL;
+			unselectAll();
 		}
 		else if ( _mode == ADDING_OBJECT )
 		{
 			delete _addedObject;
 			_addedObject = NULL;
+			unselectAll();
 		}
 		
 		_mode = mode;

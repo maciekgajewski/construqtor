@@ -23,6 +23,7 @@
 #include "cqwheel.h"
 #include "cqwheelwithengine.h"
 #include "controllerwidget.h"
+#include "cqbolt.h"
 
 #include "mainwindow.h"
 
@@ -60,6 +61,7 @@ void MainWindow::simulationStarted()
 	buttonWheel40->setEnabled(false);
 	buttonWheel80->setEnabled(false);
 	buttonWwE->setEnabled(false);
+	buttonBolt->setEnabled(false);
 }
 
 // =================================== on stop ============
@@ -72,6 +74,7 @@ void MainWindow::simulationPaused()
 	buttonWheel40->setEnabled(true);
 	buttonWheel80->setEnabled(true);
 	buttonWwE->setEnabled(true);
+	buttonBolt->setEnabled(true);
 }
 
 // =========================== pointer pos  =======================
@@ -106,6 +109,13 @@ void MainWindow::on_buttonNail_clicked()
 {
 	CqNail* pNail = new CqNail();
 	view->toolAddNail( pNail );
+}
+
+// ============================ bolt ==============================
+void MainWindow::on_buttonBolt_clicked()
+{
+	CqBolt* pBolt = new CqBolt();
+	view->toolAddNail( pBolt );
 }
 
 // ============================ wheel 40  ==============================

@@ -25,6 +25,10 @@
 #include "cqsimulation.h"
 #include "cqwheelwithengine.h"
 
+static const double MAX_SPEED	= 20.0;		// max speed [rad/s?] 
+static const double MAX_TORQUE	= 1000.0;	// max torque [Nm?]
+static const CqMaterial ENGINE_MATERIAL( 400.0, 0.2, 0.1 ); // dens, friq, restit
+
 // ======================== constructor ===================
 CqWheelWithEngine::CqWheelWithEngine( double wheelDiameter )
  : CqCompoundItem()
@@ -53,14 +57,14 @@ void CqWheelWithEngine::init()
 	_pEngine = new CqGirder(_wheelDiameter / 2, _wheelDiameter );
 	_pEngine->setPos( 0, _wheelDiameter * 0.4 );
 	_pEngine->setBrush( QColor( 0x80, 0x80, 0x80, 0x80 ) ); // semitransparent gray
-	_pEngine->setMaterial( CqMaterial( 5.0, 0.2, 0.1 ) );
+	_pEngine->setMaterial( ENGINE_MATERIAL );
 	_pEngine->setZValue( 0.5 );
 	
 	// init joint
 	_pMotor = new Motor();
 	_pMotor->setAnchorPoint( QPointF(0,0) );
 	_pMotor->setConnectedBodies( _pWheel,  _pEngine );
-	_pMotor->setMotorEnabled( true, 50.0, 50.0 );
+	_pMotor->setMotorEnabled( true, MAX_SPEED, MAX_TORQUE );
 	_pMotor->setZValue( 0.9 );
 	
 	addChild( _pWheel );

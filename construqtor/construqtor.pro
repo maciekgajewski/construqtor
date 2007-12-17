@@ -20,7 +20,8 @@ cqwheelwithengine.cpp \
 cqcompounditem.cpp \
 cqmotorcontroller.cpp \
 cqrevolutevelocitycontroler.cpp \
-controllerwidget.cpp
+controllerwidget.cpp \
+cqbolt.cpp
 FORMS += mainwindow.ui \
 ControllerWidget.ui
 HEADERS += mainwindow.h \
@@ -43,7 +44,8 @@ cqwheelwithengine.h \
 cqcompounditem.h \
 cqmotorcontroller.h \
 cqrevolutevelocitycontroler.h \
-controllerwidget.h
+controllerwidget.h \
+cqbolt.h
 CONFIG += debug \
 qt \
 warn_on \
