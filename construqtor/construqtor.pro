@@ -23,7 +23,8 @@ cqrevolutevelocitycontroler.cpp \
 controllerwidget.cpp \
 cqbolt.cpp \
  cqpolygonalbody.cpp \
- cqpolygontriangulator.cpp
+ cqpolygontriangulator.cpp \
+ cqstone.cpp
 FORMS += mainwindow.ui \
 ControllerWidget.ui
 HEADERS += mainwindow.h \
@@ -49,7 +50,8 @@ cqrevolutevelocitycontroler.h \
 controllerwidget.h \
 cqbolt.h \
  cqpolygonalbody.h \
- cqpolygontriangulator.h
+ cqpolygontriangulator.h \
+ cqstone.h
 CONFIG += debug \
 qt \
 warn_on \

@@ -18,6 +18,9 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+// Qt
+#include <QPainter>
+
 // box2d
 #include "b2Body.h"
 
@@ -99,6 +102,11 @@ void CqPhysicalBody::createBody( CqWorld* pWorld )
 	// create body
 	_pBody = pWorld->CreateBody(&bodyDef);
 	
+	// get center pos
+	b2Vec2 cog = _pBody->GetCenterPosition();
+	_cog = QPointF( cog.x, cog.y );
+	qDebug("center: %f, %f", cog.x, cog.y ); // TODO remove
+	
 	// set body position
 	updatePhysicalPos();
 	
@@ -118,9 +126,8 @@ void CqPhysicalBody::updatePosToPhysical()
 		b2Vec2		b2pos		= _pBody->GetCenterPosition();
 		double		b2rotation	= _pBody->GetRotation();
 		
-		setWorldPos( QPointF( b2pos.x, b2pos.y ) );
+		setWorldPos( QPointF( b2pos.x, b2pos.y ) - _cog ); // correct pos by COG
 		setWorldRotation( b2rotation );
-		
 	}
 }
 
@@ -173,7 +180,7 @@ void CqPhysicalBody::updatePhysicalPos()
 	CqItem::updatePhysicalPos();
 	if ( _pBody )
 	{
-		QPointF pp	= worldPos();
+		QPointF pp	= worldPos() + _cog; // correct physical pos by COG shift
 		double r	= worldRotation();
 		
 		_pBody->SetCenterPosition( b2Vec2( pp.x(), pp.y() ), r );
@@ -206,6 +213,65 @@ void CqPhysicalBody::removeJoint( CqJoint* pJoint )
 	else
 	{
 		qWarning("joint remove from body, to each it doesn;t belogns");
+	}
+}
+
+// ========================= debug: draw collision ==================
+void CqPhysicalBody::debugDrawCollision( QPainter* pPainter )
+{
+	// no body - no bodpainting :)
+	if ( ! _pBody )
+	{
+		return;
+	}
+	
+	Q_ASSERT( pPainter );
+	
+	pPainter->save();
+	pPainter->setPen( QPen( Qt::red, 0 ) );
+	pPainter->setBrush( QBrush() );
+	
+	for ( b2Shape* s = _pBody->GetShapeList(); s; s = s->GetNext() )
+	{
+		// paint polygon
+		if ( s->GetType() == e_polyShape )
+		{
+			b2PolyShape* pPolyShape = (b2PolyShape*) s;
+			QPolygonF shape( pPolyShape->m_vertexCount );
+			//b2Mat22 rotation = pPolyShape->GetRotationMatrix();
+			
+			for ( int i =0; i < pPolyShape->m_vertexCount; i++ )
+			{
+				b2Vec2& vertex = pPolyShape->m_vertices[i];
+				shape[i] =QPointF( pPolyShape->m_vertices[i].x, vertex.y );
+			}
+			
+			// translate to body-local centroid
+			shape.translate
+				( pPolyShape->m_localCentroid.x + _cog.x()
+				, pPolyShape->m_localCentroid.y + _cog.y()
+				);
+			
+			pPainter->drawPolygon( shape );
+		}
+		// TODO other shape types
+	}
+	
+	pPainter->restore();
+}
+
+// ========================= set rotation radians ===========
+/// Sets transformation, taking COG into account
+void CqPhysicalBody::setRotationRadians( double radians )
+{
+	if ( fabs( _rotation - radians ) > 0.01 ) // some fuse to avoid frequrnt updates
+	{
+		prepareGeometryChange();
+		_rotation = radians;
+		QTransform t;
+		t.rotateRadians( _rotation );
+		setTransform( t );
+		// TODO cog here
 	}
 }
 

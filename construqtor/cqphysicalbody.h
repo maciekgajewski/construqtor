@@ -73,6 +73,7 @@ public:
 	
 	// operations
 	void breakAllJoints();								///< Destroys all joints attached
+	virtual void setRotationRadians( double radians );	///< sets rotation in radians
 	
 	// signals from simulation
 	
@@ -90,6 +91,9 @@ protected:
 	// methodd
 	
 	void recreateBody();					///< Re-creates body
+	/// Debug: draws collision shape
+	void debugDrawCollision( QPainter* pPainter );
+
 	
 	// reimplementables
 	
@@ -109,12 +113,12 @@ private:
 	void createBody( CqWorld* pWorld );		///< Creates body
 	void destroyBody( CqWorld* pWorld );	///< Destroys body
 	
-
 	// data
 
 	QPointer< CqWorld > _pWorld;		///< World object
 	b2Body*	_pBody;						///< Body itself
 	CqMaterial	_material;				///< Material used
+	QPointF		_cog;					///< center of gravity
 	
 	QBrush		_brush;					///< Brush used to paint item
 	QPen		_pen;					///< Pen used to paint ite,
