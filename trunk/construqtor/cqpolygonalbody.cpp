@@ -22,6 +22,7 @@
 #include <QPainter>
 
 // local
+#include "cqpolygontriangulator.h"
 #include "cqpolygonalbody.h"
 
 // ============================== constructor ==========================
@@ -50,22 +51,22 @@ void CqPolygonalBody::init()
 	// nope
 }
 
-// ================================== set shape ============================
-void CqPolygonalBody::setShape( const QPolygonF& ploygon )
+// ================================== set polygon ============================
+void CqPolygonalBody::setPolygon( const QPolygonF& ploygon )
 {
-	_polygon = shape;
+	_polygon = ploygon;
 	recreateBody();
 }
 
 // ================================= create shape =========================
 QList<b2ShapeDef*> CqPolygonalBody::createShape()
 {
-	const MIN_PRODUCT = 0.001
+	const double MIN_PRODUCT = 0.001;
 	
 	QList<b2ShapeDef*> list;
 	
-	PolygonTriangulator triangulator;
-	QList< QPolygonF > triangles = triangulator.triangulate( shape );
+	CqPolygonTriangulator triangulator;
+	QList< QPolygonF > triangles = triangulator.triangulate( _polygon );
 	
 	foreach( QPolygonF triangle, triangles )
 	{
@@ -83,7 +84,7 @@ QList<b2ShapeDef*> CqPolygonalBody::createShape()
 		}
 	}
 	
-	return triangles;
+	return list;
 }
 
 // ============================== paint ===================================
@@ -114,7 +115,29 @@ QRectF CqPolygonalBody::boundingRect() const
 	double dw = pbb.width() * 0.1;
 	double dh = pbb.height() * 0.1;
 	
-	return QRectF( pbb.left() - dw/2, bbb.top() - dh/2, pbb.width() + dw, pbb.height() + dh );
+	return QRectF( pbb.left() - dw/2, pbb.top() - dh/2, pbb.width() + dw, pbb.height() + dh );
+}
+
+// ========================== create triangle ================
+b2PolyDef* CqPolygonalBody::createTriangleB2Shape( const QPointF& a, const QPointF& b, const QPointF& c )
+{
+	b2PolyDef* pTriangle = new b2PolyDef();
+	
+	pTriangle->vertexCount = 3;
+	pTriangle->vertices[0].Set( a.x(), a.y() );
+	pTriangle->vertices[1].Set( b.x(), b.y() );
+	pTriangle->vertices[2].Set( c.x(), c.y() );
+	
+	return pTriangle;
+}
+// ========================== product ================
+/// Calculates Z coordinate of two 3D cross product of two 2D vectors
+/// with artifical Z. 
+/// In other words: (0 0 z) = (a1 a2 0) x (b1 b2 0)
+/// This value is equal to |a||b|sin(o), where 0 i angle btween vectors
+double CqPolygonalBody::product( const QPointF& a, const QPointF& b )
+{
+	return a.x()*b.y() - a.y()*b.x();
 }
 
 // EOF

@@ -17,8 +17,8 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef POLYGONTRIANGULATOR_H
-#define POLYGONTRIANGULATOR_H
+#ifndef CqPolygonTriangulator_H
+#define CqPolygonTriangulator_H
 
 #include <QList>
 #include <QPolygonF>
@@ -28,12 +28,12 @@
 	
 	@author Maciek Gajewski <maciej.gajewski0@gmail.com>
 */
-class PolygonTriangulator
+class CqPolygonTriangulator
 {
 public:
     
-	PolygonTriangulator();
-	~PolygonTriangulator();
+	CqPolygonTriangulator();
+	~CqPolygonTriangulator();
 	
 	/// does it's job
 	QList< QPolygonF > triangulate( const QPolygonF& polygon );

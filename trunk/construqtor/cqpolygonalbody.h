@@ -21,7 +21,7 @@
 #define CQPOLYGONALBODY_H
 
 // Qt
-#include <PolygonF>
+#include <QPolygonF>
 
 // local
 #include "cqphysicalbody.h"
@@ -40,8 +40,8 @@ public:
 	virtual ~CqPolygonalBody();
 	
 	// shape definition
-	void setShape( const QPolygonF& ploygon );			///< Sets shape
-	QPolygonF shape() const { return _polygon; }		///< Returns shape
+	void setPolygon( const QPolygonF& ploygon );		///< Sets shape
+	QPolygonF polygon() const { return _polygon; }		///< Returns shape
 	
 	// operations 
 	virtual void paint
@@ -61,6 +61,10 @@ private:
 	// methods
 	
 	void init();
+	/// Creates polygonal b2ShapeDef, based on three points
+	static b2PolyDef* createTriangleB2Shape( const QPointF& a, const QPointF& b, const QPointF& c );
+	/// Calculates cross product of two vectors
+	static double product( const QPointF& a, const QPointF& b );
 
 	// data
 	

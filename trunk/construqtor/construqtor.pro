@@ -22,7 +22,8 @@ cqmotorcontroller.cpp \
 cqrevolutevelocitycontroler.cpp \
 controllerwidget.cpp \
 cqbolt.cpp \
- cqpolygonalbody.cpp
+ cqpolygonalbody.cpp \
+ cqpolygontriangulator.cpp
 FORMS += mainwindow.ui \
 ControllerWidget.ui
 HEADERS += mainwindow.h \
@@ -47,7 +48,8 @@ cqmotorcontroller.h \
 cqrevolutevelocitycontroler.h \
 controllerwidget.h \
 cqbolt.h \
- cqpolygonalbody.h
+ cqpolygonalbody.h \
+ cqpolygontriangulator.h
 CONFIG += debug \
 qt \
 warn_on \
@@ -66,10 +68,15 @@ INCLUDEPATH += ../box2d \
 ../box2d/Dynamics/Joints \
 ../box2d/Collision \
 ../box2d/Dynamics \
-../box2d/Common
-LIBS += ../box2d/libbox2d.a
+../box2d/Common \
+ ../gpc
+LIBS += ../box2d/libbox2d.a \
+ ../gpc/libgpc.a
 
-TARGETDEPS += ../box2d/libbox2d.a
+TARGETDEPS += ../box2d/libbox2d.a \
+ ../gpc/libgpc.a
 
 DISTFILES += FETUREPLAN
+
+CONFIG -= release
 
