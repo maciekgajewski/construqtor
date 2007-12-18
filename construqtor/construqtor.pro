@@ -21,7 +21,8 @@ cqcompounditem.cpp \
 cqmotorcontroller.cpp \
 cqrevolutevelocitycontroler.cpp \
 controllerwidget.cpp \
-cqbolt.cpp
+cqbolt.cpp \
+ cqpolygonalbody.cpp
 FORMS += mainwindow.ui \
 ControllerWidget.ui
 HEADERS += mainwindow.h \
@@ -45,7 +46,8 @@ cqcompounditem.h \
 cqmotorcontroller.h \
 cqrevolutevelocitycontroler.h \
 controllerwidget.h \
-cqbolt.h
+cqbolt.h \
+ cqpolygonalbody.h
 CONFIG += debug \
 qt \
 warn_on \
