@@ -54,6 +54,8 @@ public slots:
 	
 	void on_buttonWwE_clicked();
 	
+	void on_buttonStone_clicked();
+	
 	void scenePointerPos( double x, double y );
 	
 	void simulationStarted();

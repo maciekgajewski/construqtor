@@ -24,6 +24,7 @@
 #include "cqwheelwithengine.h"
 #include "controllerwidget.h"
 #include "cqbolt.h"
+#include "cqstone.h"
 
 #include "mainwindow.h"
 
@@ -62,6 +63,7 @@ void MainWindow::simulationStarted()
 	buttonWheel80->setEnabled(false);
 	buttonWwE->setEnabled(false);
 	buttonBolt->setEnabled(false);
+	buttonStone->setEnabled(false);
 }
 
 // =================================== on stop ============
@@ -75,6 +77,7 @@ void MainWindow::simulationPaused()
 	buttonWheel80->setEnabled(true);
 	buttonWwE->setEnabled(true);
 	buttonBolt->setEnabled(true);
+	buttonStone->setEnabled(true);
 }
 
 // =========================== pointer pos  =======================
@@ -161,6 +164,13 @@ void MainWindow::setSimulation( CqSimulation* pSimulation )
 		, SIGNAL(motorControllerCreated(CqMotorController*))
 		, SLOT(controllerCreated(CqMotorController*))
 		);
+}
+
+// =========================== stone ================================
+void MainWindow::on_buttonStone_clicked()
+{
+	CqStone* pStone = CqStone::createRandomStone( 0.80 );
+	view->toolAddObject( pStone );
 }
 
 // EOF

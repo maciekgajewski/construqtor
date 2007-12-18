@@ -73,14 +73,21 @@ QList<b2ShapeDef*> CqPolygonalBody::createShape()
 		// calculate if triangle is clockwise or counterclockwise
 		double p = product( triangle[0] - triangle[1], triangle[2] - triangle[1] );
 		
-		
+		b2PolyDef* pTriangle = NULL;
 		if ( p > MIN_PRODUCT )
 		{
-			list.append( createTriangleB2Shape( triangle[2], triangle[1], triangle[0] ) );
+			pTriangle = createTriangleB2Shape( triangle[2], triangle[1], triangle[0] );
 		}
 		else if ( p < -MIN_PRODUCT )
 		{
-			list.append( createTriangleB2Shape( triangle[0], triangle[1], triangle[2] ) );
+			pTriangle = createTriangleB2Shape( triangle[0], triangle[1], triangle[2] );
+		}
+		
+		if ( pTriangle ) // NOTE: triangle could have been igored in if/else above!
+		{
+			material().copyToShapeDef( pTriangle );
+			
+			list.append( pTriangle );
 		}
 	}
 	
@@ -104,6 +111,8 @@ void CqPolygonalBody::paint
 	pPainter->setBrush( b );
 	
 	pPainter->drawPolygon( _polygon );
+	
+	debugDrawCollision( pPainter ); // TODO
 }
 
 // ========================== bounding rect ==============================

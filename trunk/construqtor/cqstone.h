@@ -17,27 +17,32 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#include <QApplication>
+#ifndef CQSTONE_H
+#define CQSTONE_H
 
-#include "mainwindow.h"
-#include "cqsimulation.h"
+#include "cqpolygonalbody.h"
 
-int main(int argc, char *argv[])
+/**
+	Stone is a non-editable heavy object with random iregular shape.
+	@author Maciek Gajewski <maciej.gajewski0@gmail.com>
+*/
+class CqStone : public CqPolygonalBody
 {
-	QApplication app(argc, argv);
-	MainWindow window;
-	CqSimulation simulation;
-	window.setSimulation( &simulation );
+public:
+	// construction / destruction
+	CqStone(QGraphicsItem* parent, CqWorld* world = NULL);
+	CqStone(CqWorld* world = NULL);
+	virtual ~CqStone();
+
+	/// Utility: creates random stone
+	static CqStone* createRandomStone( double diameter );
 	
-	// initrandom generator
-	qsrand( time(NULL) );
-	
-	// configure view
-	window.view->setSimulation( &simulation );
-	window.view->rotate( 180 );
-	window.view->scale( 50, 50 );
-	
-	window.show();
-	
-	return app.exec();
-}
+private:
+
+	void init();
+};
+
+#endif // CQSTONE_H
+
+// EOF
+

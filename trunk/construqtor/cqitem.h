@@ -115,6 +115,10 @@ protected:
 	virtual void mousePressEvent ( QGraphicsSceneMouseEvent * event );
 	virtual void mouseReleaseEvent ( QGraphicsSceneMouseEvent * event );
 	
+	// data
+	
+	double			_rotation;							///< Rotation
+	
 private:
 
 	// methods
@@ -125,7 +129,6 @@ private:
 	
 	CqSimulation*	_pSimulation;						///< Simulation
 	CqWorld*		_pWorld;							///< Physical world
-	double			_rotation;							///< Rotation
 	int				_flags;								///< Behavior flags
 	bool			_selected;							///< Selected
 	CqItem*			_pPhysicalParent;					///< Parent item
