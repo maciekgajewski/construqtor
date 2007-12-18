@@ -21,22 +21,22 @@ extern "C" {
 #include "gpc.h"
 }
 
-#include "polygontriangulator.h"
+#include "cqpolygontriangulator.h"
 
 // ==================== constructor ==========
-PolygonTriangulator::PolygonTriangulator()
+CqPolygonTriangulator::CqPolygonTriangulator()
 {
 }
 
 // ===================== destructor ===========
-PolygonTriangulator::~PolygonTriangulator()
+CqPolygonTriangulator::~CqPolygonTriangulator()
 {
 }
 
 
 // ====================== triangulate =============
 /// Takes any polygon, and returns list of triangles
-QList< QPolygonF > PolygonTriangulator::triangulate( const QPolygonF& polygon )
+QList< QPolygonF > CqPolygonTriangulator::triangulate( const QPolygonF& polygon )
 {
 	Q_ASSERT( polygon.size() >= 3 ); // don't deal with degenerated polygons
 	
