@@ -143,7 +143,10 @@ void CqItem::setRotationRadians( double radians )
 		prepareGeometryChange();
 		_rotation = radians;
 		QTransform t;
+		// rotate around center
+		t.translate( _center.x(), _center.y() );
 		t.rotateRadians( _rotation );
+		t.translate( -_center.x(), - _center.y() );
 		setTransform( t );
 	}
 }

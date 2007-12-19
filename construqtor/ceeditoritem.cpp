@@ -173,18 +173,7 @@ void CeEditorItem::RotateHandler::adjustPosToAngle()
 	
 	double angle = _pItem->rotationRadians();
 	
-	// 
-	// TODO remove, don't move. rotate instead
-	//QPointF newPos = QPointF( CeEditorItem::SIZE * cos( angle) / 2, CeEditorItem::SIZE * sin( angle ) / 2 );
-	//setPos( newPos );
-	
 	setPos( CeEditorItem::SIZE / 2.0, 0 );
-	
-	/* TODO abandoned
-	QTransform t;
-	t.rotateRadians( -angle );
-	parentItem()->setTransform( t );
-	*/
 }
 
 // =========================== Rotate Hndler: paint ==================================
@@ -213,9 +202,9 @@ void CeEditorItem::RotateHandler::mouseMoveEvent ( QGraphicsSceneMouseEvent * pE
 		
 		QPointF pointerPos	= mapToScene( pEvent->pos() );
 		QPointF pivot		= _pItem->scenePos();
+		QPointF diff		= pointerPos - pivot;
 		
-		
-		double angle = atan2( (pivot-pointerPos).y(), (pivot-pointerPos).x() );
+		double angle = atan2( diff.y(), diff.x() );
 		
 		_pItem->setPhysicalRotation( angle );
 		adjustPosToAngle();

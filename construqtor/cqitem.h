@@ -94,6 +94,9 @@ public:
 	
 	// geometrical properties
 	
+	QPointF center() const { return _center; }			///< Local center
+	void setCenter( const QPointF& c ){ _center = c; }
+	
 	/// If connection (nail/bolt/...) can be attached at this point
 	virtual bool canConnectHere( const QPointF& /*worldPoint*/ ) { return false; }
 	/// Physical body connected to joint in this location
@@ -132,6 +135,7 @@ private:
 	int				_flags;								///< Behavior flags
 	bool			_selected;							///< Selected
 	CqItem*			_pPhysicalParent;					///< Parent item
+	QPointF			_center;							///< Local center, rotation axis, COG
 
 };
 

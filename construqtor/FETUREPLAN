@@ -2,7 +2,7 @@ Planned features fo first release. Features marked with (low) can be dropped,
 marked with (ff) are future feature and are not likely to be implemented.
 
 Short term goals
-[   ] Making wheel from wheel+engine setup connectable
+[   ] Making wheel from wheel+engine setup connectabl
 [   ] Makig only part of engine from wheel+engine setup which is outside of wheel connectable
 [   ] use some color code to indicate connectable areas
 
@@ -31,8 +31,8 @@ Elements
 [   ] Spring (ff)
 
 World
-[   ] Polygonanl pody - uses triangulation
-[   ] Controllers - framework for controllnig motorized objects, with UI
+[ * ] Polygonanl pody - uses triangulation
+[ * ] Controllers - framework for controllnig motorized objects, with UI
 [   ] Random gorund bodym with some terrain
 [   ] Some randon stones on ground (low)
 [   ] Saving and loading world state to file  - propably XML

@@ -24,18 +24,18 @@
 
 int main(int argc, char *argv[])
 {
+	// initrandom generator
+	qsrand( time(NULL) );
+	
 	QApplication app(argc, argv);
 	MainWindow window;
 	CqSimulation simulation;
 	window.setSimulation( &simulation );
 	
-	// initrandom generator
-	qsrand( time(NULL) );
-	
 	// configure view
 	window.view->setSimulation( &simulation );
-	window.view->rotate( 180 );
-	window.view->scale( 50, 50 );
+	//window.view->rotate( 180 );
+	window.view->scale( 50, -50 );
 	
 	window.show();
 	

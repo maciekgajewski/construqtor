@@ -86,7 +86,7 @@ private:
 
 	// methods
 	
-	void InitWorld();				///< Intiializes physical world
+	void initWorld();				///< Intiializes physical world
 	/// Makes sure all children have they physical counterparts created for simulation
 	void assurePhysicalObjectsCreated();
 
