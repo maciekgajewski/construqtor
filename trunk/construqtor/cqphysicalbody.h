@@ -73,13 +73,13 @@ public:
 	
 	// operations
 	void breakAllJoints();								///< Destroys all joints attached
-	virtual void setRotationRadians( double radians );	///< sets rotation in radians
 	
 	// signals from simulation
 	
 	virtual void updatePosToPhysical();		///< Updates position and rotation to physical
 	virtual void assureBodyCreated();		///< Makes sure that body was created
 	virtual void updatePhysicalPos();		///< Updates body pos to item positon/rotation
+	virtual void simulationStarted();		///< Caled when simulatio is started
 	
 	// signals from joint
 	void addJoint( CqJoint* pJoint );		///< Info: you have new joint
@@ -118,7 +118,6 @@ private:
 	QPointer< CqWorld > _pWorld;		///< World object
 	b2Body*	_pBody;						///< Body itself
 	CqMaterial	_material;				///< Material used
-	QPointF		_cog;					///< center of gravity
 	
 	QBrush		_brush;					///< Brush used to paint item
 	QPen		_pen;					///< Pen used to paint ite,

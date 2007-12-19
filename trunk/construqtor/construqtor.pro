@@ -24,7 +24,8 @@ controllerwidget.cpp \
 cqbolt.cpp \
  cqpolygonalbody.cpp \
  cqpolygontriangulator.cpp \
- cqstone.cpp
+ cqstone.cpp \
+ cqgroundbody.cpp
 FORMS += mainwindow.ui \
 ControllerWidget.ui
 HEADERS += mainwindow.h \
@@ -51,7 +52,8 @@ controllerwidget.h \
 cqbolt.h \
  cqpolygonalbody.h \
  cqpolygontriangulator.h \
- cqstone.h
+ cqstone.h \
+ cqgroundbody.h
 CONFIG += debug \
 qt \
 warn_on \

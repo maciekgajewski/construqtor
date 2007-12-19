@@ -66,22 +66,28 @@ CqStone* CqStone::createRandomStone( double diameter )
 	// around desired radius
 	
 	// params
-	const double MIN_ANGLE_STEP	= 0.1;
-	const double MAX_ANGLE_STEP	= 1.5;
+	const double MIN_ANGLE_STEP	= 0.3;
+	const double MAX_ANGLE_STEP	= 0.5;
 	double MIN_DISTANCE = diameter * 0.4;
 	double MAX_DISTANCE = diameter * 1.8;
+	double MAX_DISTANCE_DELTA = diameter * 0.2;
 	
 	// go
 	double currentAngle = 0.0;
 	QPolygonF result;
+	// init ital distance
+	double distance = MIN_DISTANCE  + ( MAX_DISTANCE - MIN_DISTANCE ) * double(qrand()) / RAND_MAX;
 	
 	while( currentAngle < M_PI * 2 )
 	{
-		double distance = MIN_DISTANCE  + ( MAX_DISTANCE - MIN_DISTANCE ) * double(qrand()) / RAND_MAX;
-		
 		result.append( QPointF( distance* cos( currentAngle ), distance * sin( currentAngle ) ) );
-		
 		currentAngle += MIN_ANGLE_STEP + ( MAX_ANGLE_STEP - MIN_ANGLE_STEP )* double(qrand()) / RAND_MAX;
+		
+		// select next distance
+		distance += - MAX_DISTANCE_DELTA + 2 * MAX_DISTANCE_DELTA * double(qrand()) / RAND_MAX;
+		
+		if ( distance > MAX_DISTANCE ) distance = MAX_DISTANCE;
+		if ( distance < MIN_DISTANCE ) distance = MIN_DISTANCE;
 	}
 	
 	// now, with polygon ,create stone

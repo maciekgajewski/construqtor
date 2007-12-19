@@ -104,8 +104,7 @@ void CqPhysicalBody::createBody( CqWorld* pWorld )
 	
 	// get center pos
 	b2Vec2 cog = _pBody->GetCenterPosition();
-	_cog = QPointF( cog.x, cog.y );
-	qDebug("center: %f, %f", cog.x, cog.y ); // TODO remove
+	setCenter( QPointF( cog.x, cog.y ) );
 	
 	// set body position
 	updatePhysicalPos();
@@ -126,7 +125,7 @@ void CqPhysicalBody::updatePosToPhysical()
 		b2Vec2		b2pos		= _pBody->GetCenterPosition();
 		double		b2rotation	= _pBody->GetRotation();
 		
-		setWorldPos( QPointF( b2pos.x, b2pos.y ) - _cog ); // correct pos by COG
+		setWorldPos( QPointF( b2pos.x, b2pos.y ) - center() ); // correct pos by COG
 		setWorldRotation( b2rotation );
 	}
 }
@@ -180,7 +179,7 @@ void CqPhysicalBody::updatePhysicalPos()
 	CqItem::updatePhysicalPos();
 	if ( _pBody )
 	{
-		QPointF pp	= worldPos() + _cog; // correct physical pos by COG shift
+		QPointF pp	= worldPos() + center(); // correct physical pos by COG shift
 		double r	= worldRotation();
 		
 		_pBody->SetCenterPosition( b2Vec2( pp.x(), pp.y() ), r );
@@ -248,8 +247,8 @@ void CqPhysicalBody::debugDrawCollision( QPainter* pPainter )
 			
 			// translate to body-local centroid
 			shape.translate
-				( pPolyShape->m_localCentroid.x + _cog.x()
-				, pPolyShape->m_localCentroid.y + _cog.y()
+				( pPolyShape->m_localCentroid.x + center().x()
+				, pPolyShape->m_localCentroid.y + center().y()
 				);
 			
 			pPainter->drawPolygon( shape );
@@ -260,18 +259,15 @@ void CqPhysicalBody::debugDrawCollision( QPainter* pPainter )
 	pPainter->restore();
 }
 
-// ========================= set rotation radians ===========
-/// Sets transformation, taking COG into account
-void CqPhysicalBody::setRotationRadians( double radians )
+// ============================ simulation started ================
+/// Wakes up body on simualtion start
+void CqPhysicalBody::simulationStarted()
 {
-	if ( fabs( _rotation - radians ) > 0.01 ) // some fuse to avoid frequrnt updates
+	CqItem::simulationStarted();
+	
+	if ( _pBody )
 	{
-		prepareGeometryChange();
-		_rotation = radians;
-		QTransform t;
-		t.rotateRadians( _rotation );
-		setTransform( t );
-		// TODO cog here
+		_pBody->WakeUp();
 	}
 }
 

@@ -164,7 +164,7 @@ void MainView::mousePressEvent(QMouseEvent* pEvent)
 		} // switch
 	}
 	// cancel adding with right button
-	else if ( pEvent->button() == Qt::LeftButton )
+	else if ( pEvent->button() == Qt::RightButton )
 	{
 		setMode( SELECTING );
 	}
@@ -344,16 +344,16 @@ void MainView::addNail( QPointF& point, CqRevoluteJoint* pNail )
 	CqPhysicalBody*		pBody[2];
 	foreach( QGraphicsItem* pItem, itemsHere )
 	{
-		// check
-		if ( iNailableHere == 2 )
-		{
-			delete pNail; // TODO this stinks
-			return; // bail out!
-		}
-		
 		CqItem* pCqItem = dynamic_cast<CqItem*>( pItem );
 		if ( pCqItem && ( pCqItem->physicalParent() ==  NULL ) && pCqItem->canConnectHere( point ) )
 		{
+			// check
+			if ( iNailableHere == 2 )
+			{
+				delete pNail; // TODO this stinks
+				return; // bail out!
+			}
+		
 			pBody[ iNailableHere++ ] = pCqItem->bodyHere( point );
 		}
 		

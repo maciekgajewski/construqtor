@@ -82,6 +82,10 @@ QList<b2ShapeDef*> CqPolygonalBody::createShape()
 		{
 			pTriangle = createTriangleB2Shape( triangle[0], triangle[1], triangle[2] );
 		}
+		else
+		{
+			qWarning("CqPolygonalBody::createShape: ignored triangle");
+		}
 		
 		if ( pTriangle ) // NOTE: triangle could have been igored in if/else above!
 		{
@@ -111,8 +115,6 @@ void CqPolygonalBody::paint
 	pPainter->setBrush( b );
 	
 	pPainter->drawPolygon( _polygon );
-	
-	debugDrawCollision( pPainter ); // TODO
 }
 
 // ========================== bounding rect ==============================

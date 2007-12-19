@@ -17,8 +17,8 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef CQPOLYGONALBODY_H
-#define CQPOLYGONALBODY_H
+#ifndef CQGROUNDBODY_H
+#define CQGROUNDBODY_H
 
 // Qt
 #include <QPolygonF>
@@ -27,36 +27,36 @@
 #include "cqphysicalbody.h"
 
 /**
-	This is a physical body with shape defined by polygon.
-	Polygon is spilt into triangles using GPC library.
+	This is the ground body. Its just a polygonl body with 'groundish' default setting, which
+	is configured by, and holds heightmap. It also calculates groud height at specified position.
 	@author Maciek Gajewski <maciej.gajewski0@gmail.com>
 */
-class CqPolygonalBody : public CqPhysicalBody
+class CqGroundBody : public CqPhysicalBody
 {
 public:
-	// constrution / destruction
-	CqPolygonalBody( CqWorld* world = NULL );
-	explicit CqPolygonalBody( QGraphicsItem* parent, CqWorld* world = NULL );
-	virtual ~CqPolygonalBody();
+	CqGroundBody(QGraphicsItem* parent, CqWorld* world = NULL);
+	CqGroundBody(CqWorld* world = NULL);
+	virtual ~CqGroundBody();
 	
-	// shape definition
-	void setPolygon( const QPolygonF& ploygon );		///< Sets shape
-	QPolygonF polygon() const { return _polygon; }		///< Returns shape
+	double height( double x );							///< Calculates ground height at specified x
+	
+	void setHeightmap( const QPolygonF& heightMap );	///< Sets heightmap
+	
+	/// Creates random ground for specified simulation
+	static CqGroundBody* randomGround( CqSimulation* pSimulation, double maxSlope );
 	
 	// operations 
 	virtual void paint
 		( QPainter * painter
 		, const QStyleOptionGraphicsItem * option
 		, QWidget * widget = 0 );
-		
-    virtual QRectF boundingRect() const;
-	virtual CqPhysicalBody* bodyHere( const QPointF& /*worldPoint*/ ) { return this; }
-	
+	virtual QRectF boundingRect() const;
+
 protected:
 	
 	virtual QList<b2ShapeDef*> createShape();			///< Creates body shape
-	
-private:	
+
+private:
 
 	// methods
 	
@@ -68,10 +68,13 @@ private:
 
 	// data
 	
-	QPolygonF	_polygon;		///< shape, as polygon
-	
+	QPolygonF	_heightmap;					///< Heightmap - poins of ground surface
+	mutable QPolygonF	_painterPolygon;	///< Cache: painted polygon
+	//QRectF		_worldRect;			///< Stored world rect TODO remove if not needed
 };
 
-#endif // CQPOLYGONALBODY_H
+#endif // CQGROUNDBODY_H
 
 // EOF
+
+

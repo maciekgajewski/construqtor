@@ -27,6 +27,8 @@
 #include "cqnail.h"
 #include "cqphysicalbox.h" 
 #include "cqmotorcontroller.h"
+#include "cqgroundbody.h"
+
 
 // constants
 static const int SIMULATION_INTERVAL	= 100;	// [ms]
@@ -36,7 +38,7 @@ static const double B2D_SPS				= 60.0;	// Box2D simulation steps per second
 CqSimulation::CqSimulation(QObject* parent): QObject(parent)
 {
 	// init
-	InitWorld();
+	initWorld();
 	connect( &_simulationTimer, SIGNAL(timeout()), SLOT(simulationTimerTimeout() ) );
 }
 
@@ -118,15 +120,15 @@ void CqSimulation::simulationTimerTimeout()
 }
 
 // =========================== timer timeout =============
-void CqSimulation::InitWorld()
+void CqSimulation::initWorld()
 {
 	// TODO define outside
 	
 	_worldRect = QRect( -500, -100, 1000, 200 );
 	// world size spec
 	b2AABB worldAABB;
-	worldAABB.minVertex.Set(-500.0, -100.0);
-	worldAABB.maxVertex.Set(500.0, 100.0);
+	worldAABB.minVertex.Set(-500.0, -200.0);
+	worldAABB.maxVertex.Set(500.0, 200.0);
 	
 	// gravity
 	b2Vec2 gravity(0.0, -10.0);
@@ -134,15 +136,18 @@ void CqSimulation::InitWorld()
 	// create world
 	_pPhysicalWorld = new CqWorld( worldAABB, gravity, true /* do sleep*/, this );
 	
-	_scene.setSceneRect( -50, -50, 100, 100 );
+	_scene.setSceneRect( _worldRect );
 	
 	// ground object
 	// TODO replace with loadable ground
+	/*
 	CqPhysicalBox* pGround = new CqPhysicalBox( NULL, _pPhysicalWorld );
 	pGround->setSize( QSizeF( 100.0, 50.0 ) );
 	pGround->setPos( 0.0, -25.0 );
 	pGround->setMaterial( CqMaterial( 0, 0.9, 0.2 ) );
 	pGround->setBrush( Qt::darkGreen );
+	*/
+	CqGroundBody *pGround = CqGroundBody::randomGround( this, 0.5 );
 	addItem( pGround );
 	
 	stop();
@@ -199,28 +204,28 @@ bool CqSimulation::canBeSelected( const CqItem* pItem ) const
 }
 
 // ============================== can be moved ? =====================
-bool CqSimulation::canBeMoved( const CqItem* pItem ) const
+bool CqSimulation::canBeMoved( const CqItem* /*pItem*/ ) const
 {
 	// TODO 'movable' area here
 	return ! isRunning();
 }
 
 // ============================== can be moved here ? =====================
-bool CqSimulation::canBeMovedHere( const CqItem* pItem, const QPointF& pos ) const
+bool CqSimulation::canBeMovedHere( const CqItem* /*pItem*/, const QPointF& /*pos*/ ) const
 {
 	// TODO editable region here
 	return true;
 }
 
 // ================================ can be rotated =======================
-bool CqSimulation::canBeRotated( const CqItem* pItem ) const
+bool CqSimulation::canBeRotated( const CqItem* /*pItem*/ ) const
 {
 	// TODO 'movable' area here
 	return ! isRunning();
 }
 // ============================ can add here ? ======================
 // Can item be added here now?
-bool CqSimulation::canAddHere( const CqItem* pItem, const QPointF& pos ) const
+bool CqSimulation::canAddHere( const CqItem* /*pItem*/, const QPointF& /*pos*/ ) const
 {
 	// TODO 'edit' area here
 	return ! isRunning();
