@@ -116,7 +116,7 @@ CqGroundBody* CqGroundBody::randomGround( CqSimulation* pSimulation, double maxS
 		double sliceWidth = MIN_SLICE_WIDTH + ( MAX_SLICE_WIDTH - MIN_SLICE_WIDTH ) * double(qrand()) / RAND_MAX;
 		
 		// find out which slice is it
-		int slice = qRound( ( x - SAFEAREA_WIDTH ) / ( worldWidth - 2*SAFEAREA_WIDTH ) );
+		int slice = qRound( ( x - SAFEAREA_WIDTH ) / (( worldWidth - 2*SAFEAREA_WIDTH ) / SLICES) );
 		
 		// calculate slope
 		double calculatedSlope = SLOPE_GAIN * ( targets[slice] - height );

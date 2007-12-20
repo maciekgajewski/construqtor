@@ -62,7 +62,8 @@ protected:
 	enum Mode{
 		SELECTING,
 		ADDING_OBJECT,
-		ADDING_NAIL
+		ADDING_NAIL,
+		SCROLLING
 		};
 
 	void setMode( Mode mode );			///< Proper way to change mode
@@ -77,9 +78,16 @@ protected:
 	
 	virtual void showEvent( QShowEvent* pEvent );
 	
+	// other events
+	
+	virtual void resizeEvent( QResizeEvent* pEvent );
+	
 	// methods
 	
 	void init();
+	
+	void scrollBy( const QPoint& delta );	///< Scrolls content
+	void adjustScale();						///< Makes sure scale is sane
 	
 	void selectUnderPoint( const QPoint& pos );
 	//void startDragUnderPoint( const QPoint& pos );
@@ -101,11 +109,13 @@ protected slots:
 private:
 
 	// data
-	CqSimulation*	_pSimulation;
-	CqItem*			_addedObject;				///< Added object
+	CqSimulation*		_pSimulation;
+	CqItem*				_addedObject;		///< Added object
 	CqRevoluteJoint*	_addedNail;			///< Added joint
+	Mode				_mode;				///< Current work mode
+	QPoint				_scrollStart;		///< Scorll start point
 	
-	Mode			_mode;						///< Current work mode
+	bool _viewportInitialized;				///< Vievport position initialized in showEvent
 };
 
 #endif	// MAINVIEW_H

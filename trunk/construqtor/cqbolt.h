@@ -42,6 +42,9 @@ public:
 		, QWidget * widget = 0 );
 		
 	virtual QRectF boundingRect() const;
+	
+	// infor from sulation
+	virtual void simulationStep();						///< Called after simulation step
 
 private:
 

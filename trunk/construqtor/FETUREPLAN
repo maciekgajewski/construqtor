@@ -10,10 +10,10 @@ Editor
 [   ] Deleting elements
 [   ] Group selection (ruber band), moving and rotating
 [   ] Rotating elements with one revolute joint (low)
-[   ] Zoom-to-pointer instead of zoom-to center with mouse wheel
-[   ] Scrolling by dragging
+[ * ] Zoom-to-pointer instead of zoom-to center with mouse wheel
+[ * ] Scrolling by dragging
 [   ] Ground editor - possinbly separate application (low)
-[   ] Scorrling/zooming limited to world boundaries
+[ * ] Scorrling/zooming limited to world boundaries
 
 Elements
 [75%] Wheel + engine - different sizes [missing different sizes]

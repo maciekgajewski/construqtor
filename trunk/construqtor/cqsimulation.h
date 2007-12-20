@@ -67,6 +67,8 @@ public:
 	void addController( CqMotorController* pController );	///< adds controler ot controller list
 	
 	QRectF worldRect() const { return _worldRect; }
+	
+	double invTimeStep() const;						///< Returns time step [1/s]
 
 signals:
 
