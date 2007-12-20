@@ -23,6 +23,7 @@
 
 // local
 #include "cqrevolutevelocitycontroler.h"
+#include "cqsimulation.h"
 
 // ============================ constructor ====================
 CqRevoluteVelocityControler::CqRevoluteVelocityControler(QObject* parent)
@@ -58,7 +59,8 @@ double CqRevoluteVelocityControler::getCurrentForce() const
 	if ( _pJoint && _pJoint->b2joint() )
 	{
 		b2RevoluteJoint* pRj = (b2RevoluteJoint*)_pJoint->b2joint();
-		return pRj->GetMotorTorque( 60.0 ); // TODO get from simulation
+		double torque =  pRj->GetMotorTorque( _pJoint->simulation()->invTimeStep() ); // TODO get from simulation
+		return torque;
 	}
 
 	return 0.0;

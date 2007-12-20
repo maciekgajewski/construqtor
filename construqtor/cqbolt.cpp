@@ -21,8 +21,12 @@
 // Qt
 #include <QPainter>
 
+// box2d
+#include "b2Joint.h"
+
 // local
 #include "cqbolt.h"
+#include "cqsimulation.h"
 
 static const QSizeF SIZE = QSizeF( 0.05, 0.05 );
 
@@ -70,6 +74,21 @@ QRectF CqBolt::boundingRect() const
 	return QRectF( - QPointF( bbs.width(), bbs.height() ) / 2, bbs );
 }
 
+// ====================== simualtion step =================
+void CqBolt::simulationStep()
+{
+	
+	/*
+	if ( b2joint() )
+	{
+		double its = simulation()->invTimeStep();
+		b2Vec2 rf = b2joint()->GetReactionForce( its );
+		double rt = b2joint()->GetReactionTorque( its );
+		
+		// TODO modify temperature here. Move code to CqRevoluteJoint
+	}
+	*/
+}
 
 // EOF
 

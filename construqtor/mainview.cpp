@@ -21,7 +21,7 @@
 // Qt
 #include <QMouseEvent>
 #include <QWheelEvent>
-
+#include <QScrollBar>
 
 // CQ
 #include "cqitem.h"
@@ -59,6 +59,12 @@ void MainView::setSimulation( CqSimulation* pSimulation )
 	
 	setScene( pSimulation->scene() );
 	
+	// TODO experimental - tunr off scrollbars. DOES NOT WORK
+	//setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
+	//setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
+	
+	setTransformationAnchor( QGraphicsView::AnchorUnderMouse );
+	setResizeAnchor( QGraphicsView::AnchorUnderMouse );
 }
 
 // ========================== init =============================
@@ -73,6 +79,7 @@ void MainView::init()
 	_addedObject	= NULL;
 	_addedNail		= NULL;
 	_mode = SELECTING;
+	_viewportInitialized = false;
 }
 
 // ========================= destructor ======================
@@ -104,6 +111,11 @@ void MainView::mouseMoveEvent(QMouseEvent* pEvent)
 	if ( _mode == ADDING_NAIL && canAddNail( mapToScene( pEvent->pos() ) ) )
 	{
 		setCursor( Qt::CrossCursor );
+	}
+	else if ( _mode == SCROLLING )
+	{
+		scrollBy( _scrollStart - pEvent->pos() );
+		_scrollStart = pEvent->pos();
 	}
 	else
 	{
@@ -166,7 +178,8 @@ void MainView::mousePressEvent(QMouseEvent* pEvent)
 	// cancel adding with right button
 	else if ( pEvent->button() == Qt::RightButton )
 	{
-		setMode( SELECTING );
+		setMode( SCROLLING );
+		_scrollStart = pEvent->pos();
 	}
 }
 
@@ -175,6 +188,14 @@ void MainView::mouseReleaseEvent(QMouseEvent* pEvent)
 {
 	QGraphicsView::mouseReleaseEvent( pEvent );
 	
+	// stop scrolling
+	if ( pEvent->button() == Qt::RightButton )
+	{
+		if ( _mode == SCROLLING )
+		{
+			setMode( SELECTING );
+		}
+	}
 }
 
 // ======================== select under point ===========
@@ -261,6 +282,7 @@ void MainView::breakJointUnderPoint( const QPoint& pos )
 // ======================= wheel event  ==============
 void MainView::wheelEvent ( QWheelEvent * pEvent )
 {
+	// caclulate scale factor
 	double factor = 1.0;
 	int delta = pEvent->delta();
 	
@@ -273,14 +295,52 @@ void MainView::wheelEvent ( QWheelEvent * pEvent )
 		factor = 1.0 / ( 1.0 - delta/1000.0 );
 	}
 	
+	setUpdatesEnabled( false );
 	scale( factor, factor );
+	adjustScale();
+	setUpdatesEnabled( true );
+	
 	// update editor if needed
 	if ( _pEditor )
 	{
 		_pEditor->setMatrix( matrix().inverted() ); //set inverted transform
 	}
+}
 
+// ============================ resize event ===================
+void MainView::resizeEvent( QResizeEvent* /*pEvent*/ )
+{
+	adjustScale();
+}
 
+// ============================= scroll by ====================================
+/// Scrols content by 'delta' pixels
+void MainView::scrollBy( const QPoint& delta )
+{
+	QScrollBar* pH = horizontalScrollBar();
+	QScrollBar* pV = verticalScrollBar();
+	
+	Q_ASSERT( pH && pV );
+	
+	pH->setValue( pH->value() + delta.x() );
+	pV->setValue( pV->value() + delta.y() );
+	
+}
+
+// =============================== adjust scale =============================
+void MainView::adjustScale()
+{
+	QRect sceneRectPixels = mapFromScene( sceneRect() ).boundingRect();
+	
+	double sx = double(sceneRectPixels.width()) / viewport()->width();
+	double sy = double(sceneRectPixels.height()) / viewport()->height();
+	
+	double min = qMin( sx, sy );
+	// make sure both scales are at least 1
+	if ( min < 1.0 )
+	{
+		scale( 1.0 / min, 1.0 / min );
+	}
 }
 
 // ========================= on simulation started ===========================
@@ -310,7 +370,11 @@ void MainView::toolAddObject( CqItem* pItem )
 // ============================ show event ==============================
 void MainView::showEvent( QShowEvent* /*pEvent*/ )
 {
-	ensureVisible( -6, -5, 12, 12 );
+	if ( ! _viewportInitialized )
+	{
+		ensureVisible( -6, -5, 12, 12 );
+		_viewportInitialized = true;
+	}
 }
 
 // ============================ can add nail ==============================
@@ -391,8 +455,18 @@ void MainView::setMode( Mode mode )
 			_addedObject = NULL;
 			unselectAll();
 		}
+		else if ( _mode == SCROLLING )
+		{
+			setCursor( Qt::ArrowCursor );
+		}
 		
 		_mode = mode;
+		
+		// prepare new mode
+		if ( _mode == SCROLLING )
+		{
+			setCursor( Qt::ClosedHandCursor );
+		}
 	}
 }
 

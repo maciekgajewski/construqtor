@@ -46,7 +46,7 @@ CqWheel::~CqWheel()
 void CqWheel::init()
 {
 	setEditorFlags( editorFlags() | Selectable | Movable );
-	setMaterial( CqMaterial( 100.0, 1.0, 0.3 ) );
+	setMaterial( CqMaterial( 100.0, 2.0, 0.3 ) );
 }
 
 // ========================= can be moved ================

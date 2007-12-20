@@ -97,6 +97,12 @@ bool CqSimulation::isRunning() const
 	return _simulationTimer.isActive();
 }
 
+// ========================== inv time step ================
+double CqSimulation::invTimeStep() const
+{
+	return 1.0/B2D_SPS;
+}
+
 // =========================== timer timeout =============
 void CqSimulation::simulationTimerTimeout()
 {
@@ -124,7 +130,7 @@ void CqSimulation::initWorld()
 {
 	// TODO define outside
 	
-	_worldRect = QRect( -500, -100, 1000, 200 );
+	_worldRect = QRect( -250, -100, 500, 200 ); // 500x200 m
 	// world size spec
 	b2AABB worldAABB;
 	worldAABB.minVertex.Set(-500.0, -200.0);
@@ -225,10 +231,10 @@ bool CqSimulation::canBeRotated( const CqItem* /*pItem*/ ) const
 }
 // ============================ can add here ? ======================
 // Can item be added here now?
-bool CqSimulation::canAddHere( const CqItem* /*pItem*/, const QPointF& /*pos*/ ) const
+bool CqSimulation::canAddHere( const CqItem* /*pItem*/, const QPointF& pos ) const
 {
 	// TODO 'edit' area here
-	return ! isRunning();
+	return ! isRunning() && _worldRect.contains( pos );
 }
 
 // ============================== cotroller destroyed ==================
