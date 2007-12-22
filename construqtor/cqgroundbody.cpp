@@ -44,6 +44,7 @@ void CqGroundBody::init()
 {
 	setMaterial( CqMaterial( 0, 0.9, 0.2 ) );
 	setBrush( Qt::darkGreen );
+	setName("Ground");
 }
 
 // =============================== destructor =======================
@@ -56,7 +57,19 @@ CqGroundBody::~CqGroundBody()
 /// Calculates y for specified x.
 double CqGroundBody::height( double x )
 {
-	// TODO
+	// find line containing this coordinate
+	for( int i = 0; i < _heightmap.size() - 1; i++ )
+	{
+		if ( _heightmap[i].x() <= x && _heightmap[i+1].x() >= x )
+		{
+			double x1 = _heightmap[i].x();
+			double y1 = _heightmap[i].y();
+			double x2 = _heightmap[i+1].x();
+			double y2 = _heightmap[i+1].y();
+			
+			return y1 + ( y2 - y1 ) * ( x - x1) / ( x2 - x1 );
+		}
+	}
 	return 0;
 }
 
@@ -217,10 +230,6 @@ QList<b2ShapeDef*> CqGroundBody::createShape()
 		
 		list.append( createTriangleB2Shape( bottomPoint, prevPoint, prevBottomPoint ) );
 		list.append( createTriangleB2Shape( bottomPoint, point, prevPoint ) );
-		// TODO try CLOCKWISE
-		//list.append( createTriangleB2Shape( bottomPoint, prevPoint, point ) );
-		//list.append( createTriangleB2Shape( bottomPoint, prevBottomPoint, prevPoint ) );
-		
 		
 		prevPoint = point;
 	}
@@ -248,6 +257,12 @@ b2PolyDef* CqGroundBody::createTriangleB2Shape( const QPointF& a, const QPointF&
 double CqGroundBody::product( const QPointF& a, const QPointF& b )
 {
 	return a.x()*b.y() - a.y()*b.x();
+}
+
+// ======================== contains ==========================
+bool CqGroundBody::contains( const QPointF& pos ) const
+{
+	return _painterPolygon.containsPoint( pos, Qt::OddEvenFill );
 }
 
 // EOF

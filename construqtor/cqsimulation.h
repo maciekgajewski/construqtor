@@ -54,6 +54,9 @@ public:
 	const QGraphicsScene* scene() const { return &_scene; };
 	
 	void addItem( CqItem* pItem );		///< Adds item do simulation
+	void addGroundItem( CqItem* pItem );///< Adds ground item to simulation
+	QList<CqItem*> groundItems() const { return _groundItems; }
+	
 	
 	// editor control
 	bool canBeSelected( const CqItem* pItem ) const;	///< If itemcan be selected
@@ -99,6 +102,7 @@ private:
 	QGraphicsScene	_scene;					///< Simulation scene
 	QList<CqMotorController*>	_controllers;	///< Set of motor controllers
 	QRectF			_worldRect;				///< world rectangle
+	QList<CqItem*>	_groundItems;			///< List of ground bodies
 };
 
 #endif

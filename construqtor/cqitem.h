@@ -81,6 +81,8 @@ public:
 	double worldRotation() const;						///< item rotation in world coords
 	void setWorldPos( const QPointF pos );
 	void setWorldRotation( double rotation );
+	void setName( const QString& name ) { _name = name; }
+	QString name() const { return _name; }
 	
 	// info from editor
 	virtual void setPhysicalRotation( double radians );		///< Rotates item
@@ -110,6 +112,7 @@ public:
 	virtual void updatePhysicalPos(){};				///< Updates physical pos to item pos/rotation
 	virtual void updatePosToPhysical(){};			///< Updates item pos to physical pos (after simulation step)
 	
+	
 protected:
 	
 	// input handlers
@@ -136,6 +139,7 @@ private:
 	bool			_selected;							///< Selected
 	CqItem*			_pPhysicalParent;					///< Parent item
 	QPointF			_center;							///< Local center, rotation axis, COG
+	QString			_name;								///< Name
 
 };
 

@@ -27,6 +27,7 @@ CqGirder::CqGirder( double length, double width ) : CqPhysicalBox()
 {
 	setSize( QSizeF(length, width) );
 	setEditorFlags( editorFlags() | Selectable | Movable | Rotatable );
+	setName( QString("Girder %1x%2").arg(length).arg(width) );
 }
 
 // ============================ destructor ==================

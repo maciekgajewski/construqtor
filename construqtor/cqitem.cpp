@@ -24,6 +24,7 @@
 // local
 #include "cqsimulation.h"
 #include "cqitem.h"
+#include "cqcompounditem.h"
 
 // ========================== constructor ======================
 CqItem::CqItem( QGraphicsItem* parent )
@@ -35,7 +36,12 @@ CqItem::CqItem( QGraphicsItem* parent )
 // ========================== destructor ======================
 CqItem::~CqItem()
 {
-	// none
+	// remove self from parents lists
+	CqCompoundItem* pCompoundParent = dynamic_cast<CqCompoundItem*>( _pPhysicalParent );
+	if ( pCompoundParent )
+	{
+		pCompoundParent->removeChild( this );
+	}
 }
 
 // ==================================== init ==================

@@ -59,6 +59,7 @@ void CqWheelWithEngine::init()
 	_pEngine->setBrush( QColor( 0x80, 0x80, 0x80, 0x80 ) ); // semitransparent gray
 	_pEngine->setMaterial( ENGINE_MATERIAL );
 	_pEngine->setZValue( 0.5 );
+	_pEngine->setName("Engine");
 	
 	// init joint
 	_pMotor = new Motor();
@@ -78,6 +79,9 @@ void CqWheelWithEngine::init()
 	
 	// controller
 	_controller.setJoint( _pMotor );
+	
+	// init this
+	setName( "Wheel with engine" );
 }
 
 // ======================== constructor ===================
@@ -103,7 +107,7 @@ bool CqWheelWithEngine::canConnectHere( const QPointF& worldPoint )
 CqWheelWithEngine::Motor::Motor( CqWheelWithEngine* parent )
 	: CqRevoluteJoint( parent )
 {
-	// TODO
+	setName( "Motor" );
 }
 
 // ======================== Motor : paint ============

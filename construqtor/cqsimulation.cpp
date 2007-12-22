@@ -154,7 +154,7 @@ void CqSimulation::initWorld()
 	pGround->setBrush( Qt::darkGreen );
 	*/
 	CqGroundBody *pGround = CqGroundBody::randomGround( this, 0.5 );
-	addItem( pGround );
+	addGroundItem( pGround );
 	
 	stop();
 }
@@ -234,7 +234,21 @@ bool CqSimulation::canBeRotated( const CqItem* /*pItem*/ ) const
 bool CqSimulation::canAddHere( const CqItem* /*pItem*/, const QPointF& pos ) const
 {
 	// TODO 'edit' area here
-	return ! isRunning() && _worldRect.contains( pos );
+	if ( ! isRunning() && _worldRect.contains( pos ) )
+	{
+		// make sure it is not inside any ground body
+		foreach( CqItem* pGround, _groundItems )
+		{
+			if ( pGround->contains( pos ) )
+			{
+				return false;
+			}
+			
+			return true;
+		}
+	}
+	
+	return false;
 }
 
 // ============================== cotroller destroyed ==================
@@ -255,6 +269,14 @@ void CqSimulation::addController( CqMotorController* pController )
 	
 		emit motorControllerCreated( pController );
 	}
+}
+
+// =============================== add ground item ====================
+/// Like addsItem(), buts stores item on ground item's list. Does not change the item
+void CqSimulation::addGroundItem( CqItem* pItem )
+{
+	_groundItems.append( pItem );
+	addItem( pItem );
 }
 
 // EOF

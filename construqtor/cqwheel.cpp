@@ -47,6 +47,8 @@ void CqWheel::init()
 {
 	setEditorFlags( editorFlags() | Selectable | Movable );
 	setMaterial( CqMaterial( 100.0, 2.0, 0.3 ) );
+	
+	setName( QString("Wheel %1").arg( diameter() ) );
 }
 
 // ========================= can be moved ================

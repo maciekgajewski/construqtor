@@ -84,4 +84,8 @@ private:
 	CqPhysicalBody		*_pBody1, *_pBody2;	///< Bodies connected by joint
 };
 
-#endif
+#endif // CQJOINT_H
+
+// EOF
+
+
