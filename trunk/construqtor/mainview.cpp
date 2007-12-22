@@ -29,6 +29,7 @@
 #include "cqphysicalbody.h"
 #include "cqsimulation.h"
 #include "cqrevolutejoint.h"
+#include "cqgroundbody.h"
 
 // Local
 #include "mainview.h"
@@ -263,9 +264,9 @@ void MainView::breakJointUnderPoint( const QPoint& pos )
 	// simplest implementation - break first body or joint discovered
 	foreach( QGraphicsItem* pItem, itemList )
 	{
-		// body?
+		// top level body?
 		CqPhysicalBody* pBody = dynamic_cast<CqPhysicalBody*>( pItem );
-		if ( pBody )
+		if ( pBody && ! pBody->physicalParent() )
 		{
 			pBody->breakAllJoints();
 			break;
@@ -372,8 +373,18 @@ void MainView::showEvent( QShowEvent* /*pEvent*/ )
 {
 	if ( ! _viewportInitialized )
 	{
-		ensureVisible( -6, -5, 12, 12 );
-		_viewportInitialized = true;
+		QList<CqItem*> grounds = _pSimulation->groundItems();
+		if ( grounds.size() )
+		{
+			CqGroundBody* pGround = dynamic_cast<CqGroundBody*>(grounds[0]);
+			if ( pGround )
+			{
+				QRectF worldRect = _pSimulation->worldRect();
+				double startHeight = pGround->height( worldRect.left() );
+				ensureVisible( worldRect.left() + 2, startHeight - 5, 12, 12 );
+				_viewportInitialized = true;
+			}
+		}
 	}
 }
 

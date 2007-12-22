@@ -34,7 +34,9 @@ public:
 	CqCompoundItem( QGraphicsItem *pParent = 0 );
 	virtual ~CqCompoundItem();
 
-	void addChild( CqItem* pChild );
+	void addChild( CqItem* pChild );					///< adds child
+	void removeChild( CqItem* pChild );					///< removes child
+	
 	virtual void setWorld ( CqWorld* pWorld );			///< Sets world
 	virtual void setSelected( bool selected );			///< Selects
 	virtual void setSimulation( CqSimulation* pSimulation );

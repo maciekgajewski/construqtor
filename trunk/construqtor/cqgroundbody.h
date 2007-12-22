@@ -51,6 +51,7 @@ public:
 		, const QStyleOptionGraphicsItem * option
 		, QWidget * widget = 0 );
 	virtual QRectF boundingRect() const;
+	virtual bool contains( const QPointF& pos ) const;
 
 protected:
 	
@@ -70,7 +71,6 @@ private:
 	
 	QPolygonF	_heightmap;					///< Heightmap - poins of ground surface
 	mutable QPolygonF	_painterPolygon;	///< Cache: painted polygon
-	//QRectF		_worldRect;			///< Stored world rect TODO remove if not needed
 };
 
 #endif // CQGROUNDBODY_H

@@ -68,6 +68,17 @@ void CqCompoundItem::addChild( CqItem* pChild )
 	}
 }
 
+// =============================== remove child ====================
+void CqCompoundItem::removeChild( CqItem* pChild )
+{
+	Q_ASSERT( pChild );
+
+	if ( ! _children.removeAll( pChild ) )
+	{
+		qWarning("CqCompoundItem::removeChild: item not a child" );
+	}
+}
+
 // =============================== set world ====================
 /// Sets world for each self and it's children
 void CqCompoundItem::setWorld ( CqWorld* pWorld )

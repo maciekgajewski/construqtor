@@ -77,7 +77,7 @@ QRectF CqBolt::boundingRect() const
 // ====================== simualtion step =================
 void CqBolt::simulationStep()
 {
-	
+	CqRevoluteJoint::simulationStep();
 	/*
 	if ( b2joint() )
 	{
