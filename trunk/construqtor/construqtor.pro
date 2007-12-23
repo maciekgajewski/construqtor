@@ -25,7 +25,8 @@ cqbolt.cpp \
  cqpolygonalbody.cpp \
  cqpolygontriangulator.cpp \
  cqstone.cpp \
- cqgroundbody.cpp
+ cqgroundbody.cpp \
+ cqfragilerevolutejoint.cpp
 FORMS += mainwindow.ui \
 ControllerWidget.ui
 HEADERS += mainwindow.h \
@@ -53,13 +54,15 @@ cqbolt.h \
  cqpolygonalbody.h \
  cqpolygontriangulator.h \
  cqstone.h \
- cqgroundbody.h
+ cqgroundbody.h \
+ cqfragilerevolutejoint.h
 CONFIG += debug \
 qt \
 warn_on \
 rtti
 QT += core \
-gui
+gui \
+xml
 TARGET = ../bin/construqtor
 
 OBJECTS_DIR = .obj
@@ -68,19 +71,17 @@ UI_DIR = .ui
 
 MOC_DIR = .moc
 
-INCLUDEPATH += ../box2d \
-../box2d/Dynamics/Joints \
-../box2d/Collision \
-../box2d/Dynamics \
-../box2d/Common \
- ../gpc
-LIBS += ../box2d/libbox2d.a \
- ../gpc/libgpc.a
-
-TARGETDEPS += ../box2d/libbox2d.a \
- ../gpc/libgpc.a
-
 DISTFILES += FETUREPLAN
 
 CONFIG -= release
 
+INCLUDEPATH += ../box2d \
+../gpc \
+../box2d/Dynamics/Joints \
+../box2d/Collision \
+../box2d/Dynamics \
+../box2d/Common
+LIBS += ../box2d/libbox2d.a \
+../gpc/libgpc.a
+TARGETDEPS += ../box2d/libbox2d.a \
+../gpc/libgpc.a

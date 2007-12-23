@@ -31,13 +31,13 @@
 static const QSizeF SIZE = QSizeF( 0.05, 0.05 );
 
 // =================== constructor =======================
-CqBolt::CqBolt(CqWorld* world): CqRevoluteJoint(world)
+CqBolt::CqBolt(CqWorld* world): CqFragileRevoluteJoint(world)
 {
 	init();
 }
 
 // =================== constructor =======================
-CqBolt::CqBolt(QGraphicsItem* parent, CqWorld* world): CqRevoluteJoint(parent, world)
+CqBolt::CqBolt(QGraphicsItem* parent, CqWorld* world): CqFragileRevoluteJoint(parent, world)
 {
 	init();
 }
@@ -51,43 +51,86 @@ void CqBolt::init()
 	// TODO random rotation
 }
 
-// =================== destructor =======================
+// ========================== destructor ============================
 CqBolt::~CqBolt()
 {
 	// nope
 }
 
-// ====================== paint =================
+// ============================ paint ============================
 void CqBolt::paint
 	( QPainter * pPainter
 	, const QStyleOptionGraphicsItem * /*option*/
 	, QWidget * /*widget*/ )
 {
+	pPainter->setPen( colorByTemperature( temperature() ) );
+	
 	pPainter->drawEllipse( QRectF( - QPointF( SIZE.width(), SIZE.height() ) / 2, SIZE ) );
 	pPainter->drawLine( QPointF( -SIZE.width()/2, 0),  QPointF(SIZE.width()/2, 0 ) ); 
 }
-	
-// ================= boundiong rect =============
+
+// ========================== boundiong rect ======================
 QRectF CqBolt::boundingRect() const
 {
 	QSizeF bbs = SIZE *1.1;
 	return QRectF( - QPointF( bbs.width(), bbs.height() ) / 2, bbs );
 }
 
-// ====================== simualtion step =================
-void CqBolt::simulationStep()
+// =============================== broken ========================
+void CqBolt::broken()
 {
-	CqRevoluteJoint::simulationStep();
-	/*
-	if ( b2joint() )
-	{
-		double its = simulation()->invTimeStep();
-		b2Vec2 rf = b2joint()->GetReactionForce( its );
-		double rt = b2joint()->GetReactionTorque( its );
-		
-		// TODO modify temperature here. Move code to CqRevoluteJoint
-	}
-	*/
+	Q_ASSERT( simulation() );
+	
+	// create broken bolt
+	BrokenBolt* pBrokenBolt = new BrokenBolt();
+	
+	pBrokenBolt->setPhysicalPos( worldPos() );
+	pBrokenBolt->setPhysicalRotation( worldRotation() );
+	
+	simulation()->addItem( pBrokenBolt );
+	
+	// bye bye, cruel world!
+	delete this;
+}
+
+// ============================== broken bolt: paint ===========================
+void CqBolt::BrokenBolt::paint
+	( QPainter * pPainter
+	, const QStyleOptionGraphicsItem * /*option*/
+	, QWidget * /*widget*/  )
+{
+	pPainter->drawEllipse( QRectF( - QPointF( SIZE.width(), SIZE.height() ) / 2, SIZE ) );
+	pPainter->drawLine( QPointF( -SIZE.width()/2, 0),  QPointF(SIZE.width()/2, 0 ) ); 
+}
+
+// ============================ broken bolt: boundong rect ======================
+QRectF CqBolt::BrokenBolt::boundingRect() const
+{
+	QSizeF bbs = SIZE *1.1;
+	return QRectF( - QPointF( bbs.width(), bbs.height() ) / 2, bbs );
+}
+
+// ================================ broken bolt: init ===============================
+void CqBolt::BrokenBolt::init()
+{
+	setName("Broken bolt");
+	setEditorFlags( 0 );
+	setMaterial( CqMaterial::steel() );
+}
+
+// ================================= create shape =================================
+QList<b2ShapeDef*> CqBolt::BrokenBolt::createShape()
+{
+	b2CircleDef* pCircle = new b2CircleDef;
+	
+	pCircle->radius = SIZE.width() / 2.0;
+	
+	material().copyToShapeDef( pCircle );
+	
+	QList<b2ShapeDef*> result;
+	result.append( pCircle );
+	
+	return result;
 }
 
 // EOF

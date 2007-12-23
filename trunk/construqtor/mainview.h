@@ -55,6 +55,7 @@ public:
 signals:
 
 	void pointerPos( double x, double y );	///< Signals mouse pointer pos in scene corrds
+	void selectedDescription( const QString& description ); ///< Descriptiopn of selected item
 	
 protected:
 

@@ -100,7 +100,7 @@ bool CqSimulation::isRunning() const
 // ========================== inv time step ================
 double CqSimulation::invTimeStep() const
 {
-	return 1.0/B2D_SPS;
+	return B2D_SPS;
 }
 
 // =========================== timer timeout =============
@@ -168,7 +168,6 @@ void CqSimulation::assurePhysicalObjectsCreated()
 	// first - create bodies
 	foreach( QGraphicsItem* pItem, items )
 	{
-		//CqPhysicalBody* pBody = qgraphicsitem_cast<CqPhysicalBody*>( pItem );
 		CqPhysicalBody* pBody = dynamic_cast<CqPhysicalBody*>( pItem );
 		
 		if ( pBody )
@@ -180,7 +179,6 @@ void CqSimulation::assurePhysicalObjectsCreated()
 	// second - create joints
 	foreach( QGraphicsItem* pItem, items )
 	{
-		//CqJoint* pJoint = qgraphicsitem_cast<CqJoint*>( pItem );
 		CqJoint* pJoint = dynamic_cast<CqJoint*>( pItem );
 		
 		if ( pJoint )
@@ -198,6 +196,21 @@ void CqSimulation::addItem( CqItem* pItem )
 	_scene.addItem( pItem );
 	pItem->setSimulation( this );
 	pItem->setWorld( _pPhysicalWorld );
+	if ( isRunning() )
+	{
+		// make sure it is created
+		CqPhysicalBody* pBody = dynamic_cast<CqPhysicalBody*>( pItem );
+		if ( pBody )
+		{
+			pBody->assureBodyCreated();
+		}
+	
+		CqJoint* pJoint = dynamic_cast<CqJoint*>( pItem );
+		if ( pJoint )
+		{
+			pJoint->assureJointCreated();
+		}
+	}
 }
 
 // ============================= can be selected ? ==================
@@ -277,6 +290,30 @@ void CqSimulation::addGroundItem( CqItem* pItem )
 {
 	_groundItems.append( pItem );
 	addItem( pItem );
+}
+
+// ============================= load from XML ======================
+void CqSimulation::loadFromXml( const QString& fileName )
+{
+	// TODO
+}
+
+// ============================= save to XML =======================
+void CqSimulation::saveToXml( const QString& fileName ) const
+{
+	// TODO
+}
+
+// ================================ to XML ==========================
+QDomElement CqSimulation::toXml() const
+{
+	// TODO
+}
+
+// =================================== from XML =====================
+void CqSimulation::fromXml( const QDomElement& element )
+{
+	// TODO
 }
 
 // EOF

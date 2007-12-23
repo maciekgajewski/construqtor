@@ -20,14 +20,16 @@
 #ifndef CQBOLT_H
 #define CQBOLT_H
 
-#include <cqrevolutejoint.h>
+// local
+#include "cqfragilerevolutejoint.h"
+#include "cqphysicalbody.h"
 
 /**
 	Bolt is a revolute jont, similar to nail, but disallowing rotations.
 	
 	@author Maciek Gajewski <maciej.gajewski0@gmail.com>
 */
-class CqBolt : public CqRevoluteJoint
+class CqBolt : public CqFragileRevoluteJoint
 {
 public:
 	// construction / destruction
@@ -43,12 +45,37 @@ public:
 		
 	virtual QRectF boundingRect() const;
 	
-	// infor from sulation
-	virtual void simulationStep();						///< Called after simulation step
+protected:
 
+	virtual void broken();							//!< called when joint is breaked
+	
 private:
 
 	void init();
+	
+	/// A 'broken bolt' object class. Its a non-selectable object wich represents broken bolt
+	class BrokenBolt : public CqPhysicalBody
+	{
+	public:
+	
+		BrokenBolt( CqWorld* world = NULL ) : CqPhysicalBody( world ){ init(); }
+		virtual ~BrokenBolt(){}
+		// operations 
+		virtual void paint
+			( QPainter * painter
+			, const QStyleOptionGraphicsItem * option
+			, QWidget * widget = 0 );
+			
+		virtual QRectF boundingRect() const;
+	protected:
+	
+		virtual QList<b2ShapeDef*> createShape();
+		
+	private:
+	
+		void init();
+		
+	};
 };
 
 #endif // CQBOLT_H

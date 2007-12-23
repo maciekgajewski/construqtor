@@ -36,6 +36,7 @@ MainWindow::MainWindow(QWidget *parent)
 	_pSimulation = NULL;
 	
 	connect( view, SIGNAL(pointerPos(double,double)), SLOT(scenePointerPos(double,double)));
+	connect( view, SIGNAL(selectedDescription( const QString&)), SLOT(selectedDescription( const QString&)));
 }
 
 // =========================== start =======================
@@ -171,6 +172,12 @@ void MainWindow::on_buttonStone_clicked()
 {
 	CqStone* pStone = CqStone::createRandomStone( 0.80 );
 	view->toolAddObject( pStone );
+}
+
+// =========================== new element selected ================
+void MainWindow::selectedDescription( const QString& description )
+{
+	labelSelected->setText( description );
 }
 
 // EOF

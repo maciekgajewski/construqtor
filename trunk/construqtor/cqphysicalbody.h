@@ -71,6 +71,9 @@ public:
 
 	virtual int type() const;	///< RTTI
 	
+	double mass() const;								///< Body masss [kg]
+	virtual QString description(); 						///< Object description
+	
 	// operations
 	void breakAllJoints();								///< Destroys all joints attached
 	

@@ -271,5 +271,23 @@ void CqPhysicalBody::simulationStarted()
 	}
 }
 
+// =========================== mass ===============================
+double CqPhysicalBody::mass() const
+{
+	if ( _pBody )
+	{
+		return _pBody->GetMass();
+	}
+	
+	return 0.0;
+}
+
+// ============================= description ====================
+/// Adds mass to description
+QString CqPhysicalBody::description()
+{
+	return QString("%1, %2kg").arg( CqItem::description() ).arg( mass() );
+}
+
 // EOF
 

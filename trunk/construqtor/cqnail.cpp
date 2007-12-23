@@ -23,20 +23,21 @@
 
 // local
 #include "cqnail.h"
+#include "cqsimulation.h"
 
 
 static const QSizeF SIZE = QSizeF( 0.02, 0.02 );
 
 // ========================= construction ======================
 CqNail::CqNail( CqWorld* world  )
-	: CqRevoluteJoint(world)
+	: CqFragileRevoluteJoint(world)
 {
 	init();
 }
 
 // ========================= construction ======================
 CqNail::CqNail( QGraphicsItem* parent, CqWorld* world  )
-	:CqRevoluteJoint( parent, world )
+	:CqFragileRevoluteJoint( parent, world )
 {
 	init();
 }
@@ -68,6 +69,62 @@ QRectF CqNail::boundingRect() const
 	QSizeF bbs = SIZE *1.1;
 	return QRectF( - QPointF( bbs.width(), bbs.height() ) / 2, bbs );
 }
+// ============================== broken nail: paint ===========================
+void CqNail::BrokenNail::paint
+	( QPainter * pPainter
+	, const QStyleOptionGraphicsItem * /*option*/
+	, QWidget * /*widget*/  )
+{
+	pPainter->drawEllipse( QRectF( - QPointF( SIZE.width(), SIZE.height() ) / 2, SIZE ) );
+}
+
+// ============================ broken bolt: boundong rect ======================
+QRectF CqNail::BrokenNail::boundingRect() const
+{
+	QSizeF bbs = SIZE *1.1;
+	return QRectF( - QPointF( bbs.width(), bbs.height() ) / 2, bbs );
+}
+
+// ================================ broken nail: init ===============================
+void CqNail::BrokenNail::init()
+{
+	setName("Broken nail");
+	setEditorFlags( 0 );
+	setMaterial( CqMaterial::steel() );
+}
+
+// ================================= broken nail: create shape =================================
+QList<b2ShapeDef*> CqNail::BrokenNail::createShape()
+{
+	b2CircleDef* pCircle = new b2CircleDef;
+	
+	pCircle->radius = SIZE.width() / 2.0;
+	
+	material().copyToShapeDef( pCircle );
+	
+	QList<b2ShapeDef*> result;
+	result.append( pCircle );
+	
+	return result;
+}
+
+// =============================== broken ========================
+void CqNail::broken()
+{
+	Q_ASSERT( simulation() );
+	
+	// create broken nail
+	BrokenNail* pBrokenNail = new BrokenNail();
+	
+	pBrokenNail->setPhysicalPos( worldPos() );
+	pBrokenNail->setPhysicalRotation( worldRotation() );
+	
+	simulation()->addItem( pBrokenNail );
+	
+	// bye bye, cruel world!
+	delete this;
+}
+
 
 
 // EOF

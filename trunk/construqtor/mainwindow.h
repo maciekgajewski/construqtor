@@ -63,6 +63,7 @@ public slots:
 	
 	// signals from simulation
 	void controllerCreated( CqMotorController* pCtrl );
+	void selectedDescription( const QString& description );
 	
 private:
 	CqSimulation* _pSimulation;
