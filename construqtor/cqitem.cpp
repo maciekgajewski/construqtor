@@ -270,6 +270,18 @@ void CqItem::setWorldRotation( double rotation )
 	}
 }
 
+// ================================ to XML ==============================
+QDomElement CqItem::toXml() const
+{
+	// TODO
+}
+
+// ================================ from XML =============================
+void CqItem::fromXml( const QDomElement& element )
+{
+	// TODO
+}
+
 // EOF
 
 

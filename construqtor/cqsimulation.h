@@ -24,6 +24,7 @@
 #include <QObject>
 #include <QGraphicsScene>
 #include <QTimer>
+#include <QDomElement>
 
 // box2d
 class b2World;
@@ -72,6 +73,14 @@ public:
 	QRectF worldRect() const { return _worldRect; }
 	
 	double invTimeStep() const;						///< Returns time step [1/s]
+	
+	// XML storing / reading
+	void loadFromXml( const QString& fileName );		///< loads from XML
+	void saveToXml( const QString& fileName ) const;	///< saves to XML
+	
+	virtual QDomElement toXml() const;					///< stores item state as XML. To be reimplemented
+	virtual void fromXml( const QDomElement& element );	///< restores item state from XML. To be reimplemented
+	
 
 signals:
 

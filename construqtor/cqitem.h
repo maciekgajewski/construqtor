@@ -22,6 +22,7 @@
 
 // Qt
 #include <QGraphicsItem>
+#include <QDomElement>
 
 // local
 class CqSimulation;
@@ -70,6 +71,9 @@ public:
 	
 	virtual void setSelected( bool selected );
 	bool selected() const { return _selected; }
+	
+	virtual QString description() { return _name;} 		///< Object description
+	
 	// mapping coordinates 
 	QPointF mapToWorld( const QPointF& local );			///< Maps local to physical scene
 	double	mapToWorld( double rotation );				///< Maps local rotation to [husical
@@ -112,6 +116,9 @@ public:
 	virtual void updatePhysicalPos(){};				///< Updates physical pos to item pos/rotation
 	virtual void updatePosToPhysical(){};			///< Updates item pos to physical pos (after simulation step)
 	
+	// XML storing / reading
+	virtual QDomElement toXml() const;					///< stores item state as XML. To be reimplemented
+	virtual void fromXml( const QDomElement& element );	///< restores item state from XML. To be reimplemented
 	
 protected:
 	

@@ -219,12 +219,14 @@ void MainView::selectUnderPoint( const QPoint& pos )
 			// selectable
 			if ( pcqitem->canBeSelected() )
 			{
-				pcqitem->setSelected( ! pcqitem->isSelected() );
+				pcqitem->setSelected( true );
 				pcqitem->update();
 				// create editor for selected
 				delete _pEditor;
 				_pEditor = new CeEditorItem( pcqitem );
 				_pEditor->setMatrix( matrix().inverted() ); //set inverted transform
+				
+				emit selectedDescription( pcqitem->description() );
 				break;
 			}
 		}
@@ -248,6 +250,8 @@ void MainView::unselectAll()
 	// destroy editor
 	delete _pEditor;
 	_pEditor = NULL;
+	
+	emit selectedDescription( "" );
 }
 
 // ======================= break joint under point ==============
@@ -271,9 +275,9 @@ void MainView::breakJointUnderPoint( const QPoint& pos )
 			pBody->breakAllJoints();
 			break;
 		}
-		// joint?
+		// top level joint?
 		CqJoint* pJoint = dynamic_cast<CqJoint*>( pItem );
-		if ( pJoint )
+		if ( pJoint && ! pJoint->physicalParent() )
 		{
 			pJoint->breakJoint();
 		}

@@ -20,14 +20,16 @@
 #ifndef CQNAIL_H
 #define CQNAIL_H
 
-#include <cqrevolutejoint.h>
+// local
+#include "cqfragilerevolutejoint.h"
+#include "cqphysicalbody.h"
 
 /**
 	Nail is a simplest revolition joint: no motors, no limits.
 
 	@author Maciek Gajewski <maciej.gajewski0@gmail.com>
 */
-class CqNail : public CqRevoluteJoint
+class CqNail : public CqFragileRevoluteJoint
 {
 public:
 
@@ -44,10 +46,41 @@ public:
 		
 	virtual QRectF boundingRect() const;
 
+protected:
+
+	virtual void broken();							//!< called when joint is breaked
+
 private:
 
 	void init();
+	/// A 'broken nail' object class. Its a non-selectable object wich represents broken nails
+	class BrokenNail : public CqPhysicalBody
+	{
+	public:
+	
+		BrokenNail( CqWorld* world = NULL ) : CqPhysicalBody( world ){ init(); }
+		virtual ~BrokenNail(){}
+		// operations 
+		virtual void paint
+			( QPainter * painter
+			, const QStyleOptionGraphicsItem * option
+			, QWidget * widget = 0 );
+			
+		virtual QRectF boundingRect() const;
+	protected:
+	
+		virtual QList<b2ShapeDef*> createShape();
+		
+	private:
+	
+		void init();
+		
+	};
 
 };
 
-#endif
+#endif // CQNAIL_H
+
+// EOF
+
+
