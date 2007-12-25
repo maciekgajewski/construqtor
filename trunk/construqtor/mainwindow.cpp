@@ -65,6 +65,8 @@ void MainWindow::simulationStarted()
 	buttonWwE->setEnabled(false);
 	buttonBolt->setEnabled(false);
 	buttonStone->setEnabled(false);
+	buttonSave->setEnabled(false);
+	buttonLoad->setEnabled(false);
 }
 
 // =================================== on stop ============
@@ -79,6 +81,8 @@ void MainWindow::simulationPaused()
 	buttonWwE->setEnabled(true);
 	buttonBolt->setEnabled(true);
 	buttonStone->setEnabled(true);
+	buttonSave->setEnabled(true);
+	buttonLoad->setEnabled(true);
 }
 
 // =========================== pointer pos  =======================
@@ -178,6 +182,18 @@ void MainWindow::on_buttonStone_clicked()
 void MainWindow::selectedDescription( const QString& description )
 {
 	labelSelected->setText( description );
+}
+
+// ============================== save ==============================
+void MainWindow::on_buttonSave_clicked()
+{
+	_pSimulation->saveToXml( "simulation.xml" );
+}
+
+// ================================= load ===========================
+void MainWindow::on_buttonLoad_clicked()
+{
+	_pSimulation->loadFromXml( "simulation.xml" );
 }
 
 // EOF

@@ -49,6 +49,7 @@ class CqJoint;
 */
 class CqPhysicalBody : public CqItem
 {
+	Q_OBJECT
 public:
 	
 	// constrution / destruction
@@ -88,6 +89,10 @@ public:
 	void addJoint( CqJoint* pJoint );		///< Info: you have new joint
 	void removeJoint( CqJoint* pJoint );	///< Info: joint was removed
 	
+	// storing / reading
+	virtual void store( CqElement& element ) const;		///< stores item state 
+	virtual void load( const CqElement& element );		///< restores item state 
+	
 	
 protected:
 	
@@ -123,7 +128,15 @@ private:
 	CqMaterial	_material;				///< Material used
 	
 	QBrush		_brush;					///< Brush used to paint item
-	QPen		_pen;					///< Pen used to paint ite,
+	QPen		_pen;					///< Pen used to paint item
+	
+	double		_initialAngluarVelocity;	///< Initial angular velocity for created body
+	QPointF		_initialLinearVelocity;		///< Initial linear velocity
+
 };
 
-#endif
+#endif // CQPHYSICALBODY_H
+
+// EOF
+
+

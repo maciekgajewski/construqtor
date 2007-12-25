@@ -33,6 +33,7 @@
 */
 class CqGroundBody : public CqPhysicalBody
 {
+	Q_OBJECT
 public:
 	CqGroundBody(QGraphicsItem* parent, CqWorld* world = NULL);
 	CqGroundBody(CqWorld* world = NULL);

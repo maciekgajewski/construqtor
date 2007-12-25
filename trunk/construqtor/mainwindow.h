@@ -40,6 +40,10 @@ public slots:
 	void on_buttonStart_clicked();
 	void on_buttonStop_clicked();
 	
+	// save/load
+	void on_buttonSave_clicked();
+	void on_buttonLoad_clicked();
+	
 	// buttons - elements
 	
 	void on_buttonGirder100_clicked();

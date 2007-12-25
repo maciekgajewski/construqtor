@@ -30,6 +30,7 @@
 */
 class CqPhysicalDisk : public CqPhysicalBody
 {
+	Q_OBJECT
 public:
 	
 	// construction / destruction
@@ -53,6 +54,10 @@ public:
 	
 	/// Returns body under poitn - single body everywhere
 	virtual CqPhysicalBody* bodyHere( const QPointF& /*worldPoint*/ ) { return this; }
+	
+	// storing / reading
+	virtual void store( CqElement& element ) const;		///< stores item state 
+	virtual void load( const CqElement& element );		///< restores item state 
 	
 protected:
 

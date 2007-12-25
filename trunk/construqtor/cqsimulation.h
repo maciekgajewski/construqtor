@@ -20,11 +20,13 @@
 #ifndef CQSIMULATION_H
 #define CQSIMULATION_H
 
+// local
+#include "cqelement.h"
+
 // qt
 #include <QObject>
 #include <QGraphicsScene>
 #include <QTimer>
-#include <QDomElement>
 
 // box2d
 class b2World;
@@ -78,9 +80,10 @@ public:
 	void loadFromXml( const QString& fileName );		///< loads from XML
 	void saveToXml( const QString& fileName ) const;	///< saves to XML
 	
-	virtual QDomElement toXml() const;					///< stores item state as XML. To be reimplemented
-	virtual void fromXml( const QDomElement& element );	///< restores item state from XML. To be reimplemented
+	virtual void store( CqElement& element ) const;		///< stores item state 
+	virtual void load( const CqElement& element );		///< restores item state 
 	
+	void clear();										///< Clears simulation
 
 signals:
 
@@ -112,6 +115,11 @@ private:
 	QList<CqMotorController*>	_controllers;	///< Set of motor controllers
 	QRectF			_worldRect;				///< world rectangle
 	QList<CqItem*>	_groundItems;			///< List of ground bodies
+	QPointF			_gravity;				///< Gravity vector
 };
 
-#endif
+#endif // CQSIMULATION_H
+
+// EOF
+
+

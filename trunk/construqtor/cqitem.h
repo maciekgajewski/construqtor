@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2007 by Maciek Gajewski   *
- *   maciej.gajewski0@gmail.com   *
+ *   Copyright (C) 2007 by Maciek Gajewski                                 *
+ *   maciej.gajewski0@gmail.com                                            *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -22,9 +22,11 @@
 
 // Qt
 #include <QGraphicsItem>
-#include <QDomElement>
+#include <QObject>
+#include <QUuid>
 
 // local
+#include "cqelement.h"
 class CqSimulation;
 class CqWorld;
 class CqPhysicalBody;
@@ -35,8 +37,9 @@ class CqPhysicalBody;
 
 	@author Maciek Gajewski <maciej.gajewski0@gmail.com>
 */
-class CqItem : public QGraphicsItem
+class CqItem : public QObject, public QGraphicsItem
 {
+	Q_OBJECT
 public:
 
 	/// Flags describing editing this item
@@ -73,6 +76,9 @@ public:
 	bool selected() const { return _selected; }
 	
 	virtual QString description() { return _name;} 		///< Object description
+	
+	QUuid id() const { return _id; }					///< Unique id
+	void setId( const QUuid& id ) { _id = id; }			///< Sets id
 	
 	// mapping coordinates 
 	QPointF mapToWorld( const QPointF& local );			///< Maps local to physical scene
@@ -116,9 +122,9 @@ public:
 	virtual void updatePhysicalPos(){};				///< Updates physical pos to item pos/rotation
 	virtual void updatePosToPhysical(){};			///< Updates item pos to physical pos (after simulation step)
 	
-	// XML storing / reading
-	virtual QDomElement toXml() const;					///< stores item state as XML. To be reimplemented
-	virtual void fromXml( const QDomElement& element );	///< restores item state from XML. To be reimplemented
+	// storing / reading
+	virtual void store( CqElement& element ) const;		///< stores item state 
+	virtual void load( const CqElement& element );		///< restores item state 
 	
 protected:
 	
@@ -147,6 +153,7 @@ private:
 	CqItem*			_pPhysicalParent;					///< Parent item
 	QPointF			_center;							///< Local center, rotation axis, COG
 	QString			_name;								///< Name
+	QUuid			_id;								///< Unique ID
 
 };
 

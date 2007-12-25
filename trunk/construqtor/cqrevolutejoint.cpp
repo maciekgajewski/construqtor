@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2007 by Maciek Gajewski   *
- *   maciej.gajewski0@gmail.com   *
+ *   Copyright (C) 2007 by Maciek Gajewski                                 *
+ *   maciej.gajewski0@gmail.com                                            *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -24,6 +24,18 @@
 // local
 #include "cqrevolutejoint.h"
 #include "cqphysicalbody.h"
+
+// XML tags
+static const char* TAG_ANCHOR_POINT		= "anchor";
+static const char* TAG_MOTOR_ENABLED	= "motor";
+static const char* TAG_MAX_SPEED		= "maxspeed";
+static const char* TAG_MAX_TORQUE		= "maxtorque";
+static const char* TAG_LIMITS_ENABLED	= "limits";
+static const char* TAG_UPPER_LIMIT		= "upperlimit";
+static const char* TAG_LOWER_LIMIT		= "lowerlimit";
+static const char* TAG_JOINT_SPEED		= "jointspeed";
+static const char* TAG_JOINT_ANGLE		= "jointangle";
+
 
 // =========================== constructor ===================
 CqRevoluteJoint::CqRevoluteJoint(QGraphicsItem* parent, CqWorld* world): CqJoint(parent, world)
@@ -52,6 +64,7 @@ void CqRevoluteJoint::init()
 	_enableLimits	= false;
 	_anchorPoint	= QPointF( 0, 0 );
 	_initialSpeed	= 0.0;
+	_initialAngle	= 0.0;
 }
 
 // =========================== create joint ===================
@@ -82,8 +95,11 @@ b2Joint* CqRevoluteJoint::createJoint(CqWorld* pWorld)
 		jointDef.upperAngle		= _upperLimit;
 		jointDef.lowerAngle		= _lowerLimit;
 		
+		b2RevoluteJoint* pJoint = (b2RevoluteJoint*)pWorld->CreateJoint( & jointDef );
 		
-		return pWorld->CreateJoint( & jointDef );
+		// TODO what to do with initial angle?
+		
+		return pJoint;
 	}
 	
 	qWarning("Tired to create revolute joint without bodies");
@@ -115,6 +131,72 @@ void CqRevoluteJoint::setLimits( bool limits, double upper, double lower )
 	_enableLimits	= limits;
 	_upperLimit		= upper;
 	_lowerLimit		= lower;
+}
+
+// ================================= store ========================
+void CqRevoluteJoint::store( CqElement& element ) const
+{
+	CqJoint::store( element );
+	
+	element.appendPointF( TAG_ANCHOR_POINT, _anchorPoint );
+	
+	// motor
+	element.appendInt( TAG_MOTOR_ENABLED, _enableMotor );
+	if ( _enableMotor )
+	{
+		element.appendDouble( TAG_MAX_SPEED, _maxSpeed );
+		element.appendDouble( TAG_MAX_TORQUE, _maxTorque );
+	}
+	
+	// limits
+	element.appendInt( TAG_LIMITS_ENABLED, _enableLimits );
+	if ( _enableLimits )
+	{
+		element.appendDouble( TAG_UPPER_LIMIT, _upperLimit );
+		element.appendDouble( TAG_LOWER_LIMIT, _lowerLimit );
+	}
+	
+	// store joint state
+	b2RevoluteJoint* pJoint = (b2RevoluteJoint*)b2joint();
+	if ( pJoint )
+	{
+		element.appendDouble( TAG_JOINT_SPEED, pJoint->GetJointSpeed() );
+		element.appendDouble( TAG_JOINT_ANGLE, pJoint->GetJointAngle() );
+	}
+	else
+	{
+		element.appendDouble( TAG_JOINT_SPEED, _initialSpeed );
+		element.appendDouble( TAG_JOINT_ANGLE, _initialAngle );
+	}
+}
+
+// ================================= load ========================
+void CqRevoluteJoint::load( const CqElement& element )
+{
+	CqItem::load( element );
+
+	_anchorPoint = element.readPointF( TAG_ANCHOR_POINT );
+	
+	// motor
+	_enableMotor = bool( element.readInt( TAG_MOTOR_ENABLED ) );
+	if ( _enableMotor )
+	{
+		_maxSpeed = element.readDouble( TAG_MAX_SPEED );
+		_maxTorque = element.readDouble( TAG_MAX_TORQUE );
+	}
+	
+	// limits
+	_enableLimits = bool( element.readInt( TAG_LIMITS_ENABLED ) );
+	if ( _enableLimits )
+	{
+		_upperLimit = element.readDouble( TAG_UPPER_LIMIT );
+		_lowerLimit = element.readDouble( TAG_LOWER_LIMIT );
+	}
+	
+	// physical properties
+	// NOTE: assuming joint isn't created yet
+	_initialSpeed = element.readDouble( TAG_JOINT_SPEED );
+	_initialAngle = element.readDouble( TAG_JOINT_ANGLE );
 }
 
 // EOF

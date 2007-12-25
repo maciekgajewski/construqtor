@@ -29,6 +29,7 @@
 */
 class CqRevoluteJoint : public CqJoint
 {
+	Q_OBJECT
 public:
 	
 	// construction destruction
@@ -56,6 +57,10 @@ public:
 	// signal from simulation
 
 	virtual void updatePosToPhysical();		///< Updates position and rotation to physical
+	
+	// storing / reading
+	virtual void store( CqElement& element ) const;		///< stores item state 
+	virtual void load( const CqElement& element );		///< restores item state 
 
 protected:
 
@@ -74,7 +79,10 @@ protected:
 	
 	double	_maxTorque;
 	double	_maxSpeed;
+	
+	// physica lproperties
 	double	_initialSpeed;
+	double	_initialAngle;
 
 };
 

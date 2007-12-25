@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2007 by Maciek Gajewski   *
- *   maciej.gajewski0@gmail.com   *
+ *   Copyright (C) 2007 by Maciek Gajewski                                 *
+ *   maciej.gajewski0@gmail.com                                            *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -29,6 +29,7 @@
 */
 class CqCompoundItem : public CqItem
 {
+	Q_OBJECT
 public:
 	
 	CqCompoundItem( QGraphicsItem *pParent = 0 );
@@ -58,6 +59,10 @@ public:
 	
 	// signals from simulation
 	virtual void updatePosToPhysical();		///< Updates position and rotation to physical
+	
+	// storing / reading
+	virtual void store( CqElement& element ) const;		///< stores item state 
+	virtual void load( const CqElement& element );		///< restores item state 
 
 private:
 

@@ -29,6 +29,7 @@
 */
 class CqPhysicalBox : public CqPhysicalBody
 {
+	Q_OBJECT
 public:
 	
 	// construction / destruction
@@ -49,6 +50,10 @@ public:
 		
     virtual QRectF boundingRect() const;
 	virtual CqPhysicalBody* bodyHere( const QPointF& /*worldPoint*/ ) { return this; }
+	
+	// storing / reading
+	virtual void store( CqElement& element ) const;		///< stores item state 
+	virtual void load( const CqElement& element );		///< restores item state 
 	
 protected:
 

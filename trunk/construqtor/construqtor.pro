@@ -26,7 +26,9 @@ cqbolt.cpp \
  cqpolygontriangulator.cpp \
  cqstone.cpp \
  cqgroundbody.cpp \
- cqfragilerevolutejoint.cpp
+ cqfragilerevolutejoint.cpp \
+ cqdocument.cpp \
+ cqelement.cpp
 FORMS += mainwindow.ui \
 ControllerWidget.ui
 HEADERS += mainwindow.h \
@@ -55,7 +57,10 @@ cqbolt.h \
  cqpolygontriangulator.h \
  cqstone.h \
  cqgroundbody.h \
- cqfragilerevolutejoint.h
+ cqfragilerevolutejoint.h \
+ gexception.h \
+ cqdocument.h \
+ cqelement.h
 CONFIG += debug \
 qt \
 warn_on \

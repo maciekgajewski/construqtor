@@ -31,6 +31,7 @@
 */
 class CqNail : public CqFragileRevoluteJoint
 {
+	Q_OBJECT
 public:
 
 	// construction / destruction

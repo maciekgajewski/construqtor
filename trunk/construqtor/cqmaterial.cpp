@@ -25,6 +25,12 @@
 
 // local
 #include "cqmaterial.h"
+#include "cqelement.h"
+	
+static const char* TAG_FRICTION		= "friction";
+static const char* TAG_DENSITY		= "density";
+static const char* TAG_RESTITUTION	= "restitution";
+static const char* TAG_TYPE			= "type";
 
 // ====================== copy to shape derf ================
 void CqMaterial::copyToShapeDef( b2ShapeDef* pShape ) const
@@ -36,3 +42,22 @@ void CqMaterial::copyToShapeDef( b2ShapeDef* pShape ) const
 	pShape->restitution = restitution;
 }
 
+// ============================= store =====================
+void CqMaterial::store( CqElement& element ) const
+{
+	element.appendDouble( TAG_FRICTION, friction );
+	element.appendDouble( TAG_DENSITY, density );
+	element.appendDouble( TAG_RESTITUTION, restitution );
+	element.appendInt( TAG_TYPE, int(type) );
+}
+
+// ============================== load =====================
+void CqMaterial::load( const CqElement& element )
+{
+	friction = element.readDouble( TAG_FRICTION );
+	density = element.readDouble( TAG_DENSITY );
+	restitution = element.readDouble( TAG_RESTITUTION );
+	type = (Type)element.readInt( TAG_TYPE );
+}
+
+// EOF

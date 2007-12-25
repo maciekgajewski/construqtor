@@ -57,11 +57,11 @@ CeEditorItem::~CeEditorItem()
 }
 
 // =================================== paint ==============================
-void CeEditorItem::paint ( QPainter * pPainter, const QStyleOptionGraphicsItem * option, QWidget * widget )
+void CeEditorItem::paint ( QPainter * pPainter, const QStyleOptionGraphicsItem * /*option*/, QWidget * /*widget*/ )
 {
 	pPainter->setPen( QPen( Qt::black, 0, Qt::DotLine ) );
 	
-	pPainter->drawEllipse( -SIZE/2, -SIZE/2, SIZE, SIZE );
+	pPainter->drawEllipse( QRectF( -SIZE/2, -SIZE/2, SIZE, SIZE ) );
 }
 
 // =================================== bounding rect ==============================
@@ -177,7 +177,7 @@ void CeEditorItem::RotateHandler::adjustPosToAngle()
 }
 
 // =========================== Rotate Hndler: paint ==================================
-void CeEditorItem::RotateHandler::paint ( QPainter * pPainter, const QStyleOptionGraphicsItem * option, QWidget * widget )
+void CeEditorItem::RotateHandler::paint ( QPainter * pPainter, const QStyleOptionGraphicsItem * /*option*/, QWidget * /*widget*/ )
 {
 	QRectF rect(- SIZE/2.0, -SIZE/2.0, SIZE, SIZE ); 
 	pPainter->setPen( Qt::red );
@@ -212,13 +212,13 @@ void CeEditorItem::RotateHandler::mouseMoveEvent ( QGraphicsSceneMouseEvent * pE
 }
 
 // ============================== Rotate Handler: move press ===============================
-void CeEditorItem::RotateHandler::mousePressEvent ( QGraphicsSceneMouseEvent * pEvent )
+void CeEditorItem::RotateHandler::mousePressEvent ( QGraphicsSceneMouseEvent * /*pEvent*/ )
 {
 	_dragging = true;
 }
 
 // ============================== Rotate Handler: move release ===============================
-void CeEditorItem::RotateHandler::mouseReleaseEvent ( QGraphicsSceneMouseEvent * pEvent )
+void CeEditorItem::RotateHandler::mouseReleaseEvent ( QGraphicsSceneMouseEvent * /*pEvent*/ )
 {
 	_dragging = false;
 }

@@ -21,6 +21,9 @@
 // local
 #include "cqcompounditem.h"
 
+// tags
+static const char* TAG_FOLLOWED_CHILD	= "followed";
+
 // ======================== constructor =====================
 CqCompoundItem::CqCompoundItem( QGraphicsItem *pParent )
  : CqItem(pParent)
@@ -195,6 +198,37 @@ void CqCompoundItem::setSimulation( CqSimulation* pSimulation )
 	{
 		pChild->setSimulation(pSimulation);
 	}
+}
+
+// =================================== store ============================
+void CqCompoundItem::store( CqElement& element ) const
+{
+	CqItem::store( element );
+	
+	// append child elements
+	foreach( CqItem* pItem, _children )
+	{
+		element.appendItem( pItem );
+	}
+	
+	// noe store followed child
+	element.appendItemPointer( TAG_FOLLOWED_CHILD, _followedChild );
+}
+
+// =================================== load ============================
+void CqCompoundItem::load( const CqElement& element )
+{
+	CqItem::load( element );
+	
+	// populate list of children with sub-elements
+	while( CqItem* pItem = element.readItem() )
+	{
+		_children.append( pItem );
+	}
+	
+	// readfollowed chi;d
+	_followedChild = element.readItemPointer( TAG_FOLLOWED_CHILD );
+	
 }
 
 // EOF
