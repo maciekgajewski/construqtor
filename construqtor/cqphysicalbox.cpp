@@ -24,6 +24,9 @@
 // local
 #include "cqphysicalbox.h"
 
+// XML tags
+static const char* TAG_BOX_SIZE	= "boxsize";
+
 // ==================== contructor =======================
 CqPhysicalBox::CqPhysicalBox(QGraphicsItem* parent, CqWorld* world): CqPhysicalBody(parent, world)
 {
@@ -110,6 +113,21 @@ QRectF CqPhysicalBox::boundingRect() const
 	
 }
 
+// =========================================================
+void CqPhysicalBox::store( CqElement& element ) const
+{
+	CqPhysicalBody::store( element );
+	
+	element.appendSizeF( TAG_BOX_SIZE, _size );
+}
+
+// =========================================================
+void CqPhysicalBox::load( const CqElement& element )
+{
+	CqPhysicalBody::load( element );
+	
+	_size = element.readSizeF( TAG_BOX_SIZE );
+}
 
 
 // EOF

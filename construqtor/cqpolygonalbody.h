@@ -33,6 +33,7 @@
 */
 class CqPolygonalBody : public CqPhysicalBody
 {
+	Q_OBJECT
 public:
 	// constrution / destruction
 	CqPolygonalBody( CqWorld* world = NULL );

@@ -30,6 +30,7 @@
 */
 class CqWheel : public CqPhysicalDisk
 {
+	Q_OBJECT
 public:
 
 	// construction / destruction 

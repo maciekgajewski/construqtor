@@ -35,6 +35,7 @@
 */
 class CqWheelWithEngine : public CqCompoundItem
 {
+	Q_OBJECT
 public:
 	CqWheelWithEngine( double wheelDiameter );
 	virtual ~CqWheelWithEngine();

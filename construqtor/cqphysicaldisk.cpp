@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2007 by Maciek Gajewski   *
- *   maciej.gajewski0@gmail.com   *
+ *   Copyright (C) 2007 by Maciek Gajewski                                 *
+ *   maciej.gajewski0@gmail.com                                            *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -23,6 +23,9 @@
 
 // local
 #include "cqphysicaldisk.h"
+
+// XML tags
+static const char* TAG_DISK_DIAMETER = "diameter";
 
 // ==================== contructor =======================
 CqPhysicalDisk::CqPhysicalDisk(QGraphicsItem* parent, CqWorld* world): CqPhysicalBody(parent, world)
@@ -116,6 +119,22 @@ QPainterPath CqPhysicalDisk::shape() const
 	
 	return path;
 }
+// =========================================================
+void CqPhysicalDisk::store( CqElement& element ) const
+{
+	CqPhysicalBody::store( element );
+	
+	element.appendDouble( TAG_DISK_DIAMETER, _diameter );
+}
+
+// =========================================================
+void CqPhysicalDisk::load( const CqElement& element )
+{
+	CqPhysicalBody::load( element );
+	
+	_diameter = element.readDouble( TAG_DISK_DIAMETER );
+}
+
 
 
 // EOF

@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2007 by Maciek Gajewski   *
- *   maciej.gajewski0@gmail.com   *
+ *   Copyright (C) 2007 by Maciek Gajewski                                 *
+ *   maciej.gajewski0@gmail.com                                            *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -30,6 +30,11 @@
 #include "cqjoint.h"
 #include "cqsimulation.h"
 
+// constants
+static const char* TAG_MATERIAL	= "material";
+static const char* TAG_LINEAR_VEL = "linearvelocity";
+static const char* TAG_ANGULAR_VEL = "angularvelocity";
+
 // ========================== constructor =================================
 CqPhysicalBody::CqPhysicalBody( QGraphicsItem* parent, CqWorld* world )
 	: CqItem( parent )
@@ -55,6 +60,7 @@ CqPhysicalBody::~CqPhysicalBody()
 void CqPhysicalBody::init()
 {
 	_pBody = NULL;
+	_initialAngluarVelocity = 0.0;
 	
 	// make rotatable
 	setEditorFlags( editorFlags() | Rotatable );
@@ -108,6 +114,10 @@ void CqPhysicalBody::createBody( CqWorld* pWorld )
 	
 	// set body position
 	updatePhysicalPos();
+	
+	// set body velocities
+	_pBody->SetAngularVelocity( _initialAngluarVelocity );
+	_pBody->SetLinearVelocity( b2Vec2( _initialLinearVelocity.x(), _initialLinearVelocity.y() ) );
 	
 	// delete shapes
 	foreach ( b2ShapeDef* pShape, shapes )
@@ -288,6 +298,57 @@ QString CqPhysicalBody::description()
 {
 	return QString("%1, %2kg").arg( CqItem::description() ).arg( mass() );
 }
+
+// ==============================================================
+void CqPhysicalBody::store( CqElement& element ) const
+{
+	CqItem::store( element );
+	
+	// store material
+	CqElement materialElement = element.createElement();
+	_material.store( materialElement );
+	element.appendElement( TAG_MATERIAL, materialElement );
+	
+	// TODO pen and brush here
+	
+	// store body properties, if created
+	if ( _pBody )
+	{
+		b2Vec2 lv = _pBody->GetLinearVelocity();
+		double av = _pBody->GetAngularVelocity();
+		
+		element.appendPointF( TAG_LINEAR_VEL, QPointF( lv.x, lv.y ) );
+		element.appendDouble( TAG_ANGULAR_VEL, av );
+	}
+}
+
+// ==============================================================
+void CqPhysicalBody::load( const CqElement& element )
+{
+	CqItem::load( element );
+
+	// get material
+	CqElement materialElement = element.readElement( TAG_MATERIAL );
+	_material.load( materialElement );
+	
+	// get velocities
+	if ( element.hasElement( TAG_LINEAR_VEL ) && element.hasElement( TAG_ANGULAR_VEL ) )
+	{
+		QPointF lv = element.readPointF( TAG_LINEAR_VEL );
+		double av = element.readDouble( TAG_ANGULAR_VEL );
+		if ( _pBody )
+		{
+			_pBody->SetAngularVelocity( av );
+			_pBody->SetLinearVelocity( b2Vec2( lv.x(), lv.y() ) );
+		}
+		else
+		{
+			_initialAngluarVelocity	= av;
+			_initialLinearVelocity	= lv;
+		}
+	}
+}
+
 
 // EOF
 

@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2007 by Maciek Gajewski   *
- *   maciej.gajewski0@gmail.com   *
+ *   Copyright (C) 2007 by Maciek Gajewski                                 *
+ *   maciej.gajewski0@gmail.com                                            *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -24,6 +24,14 @@
 // local
 #include "cqsimulation.h"
 #include "cqfragilerevolutejoint.h"
+	
+// tags
+static const char* TAG_TOLERATED_FORCE	= "toleratedforce";
+static const char* TAG_TOLERATED_TORQUE	= "toleratedtorque";
+static const char* TAG_HETINGBYTORQUE	= "heatingbytorque";
+static const char* TAG_HETINGBYFORCE	= "heatingbyforce";
+static const char* TAG_COOLING			= "cooling";
+static const char* TAG_TEMP				= "temperature";
 
 // ================================ constructor ==================
 CqFragileRevoluteJoint::CqFragileRevoluteJoint( QGraphicsItem* parent, CqWorld* world )
@@ -54,11 +62,11 @@ void CqFragileRevoluteJoint::init()
 	// set some defaults
 	_cooling = 0.1;
 	
-	_tolaretedForce		= 3000.0;
-	_toleratedTorque	= 3000.0;
+	_tolaretedForce		= 6000.0;
+	_toleratedTorque	= 6000.0;
 	
-	_heatingByTorque	= 0.0001;
-	_heatingByForce		= 0.0001;
+	_heatingByTorque	= 0.00005;
+	_heatingByForce		= 0.00005;
 
 }
 
@@ -118,6 +126,39 @@ void CqFragileRevoluteJoint::simulationStep()
 QColor CqFragileRevoluteJoint::colorByTemperature( double t )
 {
 	return QColor( qMin(255.0, 255.0 * t), 0, 0 );
+}
+// ================================= store ========================
+void CqFragileRevoluteJoint::store( CqElement& element ) const
+{
+	CqRevoluteJoint::store( element );
+	
+	// params
+	element.appendDouble( TAG_TOLERATED_FORCE, _tolaretedForce );
+	element.appendDouble( TAG_TOLERATED_TORQUE, _toleratedTorque );
+	element.appendDouble( TAG_HETINGBYTORQUE, _heatingByTorque );
+	element.appendDouble( TAG_HETINGBYFORCE, _heatingByForce );
+	element.appendDouble( TAG_COOLING, _cooling );
+
+	// state
+	element.appendDouble( TAG_TEMP, _temperature );
+	
+}
+
+// ================================= load ========================
+void CqFragileRevoluteJoint::load( const CqElement& element )
+{
+	CqRevoluteJoint::load( element );
+
+	// params
+	_tolaretedForce = element.readDouble( TAG_TOLERATED_FORCE );
+	_toleratedTorque = element.readDouble( TAG_TOLERATED_TORQUE );
+	_heatingByTorque = element.readDouble( TAG_HETINGBYTORQUE );
+	_heatingByForce = element.readDouble( TAG_HETINGBYFORCE );
+	_cooling = element.readDouble( TAG_COOLING );
+	
+	// state
+	_temperature = element.readDouble( TAG_TEMP );
+	
 }
 
 // EOF

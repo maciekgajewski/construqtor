@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2007 by Maciek Gajewski   *
- *   maciej.gajewski0@gmail.com   *
+ *   Copyright (C) 2007 by Maciek Gajewski                                 *
+ *   maciej.gajewski0@gmail.com                                            *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -34,6 +34,7 @@
 */
 class CqFragileRevoluteJoint: public CqRevoluteJoint
 {
+	Q_OBJECT
 public:
 
 	// construction / destruction
@@ -65,6 +66,10 @@ public:
 	// utilities
 	
 	static QColor colorByTemperature( double t );		///< Returns color beetween black and red, according to temp
+	
+	// storing / reading
+	virtual void store( CqElement& element ) const;		///< stores item state 
+	virtual void load( const CqElement& element );		///< restores item state 
 
 
 protected:

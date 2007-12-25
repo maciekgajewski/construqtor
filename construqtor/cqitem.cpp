@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2007 by Maciek Gajewski   *
- *   maciej.gajewski0@gmail.com   *
+ *   Copyright (C) 2007 by Maciek Gajewski                                 *
+ *   maciej.gajewski0@gmail.com                                            *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -25,6 +25,14 @@
 #include "cqsimulation.h"
 #include "cqitem.h"
 #include "cqcompounditem.h"
+
+// constants - xml tags
+static const char* TAG_CENTER	= "center";
+static const char* TAG_ROTATION	= "rotation";
+static const char* TAG_POSITION	= "position";
+static const char* TAG_NAME		= "name";
+static const char* TAG_FLAGS	= "flags";
+
 
 // ========================== constructor ======================
 CqItem::CqItem( QGraphicsItem* parent )
@@ -56,6 +64,8 @@ void CqItem::init()
 	_pPhysicalParent = NULL;
 	_selected = false;
 	_rotation = 0.0;
+	
+	_id = QUuid::createUuid(); // random id
 }
 
 // =========================== simulation step ===================
@@ -270,16 +280,25 @@ void CqItem::setWorldRotation( double rotation )
 	}
 }
 
-// ================================ to XML ==============================
-QDomElement CqItem::toXml() const
+// ================================ store ==============================
+void CqItem::store( CqElement& element ) const
 {
-	// TODO
+	element.appendPointF( TAG_CENTER, _center );
+	element.appendPointF( TAG_POSITION, pos() );
+	element.appendString( TAG_NAME, _name );
+	element.appendDouble( TAG_ROTATION, _rotation );
+	element.appendInt( TAG_FLAGS, _flags );
+	
 }
 
-// ================================ from XML =============================
-void CqItem::fromXml( const QDomElement& element )
+// ================================ load =============================
+void CqItem::load( const CqElement& element )
 {
-	// TODO
+	_center = element.readPointF( TAG_CENTER );
+	setPhysicalPos( element.readPointF( TAG_POSITION ) );
+	_name = element.readString( TAG_NAME );
+	setPhysicalRotation( element.readDouble( TAG_ROTATION ) );
+	_flags = element.readInt( TAG_FLAGS );
 }
 
 // EOF

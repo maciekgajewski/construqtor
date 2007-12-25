@@ -23,6 +23,9 @@
 // box 2d
 class b2ShapeDef;
 
+// local
+class CqElement;
+
 /**
 	Material description record.
 	
@@ -33,10 +36,10 @@ class CqMaterial
 public:
 	
 	// construction / destruction
-	CqMaterial( double d = 50.0, double f = 0.9, double r = 0.1){ density = d; friction = f; restitution = r;}
+	CqMaterial( double d = 50.0, double f = 0.9, double r = 0.1){ density = d; friction = f; restitution = r; type=Custom; }
 	~CqMaterial(){}
 
-	enum Type { Steel, Rubber, Wood, Custom };
+	enum Type { Custom, Steel, Rubber, Wood };
 	
 	Type type;					/// Well known material type
 	
@@ -46,6 +49,8 @@ public:
 	
 	/// Copies material spec to shape
 	void copyToShapeDef( b2ShapeDef* pShape ) const;
+	void store( CqElement& element ) const;		///< stores item state 
+	void load( const CqElement& element );		///< restores item state 
 	
 	/// Rubber definiton
 	inline static CqMaterial rubber()

@@ -28,6 +28,7 @@
 */
 class CqStone : public CqPolygonalBody
 {
+	Q_OBJECT
 public:
 	// construction / destruction
 	CqStone(QGraphicsItem* parent, CqWorld* world = NULL);

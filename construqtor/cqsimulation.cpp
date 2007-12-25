@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2007 by Maciek Gajewski   *
- *   maciej.gajewski0@gmail.com   *
+ *   Copyright (C) 2007 by Maciek Gajewski                                 *
+ *   maciej.gajewski0@gmail.com                                            *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -18,7 +18,6 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
-
 // box2d
 #include "b2World.h"
 
@@ -28,11 +27,18 @@
 #include "cqphysicalbox.h" 
 #include "cqmotorcontroller.h"
 #include "cqgroundbody.h"
+#include "cqdocument.h"
 
 
 // constants
 static const int SIMULATION_INTERVAL	= 100;	// [ms]
 static const double B2D_SPS				= 60.0;	// Box2D simulation steps per second
+
+// XML tags
+static const char* ROOT_ELEMENT		= "simulaton";
+static const char* TAG_WORLD_RECT	= "worldrectangle";		///< World rectangle
+static const char* TAG_GND_ELEMENT	= "ground";				///< Ground elements
+static const char* TAG_GRAVITY		= "gravity";
 
 // ===================== constructor =================
 CqSimulation::CqSimulation(QObject* parent): QObject(parent)
@@ -130,29 +136,22 @@ void CqSimulation::initWorld()
 {
 	// TODO define outside
 	
-	_worldRect = QRect( -250, -100, 500, 200 ); // 500x200 m
+	_worldRect	= QRect( -250, -100, 500, 200 ); // 500x200 m
+	_gravity	= QPointF( 0.0, -10.0 );
+	
 	// world size spec
 	b2AABB worldAABB;
 	worldAABB.minVertex.Set(-500.0, -200.0);
 	worldAABB.maxVertex.Set(500.0, 200.0);
 	
 	// gravity
-	b2Vec2 gravity(0.0, -10.0);
+	b2Vec2 gravity( _gravity.x(), _gravity.y() );
 	
 	// create world
 	_pPhysicalWorld = new CqWorld( worldAABB, gravity, true /* do sleep*/, this );
 	
 	_scene.setSceneRect( _worldRect );
 	
-	// ground object
-	// TODO replace with loadable ground
-	/*
-	CqPhysicalBox* pGround = new CqPhysicalBox( NULL, _pPhysicalWorld );
-	pGround->setSize( QSizeF( 100.0, 50.0 ) );
-	pGround->setPos( 0.0, -25.0 );
-	pGround->setMaterial( CqMaterial( 0, 0.9, 0.2 ) );
-	pGround->setBrush( Qt::darkGreen );
-	*/
 	CqGroundBody *pGround = CqGroundBody::randomGround( this, 0.5 );
 	addGroundItem( pGround );
 	
@@ -295,25 +294,79 @@ void CqSimulation::addGroundItem( CqItem* pItem )
 // ============================= load from XML ======================
 void CqSimulation::loadFromXml( const QString& fileName )
 {
-	// TODO
+	CqDocument doc;
+	
+	doc.loadFromFile( fileName );
+	
+	CqElement simulation = doc.readElement( ROOT_ELEMENT );
+	load( simulation );
 }
 
 // ============================= save to XML =======================
 void CqSimulation::saveToXml( const QString& fileName ) const
 {
+	CqDocument doc;
+	CqElement element = doc.createElement();
+	
+	store( element );
+	doc.appenElement( ROOT_ELEMENT, element );
+	
+	doc.saveToFile( fileName );
+}
+
+// ================================ store ==============================
+void CqSimulation::store( CqElement& element ) const
+{
+	// store discrete items first
+	element.appendRectF( TAG_WORLD_RECT, _worldRect );
+	element.appendPointF( TAG_GRAVITY, _gravity );
+	
+	// ground elements
+	foreach( CqItem* pGround, _groundItems )
+	{
+		element.appendItemPointer( TAG_GND_ELEMENT, pGround );
+	}
+	
+	// all CqItem-derrived, top-level items
+	QList< QGraphicsItem* > items = _scene.items();
+	foreach( QGraphicsItem* pItem, items )
+	{
+		CqItem* pCqIem = dynamic_cast<CqItem*>( pItem );
+		
+		if ( pCqIem && ! pCqIem->physicalParent() )
+		{
+			element.appendItem( pCqIem );
+		}
+	}
+	
+}
+
+// ================================ load =============================
+void CqSimulation::load( const CqElement& element )
+{
+	clear();
 	// TODO
 }
 
-// ================================ to XML ==========================
-QDomElement CqSimulation::toXml() const
+// =================================== clear =========================
+void CqSimulation::clear()
 {
-	// TODO
-}
-
-// =================================== from XML =====================
-void CqSimulation::fromXml( const QDomElement& element )
-{
-	// TODO
+	// destroy all scene iterms
+	QList<QGraphicsItem *> sceneItems =  _scene.items();
+	foreach( QGraphicsItem* pItem, sceneItems )
+	{
+		delete pItem;
+	}
+	
+	// re-initialize world
+	delete _pPhysicalWorld;
+	_pPhysicalWorld = NULL;
+	
+	initWorld();
+	
+	// clear lists
+	_controllers.clear();
+	_groundItems.clear();
 }
 
 // EOF

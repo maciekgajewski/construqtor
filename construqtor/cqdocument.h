@@ -17,3 +17,47 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
+#ifndef CQDOCUMENT_H
+#define CQDOCUMENT_H
+
+// Qt
+#include <QObject>
+#include <QString>
+#include <QDomDocument>
+
+// local
+#include "cqelement.h"
+
+/**
+	This is a core of CQ I/O system. Document is a storage facility, which holds tree of elements,
+	and within each element it holds values of different types, identified ith string key.
+	Current implemebntation is wrpper around Qt's XML DOM classes, but I dont see why another
+	couldn;t by ysed - i.e. binary for fast network transfer.
+	@author Maciek Gajewski <maciej.gajewski0@gmail.com>
+*/
+class CqDocument : public QObject
+{
+Q_OBJECT
+public:
+	CqDocument( QObject *parent = 0 );
+	virtual ~CqDocument();
+	
+	void appenElement( const QString& tag, const CqElement& element );
+	CqElement readElement( const QString& tag );
+
+	CqElement createElement();		///< Creates element
+
+	// i/o
+	void saveToFile( const QString& path );
+	void loadFromFile( const QString& path );
+	
+private:
+
+	QDomDocument	_document;		///< Actual document
+};
+
+#endif // CQDOCUMENT_H
+
+// EOF
+
+

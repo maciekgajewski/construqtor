@@ -24,6 +24,10 @@
 #include "cqitemtypes.h"
 #include "cqphysicalbody.h"
 
+// XML tags
+static const char* TAG_BODY1	= "body1";
+static const char* TAG_BODY2	= "body2";
+
 // =========================== constructor ===================
 CqJoint::CqJoint(CqWorld* world)
 	: CqItem()
@@ -110,6 +114,26 @@ void CqJoint::breakJoint()
 	
 	// delete this
 	delete this;
+}
+
+// ================================= store ========================
+void CqJoint::store( CqElement& element ) const
+{
+	CqItem::store( element );
+	
+	element.appendItemPointer( TAG_BODY1, _pBody1 );
+	element.appendItemPointer( TAG_BODY2, _pBody2 );
+	
+	// TODO any joint physical properties here
+}
+
+// ================================= load ========================
+void CqJoint::load( const CqElement& element )
+{
+	CqItem::load( element );
+
+	_pBody1 = (CqPhysicalBody*)element.readItemPointer( TAG_BODY1 );
+	_pBody1 = (CqPhysicalBody*)element.readItemPointer( TAG_BODY2 );
 }
 
 // EOF

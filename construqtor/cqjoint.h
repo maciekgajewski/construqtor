@@ -38,6 +38,7 @@ class CqWorld;
 */
 class CqJoint : public CqItem
 {
+	Q_OBJECT
 public:
 	// constrution / destruction
 	CqJoint( CqWorld* world = NULL );
@@ -62,6 +63,10 @@ public:
 	void breakJoint();						///< Breaks joint
 	
 	virtual int type() const;	///< RTTI
+	
+	// i/o
+	virtual void store( CqElement& element ) const;		///< stores item state 
+	virtual void load( const CqElement& element );		///< restores item state 
 	
 protected:
 
