@@ -24,6 +24,8 @@
 #include <QObject>
 #include <QString>
 #include <QDomDocument>
+#include <QMap>
+#include <QUuid>
 
 // local
 #include "cqelement.h"
@@ -51,9 +53,20 @@ public:
 	void saveToFile( const QString& path );
 	void loadFromFile( const QString& path );
 	
+	// item dictionary
+	CqItem* itemFromDictionary( const QUuid& id ) const { return _items[ id ]; }
+	
 private:
 
+	// methods
+	
+	void preCreateItems();
+	
+	// data
+	
 	QDomDocument	_document;		///< Actual document
+	
+	QMap< QUuid, CqItem* >	_items;	///< created items dictionary
 };
 
 #endif // CQDOCUMENT_H

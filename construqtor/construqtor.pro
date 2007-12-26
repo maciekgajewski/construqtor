@@ -28,7 +28,8 @@ cqbolt.cpp \
  cqgroundbody.cpp \
  cqfragilerevolutejoint.cpp \
  cqdocument.cpp \
- cqelement.cpp
+ cqelement.cpp \
+ cqitemfactory.cpp
 FORMS += mainwindow.ui \
 ControllerWidget.ui
 HEADERS += mainwindow.h \
@@ -60,7 +61,8 @@ cqbolt.h \
  cqfragilerevolutejoint.h \
  gexception.h \
  cqdocument.h \
- cqelement.h
+ cqelement.h \
+ cqitemfactory.h
 CONFIG += debug \
 qt \
 warn_on \

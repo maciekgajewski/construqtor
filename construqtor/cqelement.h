@@ -30,6 +30,7 @@
 
 // local
 class CqItem;
+class CqDocument;
 
 /**
 	Data element, stored withing CqDocument. Element holds it's child elements,
@@ -43,7 +44,12 @@ class CqElement : public QObject
 	Q_OBJECT
 public:
 
+	// character constants - XML tags and attributes
 	static const char* TAG_ITEM;		///< Default tag used to store items
+	static const char* ATTR_TYPE;		///< Attr storing element type
+	static const char* ATTR_CLASS;		///< Attr storing item class
+	static const char* ATTR_ID;			///< Attr storing item class
+	static const char* TYPE_ITEM;		///< CqItem type
 
 	CqElement ( QObject *parent = 0 );
 	CqElement ( const CqElement& source );
@@ -64,6 +70,7 @@ public:
 	void appendPolygonF( const QString& tag, const QPolygonF& value );
 	
 	void appendItemPointer( const QString& tag, const CqItem* pointer );
+	
 	void appendItem( const CqItem* pItem, const QString& tag = TAG_ITEM );
 	
 	void appendElement( const QString& tag, const CqElement& element );
@@ -79,15 +86,25 @@ public:
 	CqItem*		readItemPointer( const QString& tag ) const;
 	CqItem*		readItem( const QString& tag = TAG_ITEM ) const;
 	
+	// TODO do somethinf with iterating
 	CqElement	readElement( const QString& tag ) const;
 	
 	// underlying DOM access
 	const QDomElement& domElement() const { return _element; }
 	QDomElement& domElement() { return _element; }
 	
-private:
+	void setDocument( CqDocument* pDoc ) { _pDocument = pDoc; }
+	const CqDocument* document() const { return _pDocument; }
 	
+private:
+
+	QString getSubelementText( const QString& tag, const QString&  type ) const;
+		
 	QDomElement	_element;
+	mutable QDomElement _lastFound; ///< Iterator
+	CqItem* itemFromElement( const QDomElement& element ) const;
+	
+	CqDocument*	_pDocument;		///< Owner document
 	
 };
 

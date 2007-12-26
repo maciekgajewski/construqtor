@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2007 by Maciek Gajewski   *
- *   maciej.gajewski0@gmail.com   *
+ *   Copyright (C) 2007 by Maciek Gajewski                                 *
+ *   maciej.gajewski0@gmail.com                                            *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -25,6 +25,7 @@
 #include "cqdocument.h"
 #include "cqelement.h"
 #include "gexception.h"
+#include "cqitemfactory.h"
 
 // constants
 static const char* DOCTYPE		= "constructor-data-file";
@@ -55,8 +56,8 @@ void CqDocument::appenElement( const QString& tag,const CqElement& element )
 // ================================= read element ================
 CqElement CqDocument::readElement( const QString& tag )
 {
-	QDomElement e = _document.firstChildElement( tag );
-	
+	CqElement e( _document.firstChildElement( tag ) );
+	e.setDocument( this );
 	return e;
 }
 
@@ -94,13 +95,55 @@ void CqDocument::loadFromFile( const QString& path )
 	}
 	
 	file.close();
+	
+	// pre-create items
+	preCreateItems();
 }
 
 // ================================ create element ===============
 CqElement CqDocument::createElement()
 {
 	// NOTE: this uses converting condtructor of CqElement
-	return _document.createElement( TAG_UNNAMED );
+	CqElement e( _document.createElement( TAG_UNNAMED ) );
+	e.setDocument( this );
+	
+	return e;
+}
+
+// ============================== pre - create items ============
+void CqDocument::preCreateItems()
+{
+	// TODO load all elements, create them
+	QDomNodeList itemElements = _document.documentElement().elementsByTagName( CqElement::TAG_ITEM );
+	 
+	int count = itemElements.size();
+	for( int i = 0 ; i < count; i++ )
+	{
+		QDomElement element = itemElements.at( i ).toElement();
+		// check type
+		if ( element.attribute( CqElement::ATTR_TYPE ) == CqElement::TYPE_ITEM )
+		{
+			QString strId		= element.attribute( CqElement::ATTR_ID );
+			QString strClass	= element.attribute( CqElement::ATTR_CLASS );
+			// check
+			if ( strId.isNull() != strClass.isNull() )
+			{
+				qWarning("incomplete CqItem element"); // TODO some more helping info here
+				continue;
+			}
+			// create element
+			CqItem* pItem = CqItemFactory::createItem( strClass );
+			if ( ! pItem )
+			{
+				qWarning("Could not create item of type %s", qPrintable(strClass) );
+				continue;
+			}
+			
+			// store created element in doctionary
+			QUuid id( strId );
+			_items.insert( id, pItem );
+		}
+	}
 }
 
 // EOF

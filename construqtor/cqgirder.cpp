@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2007 by Maciek Gajewski   *
- *   maciej.gajewski0@gmail.com   *
+ *   Copyright (C) 2007 by Maciek Gajewski                                 *
+ *   maciej.gajewski0@gmail.com                                            *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -21,6 +21,9 @@
 // local
 #include "cqsimulation.h"
 #include "cqgirder.h"
+#include "cqitemfactory.h"
+
+CQ_ADD_TO_FACTORY( CqGirder );
 
 // ============================== constructor ===============
 CqGirder::CqGirder( double length, double width ) : CqPhysicalBox()

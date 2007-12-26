@@ -44,7 +44,7 @@ static const char* TAG_GRAVITY		= "gravity";
 CqSimulation::CqSimulation(QObject* parent): QObject(parent)
 {
 	// init
-	initWorld();
+	init();
 	connect( &_simulationTimer, SIGNAL(timeout()), SLOT(simulationTimerTimeout() ) );
 }
 
@@ -131,18 +131,24 @@ void CqSimulation::simulationTimerTimeout()
 	emit simulationStep();
 }
 
-// =========================== timer timeout =============
-void CqSimulation::initWorld()
+// ============================== init =============================
+void CqSimulation::init()
 {
-	// TODO define outside
-	
 	_worldRect	= QRect( -250, -100, 500, 200 ); // 500x200 m
 	_gravity	= QPointF( 0.0, -10.0 );
 	
+	createWorld();
+	initScene();
+}
+
+// =========================== create world =============
+void CqSimulation::createWorld()
+{
+	
 	// world size spec
 	b2AABB worldAABB;
-	worldAABB.minVertex.Set(-500.0, -200.0);
-	worldAABB.maxVertex.Set(500.0, 200.0);
+	worldAABB.minVertex.Set( _worldRect.left(), _worldRect.top() );
+	worldAABB.maxVertex.Set( _worldRect.right(), _worldRect.bottom() );
 	
 	// gravity
 	b2Vec2 gravity( _gravity.x(), _gravity.y() );
@@ -152,10 +158,14 @@ void CqSimulation::initWorld()
 	
 	_scene.setSceneRect( _worldRect );
 	
+	stop();
+}
+
+// ============================== init scene =============================
+void CqSimulation::initScene()
+{
 	CqGroundBody *pGround = CqGroundBody::randomGround( this, 0.5 );
 	addGroundItem( pGround );
-	
-	stop();
 }
 
 // =========================== assure objects created =============
@@ -345,7 +355,37 @@ void CqSimulation::store( CqElement& element ) const
 void CqSimulation::load( const CqElement& element )
 {
 	clear();
-	// TODO
+	
+	// load discrete elements
+	_worldRect = element.readRectF( TAG_WORLD_RECT );
+	_gravity = element.readPointF( TAG_GRAVITY );
+	
+	// now - create world
+	createWorld();
+	
+	// populate world with items
+	forever
+	{
+		CqItem* pItem = element.readItem();
+		if ( ! pItem )
+		{
+			break;
+		}
+		
+		addItem( pItem );
+	}
+	
+	// read ground intems
+	forever
+	{
+		CqItem* pItem = element.readItemPointer(TAG_GND_ELEMENT);
+		if ( ! pItem )
+		{
+			break;
+		}
+	
+		_groundItems.append( pItem );
+	}
 }
 
 // =================================== clear =========================
@@ -358,11 +398,9 @@ void CqSimulation::clear()
 		delete pItem;
 	}
 	
-	// re-initialize world
+	// destroy world
 	delete _pPhysicalWorld;
 	_pPhysicalWorld = NULL;
-	
-	initWorld();
 	
 	// clear lists
 	_controllers.clear();

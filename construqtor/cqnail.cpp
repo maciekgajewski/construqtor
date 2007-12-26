@@ -24,7 +24,10 @@
 // local
 #include "cqnail.h"
 #include "cqsimulation.h"
+#include "cqitemfactory.h"
 
+CQ_ADD_TO_FACTORY( CqNail );
+CQ_ADD_TO_FACTORY( CqBrokenNail );
 
 static const QSizeF SIZE = QSizeF( 0.02, 0.02 );
 
@@ -70,7 +73,7 @@ QRectF CqNail::boundingRect() const
 	return QRectF( - QPointF( bbs.width(), bbs.height() ) / 2, bbs );
 }
 // ============================== broken nail: paint ===========================
-void CqNail::BrokenNail::paint
+void CqBrokenNail::paint
 	( QPainter * pPainter
 	, const QStyleOptionGraphicsItem * /*option*/
 	, QWidget * /*widget*/  )
@@ -79,14 +82,14 @@ void CqNail::BrokenNail::paint
 }
 
 // ============================ broken bolt: boundong rect ======================
-QRectF CqNail::BrokenNail::boundingRect() const
+QRectF CqBrokenNail::boundingRect() const
 {
 	QSizeF bbs = SIZE *1.1;
 	return QRectF( - QPointF( bbs.width(), bbs.height() ) / 2, bbs );
 }
 
 // ================================ broken nail: init ===============================
-void CqNail::BrokenNail::init()
+void CqBrokenNail::init()
 {
 	setName("Broken nail");
 	setEditorFlags( 0 );
@@ -94,7 +97,7 @@ void CqNail::BrokenNail::init()
 }
 
 // ================================= broken nail: create shape =================================
-QList<b2ShapeDef*> CqNail::BrokenNail::createShape()
+QList<b2ShapeDef*> CqBrokenNail::createShape()
 {
 	b2CircleDef* pCircle = new b2CircleDef;
 	
@@ -114,7 +117,7 @@ void CqNail::broken()
 	Q_ASSERT( simulation() );
 	
 	// create broken nail
-	BrokenNail* pBrokenNail = new BrokenNail();
+	CqBrokenNail* pBrokenNail = new CqBrokenNail();
 	
 	pBrokenNail->setPhysicalPos( worldPos() );
 	pBrokenNail->setPhysicalRotation( worldRotation() );

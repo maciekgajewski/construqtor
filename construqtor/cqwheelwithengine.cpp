@@ -24,7 +24,12 @@
 // local
 #include "cqsimulation.h"
 #include "cqwheelwithengine.h"
+#include "cqitemfactory.h"
 
+CQ_ADD_TO_FACTORY( CqWheelWithEngine );
+CQ_ADD_TO_FACTORY( CqWheelWithEngineMotor );
+
+// constants
 static const double MAX_SPEED	= 20.0;		// max speed [rad/s?] 
 static const double MAX_TORQUE	= 1000.0;	// max torque [Nm?]
 static const CqMaterial ENGINE_MATERIAL( 400.0, 0.2, 0.1 ); // dens, friq, restit
@@ -62,7 +67,7 @@ void CqWheelWithEngine::init()
 	_pEngine->setName("Engine");
 	
 	// init joint
-	_pMotor = new Motor();
+	_pMotor = new CqWheelWithEngineMotor();
 	_pMotor->setAnchorPoint( QPointF(0,0) );
 	_pMotor->setConnectedBodies( _pWheel,  _pEngine );
 	_pMotor->setMotorEnabled( true, MAX_SPEED, MAX_TORQUE );
@@ -104,14 +109,14 @@ bool CqWheelWithEngine::canConnectHere( const QPointF& worldPoint )
 }
 
 // ======================== Motor : constructor ============
-CqWheelWithEngine::Motor::Motor( CqWheelWithEngine* parent )
+CqWheelWithEngineMotor::CqWheelWithEngineMotor( CqWheelWithEngine* parent )
 	: CqRevoluteJoint( parent )
 {
 	setName( "Motor" );
 }
 
 // ======================== Motor : paint ============
-void CqWheelWithEngine::Motor::paint
+void CqWheelWithEngineMotor::paint
 	( QPainter * pPainter
 	, const QStyleOptionGraphicsItem * /*option*/
 	, QWidget * /*widget*/ )
@@ -120,7 +125,7 @@ void CqWheelWithEngine::Motor::paint
 }
 	
 // ===================== Motor : rect ==================
-QRectF CqWheelWithEngine::Motor::boundingRect() const
+QRectF CqWheelWithEngineMotor::boundingRect() const
 {
 	// TODO temporary
 	return QRectF( -0.05, -0.05, 0.10, 0.10 );

@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2007 by Maciek Gajewski   *
- *   maciej.gajewski0@gmail.com   *
+ *   Copyright (C) 2007 by Maciek Gajewski                                 *
+ *   maciej.gajewski0@gmail.com                                            *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -27,6 +27,10 @@
 // local
 #include "cqbolt.h"
 #include "cqsimulation.h"
+#include "cqitemfactory.h"
+
+CQ_ADD_TO_FACTORY( CqBolt );
+CQ_ADD_TO_FACTORY( CqBrokenBolt );
 
 static const QSizeF SIZE = QSizeF( 0.05, 0.05 );
 
@@ -82,7 +86,7 @@ void CqBolt::broken()
 	Q_ASSERT( simulation() );
 	
 	// create broken bolt
-	BrokenBolt* pBrokenBolt = new BrokenBolt();
+	CqBrokenBolt* pBrokenBolt = new CqBrokenBolt();
 	
 	pBrokenBolt->setPhysicalPos( worldPos() );
 	pBrokenBolt->setPhysicalRotation( worldRotation() );
@@ -94,7 +98,7 @@ void CqBolt::broken()
 }
 
 // ============================== broken bolt: paint ===========================
-void CqBolt::BrokenBolt::paint
+void CqBrokenBolt::paint
 	( QPainter * pPainter
 	, const QStyleOptionGraphicsItem * /*option*/
 	, QWidget * /*widget*/  )
@@ -104,14 +108,14 @@ void CqBolt::BrokenBolt::paint
 }
 
 // ============================ broken bolt: boundong rect ======================
-QRectF CqBolt::BrokenBolt::boundingRect() const
+QRectF CqBrokenBolt::boundingRect() const
 {
 	QSizeF bbs = SIZE *1.1;
 	return QRectF( - QPointF( bbs.width(), bbs.height() ) / 2, bbs );
 }
 
 // ================================ broken bolt: init ===============================
-void CqBolt::BrokenBolt::init()
+void CqBrokenBolt::init()
 {
 	setName("Broken bolt");
 	setEditorFlags( 0 );
@@ -119,7 +123,7 @@ void CqBolt::BrokenBolt::init()
 }
 
 // ================================= create shape =================================
-QList<b2ShapeDef*> CqBolt::BrokenBolt::createShape()
+QList<b2ShapeDef*> CqBrokenBolt::createShape()
 {
 	b2CircleDef* pCircle = new b2CircleDef;
 	

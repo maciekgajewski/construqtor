@@ -54,31 +54,34 @@ protected:
 private:
 
 	void init();
-	/// A 'broken nail' object class. Its a non-selectable object wich represents broken nails
-	class BrokenNail : public CqPhysicalBody
-	{
-	public:
-	
-		BrokenNail( CqWorld* world = NULL ) : CqPhysicalBody( world ){ init(); }
-		virtual ~BrokenNail(){}
-		// operations 
-		virtual void paint
-			( QPainter * painter
-			, const QStyleOptionGraphicsItem * option
-			, QWidget * widget = 0 );
-			
-		virtual QRectF boundingRect() const;
-	protected:
-	
-		virtual QList<b2ShapeDef*> createShape();
-		
-	private:
-	
-		void init();
-		
-	};
-
 };
+
+/// A 'broken nail' object class. Its a non-selectable object wich represents broken nails
+///\internal
+class CqBrokenNail : public CqPhysicalBody
+{
+	Q_OBJECT
+public:
+
+	CqBrokenNail( CqWorld* world = NULL ) : CqPhysicalBody( world ){ init(); }
+	virtual ~CqBrokenNail(){}
+	// operations 
+	virtual void paint
+		( QPainter * painter
+		, const QStyleOptionGraphicsItem * option
+		, QWidget * widget = 0 );
+		
+	virtual QRectF boundingRect() const;
+protected:
+
+	virtual QList<b2ShapeDef*> createShape();
+	
+private:
+
+	void init();
+	
+};
+
 
 #endif // CQNAIL_H
 

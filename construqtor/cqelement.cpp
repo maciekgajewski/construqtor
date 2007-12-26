@@ -20,15 +20,17 @@
 
 // local
 #include "cqelement.h"
+#include "cqdocument.h"
 #include "cqitem.h"
 
 // tags and attributes
+// TODO clean this mess with sttaic/class static items
 static const char* TAG_UNNAMED	= "unnamed";
 const char* CqElement::TAG_ITEM	= "item";		///< Default tag used to store items
 
-static const char* ATTR_TYPE	= "type";		///< Attr storing element type
-static const char* ATTR_CLASS	= "class";		///< Attr storing item class
-static const char* ATTR_ID		= "id";			///< Attr storing item class
+const char* CqElement::ATTR_TYPE	= "type";		///< Attr storing element type
+const char* CqElement::ATTR_CLASS	= "class";		///< Attr storing item class
+const char* CqElement::ATTR_ID		= "id";			///< Attr storing item class
 
 static const char* TAG_RECT_TOPLEFT	= "topleft";	///< Rect pos
 static const char* TAG_RECT_SIZE	= "size";		///< Rect size
@@ -43,7 +45,7 @@ static const char* TYPE_POINTER	= "pointer";
 static const char* TYPE_POINT	= "point";
 static const char* TYPE_POLYGON	= "polygon";
 static const char* TYPE_RECT	= "rectangle";
-static const char* TYPE_ITEM	= "item";
+const char* CqElement::TYPE_ITEM	= "item";
 static const char* TYPE_STRING	= "string";
 static const char* TYPE_DOUBLE	= "double";
 static const char* TYPE_INT		= "int";
@@ -53,7 +55,7 @@ static const char* TYPE_SIZE	= "size";
 CqElement::CqElement ( QObject *parent )
 	: QObject ( parent )
 {
-	// nope
+	_pDocument = NULL;
 }
 
 // ========================== constructor =========================
@@ -61,6 +63,7 @@ CqElement::CqElement ( const QDomElement& element, QObject *parent )
 	: QObject ( parent )
 	, _element( element )
 {
+	_pDocument = NULL;
 }
 
 // ========================== constructor =========================
@@ -69,6 +72,7 @@ CqElement::CqElement ( const CqElement& source )
 	, _element( source._element )
 {
 	// TODO any copying here
+	_pDocument = source._pDocument;
 }
 
 // ========================== destructor ==========================
@@ -80,7 +84,10 @@ CqElement::~CqElement()
 // ==================================================================
 CqElement CqElement::createElement()
 {
-	return _element.ownerDocument().createElement( TAG_UNNAMED );
+	CqElement e( _element.ownerDocument().createElement( TAG_UNNAMED ) );
+	e.setDocument( _pDocument );
+	
+	return e;
 }
 
 // ==================================================================
@@ -199,52 +206,160 @@ void CqElement::appendElement( const QString& tag, const CqElement& element )
 	_element.appendChild( e );
 }
 
+// =========================== get text =============================
+/// Returns text od element with specified tag and type
+QString CqElement::getSubelementText( const QString& tag, const QString& type ) const
+{
+	// get element
+	QDomElement e = _element.firstChildElement( tag );
+	if ( e.isNull() )
+	{
+		qWarning("no element with tag %s", qPrintable( tag ) );
+		return QString::null;
+	}
+	
+	// check type
+	if ( e.attribute( ATTR_TYPE, QString::null ) != type )
+	{
+		qWarning("element %s is not of expected type %s", qPrintable( tag ), qPrintable( type ) );
+		return QString::null;
+	}
+	
+	return e.text();
+}
+
 // ==================================================================
+/// Returns null string if value can not be readed
 QString	CqElement::readString( const QString& tag ) const
 {
-	return QString();
+	return getSubelementText( tag, TYPE_STRING );
 }
 
 // ==================================================================
+/// Return 0.0 on error
 double	CqElement::readDouble( const QString& tag ) const
 {
-	return 0.0;
+	QString s = getSubelementText( tag, TYPE_DOUBLE );
+	bool ok = false;
+	double d = s.toDouble( &ok );
+	if ( ! ok )
+	{
+		return 0.0;
+	}
+	
+	return d;
 }
 
 // ==================================================================
+/// Return 0 on error
 int CqElement::readInt( const QString& tag ) const
 {
-	return 0;
+	QString s = getSubelementText( tag, TYPE_INT );
+	bool ok = false;
+	int i = s.toInt( &ok );
+	if ( ! ok )
+	{
+		return 0;
+	}
+	
+	return i;
 }
 
 // ==================================================================
 QPointF	CqElement::readPointF( const QString& tag ) const
 {
-	return QPointF();
+	QDomElement e = _element.firstChildElement( tag );
+	if ( e.attribute( ATTR_TYPE, QString::null ) != TYPE_POINT )
+	{
+		qWarning("no point element with tag %s", qPrintable( tag ) );
+		return QPointF();
+	}
+	
+	CqElement w( e );
+	
+	double x = w.readDouble( TAG_POINT_X );
+	double y = w.readDouble( TAG_POINT_Y );
+	
+	return QPointF( x, y );
 }
 
 // ==================================================================
 QSizeF	CqElement::readSizeF( const QString& tag ) const
 {
-	return QSizeF();
+	QDomElement e = _element.firstChildElement( tag );
+	if ( e.attribute( ATTR_TYPE, QString::null ) != TYPE_SIZE )
+	{
+		qWarning("no size element with tag %s", qPrintable( tag ) );
+		return QSizeF();
+	}
+	
+	CqElement wrapper( e );
+	
+	double w = wrapper.readDouble( TAG_WIDTH);
+	double h = wrapper.readDouble( TAG_HEIGHT );
+	
+	return QSizeF( w, h );
 }
 
 // ==================================================================
-QRectF	CqElement::readRectF( const QString& tag ) const
+QRectF	CqElement::readRectF( const QString& tag /*= TAG_ITEM*/ ) const
 {
-	return QRectF();
+	QDomElement e = _element.firstChildElement( tag );
+	if ( e.attribute( ATTR_TYPE, QString::null ) != TYPE_RECT )
+	{
+		qWarning("no rect element with tag %s", qPrintable( tag ) );
+		return QRectF();
+	}
+	
+	CqElement w( e );
+	
+	QPointF topLeft = w.readPointF( TAG_RECT_TOPLEFT );
+	QSizeF size = w.readSizeF( TAG_RECT_SIZE );
+	
+	return QRectF( topLeft, size );
 }
 
 // ==================================================================
 QPolygonF CqElement::readPolygonF( const QString& tag ) const
 {
-	return QPolygonF();
+	QDomElement e = _element.firstChildElement( tag );
+	if ( e.attribute( ATTR_TYPE, QString::null ) != TYPE_POLYGON )
+	{
+		qWarning("no polygon element with tag %s", qPrintable( tag ) );
+		return QPolygonF();
+	}
+	
+	CqElement w( e );
+	
+	QPolygonF result;
+	forever
+	{
+		QPointF p = w.readPointF( TAG_POINT );
+		if ( p.isNull() )
+		{
+			break;
+		}
+		result.append( p );
+	}
+	
+	return result;
 }
 
 // ==================================================================
 CqItem*	CqElement::readItemPointer( const QString& tag ) const
 {
-	return NULL;
+	Q_ASSERT( _pDocument );
+	
+	QDomElement e = _element.nextSiblingElement( tag );
+	if ( e.attribute( ATTR_TYPE, QString::null ) != TYPE_POINTER )
+	{
+		qWarning("no pointer element with tag %s", qPrintable( tag ) );
+		return NULL;
+	}
+	
+	QUuid  id( e.text() );
+	
+	return _pDocument->itemFromDictionary( id );
 }
 
 // ==================================================================
@@ -252,13 +367,51 @@ CqItem*	CqElement::readItemPointer( const QString& tag ) const
 /// Item is created with \b new, and is not owned. Should be destroyed by caller
 CqItem*	CqElement::readItem( const QString& tag ) const
 {
-	return NULL;
+	if ( _lastFound.isNull() )
+	{
+		_lastFound = _element.firstChildElement( tag );
+	}
+	else
+	{
+		_lastFound = _lastFound.nextSiblingElement( tag );
+	}
+	
+	return itemFromElement( _lastFound );
+}
+
+
+// =========================== item form element ======================
+CqItem*	CqElement::itemFromElement( const QDomElement& element ) const
+{
+	Q_ASSERT( _pDocument );
+	
+	if ( element.attribute( ATTR_TYPE, QString::null ) != TYPE_ITEM )
+	{
+		qWarning("no item element with tag %s", qPrintable( element.tagName() ) );
+		return NULL;
+	}
+	
+	QUuid id( element.attribute( ATTR_ID ) );
+	if ( id.isNull() )
+	{
+		qWarning("could not red id from element's attribute");
+		return NULL;
+	}
+	
+	// get pre-reated item
+	CqItem* pItem = _pDocument->itemFromDictionary( id );
+	
+	// read item
+	pItem->setId( id );
+	pItem->load( element );
+	
+	return pItem;
 }
 
 // ==================================================================
-CqElement CqElement::readElement( const QString& tag /*= TAG_ITEM*/ ) const
+CqElement CqElement::readElement( const QString& tag  ) const
 {
-	return CqElement();
+	return _element.firstChildElement( tag );
 }
 
 // ==================================================================
