@@ -17,71 +17,51 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef CQBOLT_H
-#define CQBOLT_H
+#ifndef CQITEMFACTORY_H
+#define CQITEMFACTORY_H
+
+// Qt
+#include <QMap>
+#include <QString>
 
 // local
-#include "cqfragilerevolutejoint.h"
-#include "cqphysicalbody.h"
+class CqItem;
 
 /**
-	Bolt is a revolute jont, similar to nail, but disallowing rotations.
-	
+	Global item factory.
 	@author Maciek Gajewski <maciej.gajewski0@gmail.com>
 */
-class CqBolt : public CqFragileRevoluteJoint
-{
-	Q_OBJECT
-public:
-	// construction / destruction
-	CqBolt(CqWorld* world = NULL );
-	CqBolt(QGraphicsItem* parent, CqWorld* world = NULL );
-	virtual ~CqBolt();
-
-	// operations 
-	virtual void paint
-		( QPainter * painter
-		, const QStyleOptionGraphicsItem * option
-		, QWidget * widget = 0 );
-		
-	virtual QRectF boundingRect() const;
-	
-protected:
-
-	virtual void broken();							//!< called when joint is breaked
-	
-private:
-
-	void init();
-	
-};
-
-/// A 'broken bolt' object class. Its a non-selectable object wich represents broken bolt
-///\internal
-class CqBrokenBolt : public CqPhysicalBody
+class CqItemFactory
 {
 public:
 
-	CqBrokenBolt( CqWorld* world = NULL ) : CqPhysicalBody( world ){ init(); }
-	virtual ~CqBrokenBolt(){}
-	// operations 
-	virtual void paint
-		( QPainter * painter
-		, const QStyleOptionGraphicsItem * option
-		, QWidget * widget = 0 );
-		
-	virtual QRectF boundingRect() const;
-protected:
+	/// Creator interface - inherited by creator objects for each 
+	/// class known to the factory
+	class Creator 
+	{
+	public:
+		virtual CqItem* createObject() = 0;
+	};
 
-	virtual QList<b2ShapeDef*> createShape();
+	static void addCreator( const QString& className, Creator* pCreator );
+	static CqItem* createItem( const QString& className );
 	
 private:
 
-	void init();
-	
+	static QMap< QString, Creator* > _creators;
 };
 
-#endif // CQBOLT_H
+// Use this macro in .cpp of CqItem - derrived objects
+#define CQ_ADD_TO_FACTORY( classname ) \
+	class Creator_ ## classname : public CqItemFactory::Creator \
+	{ \
+	public: \
+		Creator_ ## classname () { CqItemFactory::addCreator( #classname, this ); } \
+		virtual CqItem* createObject(){ return new classname (); } \
+	}; \
+	Creator_ ## classname __staticClassCreator ## classname;
+
+#endif // CQITEMFACTORY_H
 
 // EOF
 

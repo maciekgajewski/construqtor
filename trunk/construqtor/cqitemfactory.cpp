@@ -17,72 +17,27 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef CQBOLT_H
-#define CQBOLT_H
-
 // local
-#include "cqfragilerevolutejoint.h"
-#include "cqphysicalbody.h"
+#include "cqitemfactory.h"
 
-/**
-	Bolt is a revolute jont, similar to nail, but disallowing rotations.
-	
-	@author Maciek Gajewski <maciej.gajewski0@gmail.com>
-*/
-class CqBolt : public CqFragileRevoluteJoint
+QMap< QString, CqItemFactory::Creator* > CqItemFactory::_creators;
+
+// =====================================================
+void CqItemFactory::addCreator( const QString& className, Creator* pCreator )
 {
-	Q_OBJECT
-public:
-	// construction / destruction
-	CqBolt(CqWorld* world = NULL );
-	CqBolt(QGraphicsItem* parent, CqWorld* world = NULL );
-	virtual ~CqBolt();
+	_creators[ className ] = pCreator;
+}
 
-	// operations 
-	virtual void paint
-		( QPainter * painter
-		, const QStyleOptionGraphicsItem * option
-		, QWidget * widget = 0 );
-		
-	virtual QRectF boundingRect() const;
-	
-protected:
-
-	virtual void broken();							//!< called when joint is breaked
-	
-private:
-
-	void init();
-	
-};
-
-/// A 'broken bolt' object class. Its a non-selectable object wich represents broken bolt
-///\internal
-class CqBrokenBolt : public CqPhysicalBody
+// =====================================================
+CqItem* CqItemFactory::createItem( const QString& className )
 {
-public:
-
-	CqBrokenBolt( CqWorld* world = NULL ) : CqPhysicalBody( world ){ init(); }
-	virtual ~CqBrokenBolt(){}
-	// operations 
-	virtual void paint
-		( QPainter * painter
-		, const QStyleOptionGraphicsItem * option
-		, QWidget * widget = 0 );
-		
-	virtual QRectF boundingRect() const;
-protected:
-
-	virtual QList<b2ShapeDef*> createShape();
+	Creator* pCreator = _creators[ className ];
+	if ( pCreator )
+	{
+		return pCreator->createObject();
+	}
+	qWarning("Item factory has no creator for %s", qPrintable( className ) );
 	
-private:
-
-	void init();
-	
-};
-
-#endif // CQBOLT_H
-
-// EOF
-
+	return NULL;
+}
 

@@ -34,7 +34,7 @@ class CqWheel : public CqPhysicalDisk
 public:
 
 	// construction / destruction 
-	CqWheel( double diameter );
+	CqWheel( double diameter = 0.0 );
 	CqWheel( QGraphicsItem* parent );
 	virtual ~CqWheel();
 	

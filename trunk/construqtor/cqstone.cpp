@@ -22,6 +22,9 @@
 
 // local
 #include "cqstone.h"
+#include "cqitemfactory.h"
+
+CQ_ADD_TO_FACTORY( CqStone );
 
 // ================================= constructor ======================
 CqStone::CqStone(QGraphicsItem* parent, CqWorld* world)

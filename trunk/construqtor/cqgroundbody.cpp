@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2007 by Maciek Gajewski   *
- *   maciej.gajewski0@gmail.com   *
+ *   Copyright (C) 2007 by Maciek Gajewski                                 *
+ *   maciej.gajewski0@gmail.com                                            *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -24,6 +24,12 @@
 // local
 #include "cqsimulation.h"
 #include "cqgroundbody.h"
+#include "cqitemfactory.h"
+
+CQ_ADD_TO_FACTORY( CqGroundBody );
+
+// tags
+static const char* TAG_HEIGHTMAP = "heightmap";
 
 // =============================== constructor =======================
 CqGroundBody::CqGroundBody(QGraphicsItem* parent, CqWorld* world)
@@ -263,6 +269,24 @@ double CqGroundBody::product( const QPointF& a, const QPointF& b )
 bool CqGroundBody::contains( const QPointF& pos ) const
 {
 	return _painterPolygon.containsPoint( pos, Qt::OddEvenFill );
+}
+
+// =================================== store ======================
+void CqGroundBody::store( CqElement& element ) const
+{
+	CqPhysicalBody::store( element );
+	
+	element.appendPolygonF( TAG_HEIGHTMAP, _heightmap );
+}
+
+// =================================== load ======================
+void CqGroundBody::load( const CqElement& element )
+{
+	CqPhysicalBody::load( element );
+	
+	_heightmap = element.readPolygonF( TAG_HEIGHTMAP );
+	
+	_painterPolygon.clear(); // invalidate cache
 }
 
 // EOF

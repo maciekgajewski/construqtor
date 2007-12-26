@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2007 by Maciek Gajewski   *
- *   maciej.gajewski0@gmail.com   *
+ *   Copyright (C) 2007 by Maciek Gajewski                                 *
+ *   maciej.gajewski0@gmail.com                                            *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -24,6 +24,9 @@
 // local
 #include "cqpolygontriangulator.h"
 #include "cqpolygonalbody.h"
+
+// tags
+static const char* TAG_SHAPE	= "shape";
 
 // ============================== constructor ==========================
 CqPolygonalBody::CqPolygonalBody( CqWorld* world )
@@ -149,6 +152,22 @@ b2PolyDef* CqPolygonalBody::createTriangleB2Shape( const QPointF& a, const QPoin
 double CqPolygonalBody::product( const QPointF& a, const QPointF& b )
 {
 	return a.x()*b.y() - a.y()*b.x();
+}
+	
+// ========================== store ====================
+void CqPolygonalBody::store( CqElement& element ) const
+{
+	CqPhysicalBody::store( element );
+	
+	element.appendPolygonF( TAG_SHAPE, _polygon );
+}
+
+// ========================== load ====================
+void CqPolygonalBody::load( const CqElement& element )
+{
+	CqPhysicalBody::load( element );
+	
+	_polygon = element.readPolygonF( TAG_SHAPE );
 }
 
 // EOF

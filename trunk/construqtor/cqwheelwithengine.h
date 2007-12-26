@@ -27,6 +27,29 @@
 #include "cqcompounditem.h"
 #include "cqrevolutevelocitycontroler.h"
 
+class CqWheelWithEngine;
+///\internal
+class CqWheelWithEngineMotor : public CqRevoluteJoint
+{
+	Q_OBJECT
+public:
+	
+	CqWheelWithEngineMotor( CqWheelWithEngine* parent = 0 );
+	virtual ~CqWheelWithEngineMotor(){}
+	
+	// operations
+	virtual void paint
+		( QPainter * painter
+		, const QStyleOptionGraphicsItem * option
+		, QWidget * widget = 0 );
+		
+	virtual QRectF boundingRect() const;
+
+	
+};
+
+
+
 /**
 	 Compound item. Consist of 'motor' and 'wheel' conected wityh motorized
 	 revolute joint.
@@ -37,7 +60,7 @@ class CqWheelWithEngine : public CqCompoundItem
 {
 	Q_OBJECT
 public:
-	CqWheelWithEngine( double wheelDiameter );
+	CqWheelWithEngine( double wheelDiameter = 0.0 );
 	virtual ~CqWheelWithEngine();
 	
 	/// If connection (nail/bolt/...) can be attached at this point
@@ -50,24 +73,6 @@ public:
 
 private:
 
-	class Motor : public CqRevoluteJoint
-	{
-		public:
-		
-		Motor( CqWheelWithEngine* parent = 0 );
-		virtual ~Motor(){}
-		
-		// operations
-		virtual void paint
-			( QPainter * painter
-			, const QStyleOptionGraphicsItem * option
-			, QWidget * widget = 0 );
-			
-		virtual QRectF boundingRect() const;
-	
-		
-	};
-
 	// methods
 	
 	void init();				///< Init
@@ -76,7 +81,7 @@ private:
 	
 	CqGirder*		_pEngine;		///< Engine sub-element
 	CqWheel*		_pWheel;		///< Wheel sub-element
-	Motor*			_pMotor;		///< Motorized revolute joint
+	CqWheelWithEngineMotor*		_pMotor;		///< Motorized revolute joint
 	
 	CqRevoluteVelocityControler _controller;	///< Motor controller
 	

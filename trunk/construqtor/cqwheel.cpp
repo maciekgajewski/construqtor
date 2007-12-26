@@ -21,6 +21,9 @@
 // local
 #include "cqsimulation.h"
 #include "cqwheel.h"
+#include "cqitemfactory.h"
+
+CQ_ADD_TO_FACTORY( CqWheel );
 
 // ============================== constructor ===============
 CqWheel::CqWheel( double diameter ) : CqPhysicalDisk()
