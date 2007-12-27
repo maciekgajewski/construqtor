@@ -86,25 +86,28 @@ public:
 	CqItem*		readItemPointer( const QString& tag ) const;
 	CqItem*		readItem( const QString& tag = TAG_ITEM ) const;
 	
-	// TODO do somethinf with iterating
 	CqElement	readElement( const QString& tag ) const;
+	
+	bool isNull() const { return _element.isNull(); }
 	
 	// underlying DOM access
 	const QDomElement& domElement() const { return _element; }
 	QDomElement& domElement() { return _element; }
 	
-	void setDocument( CqDocument* pDoc ) { _pDocument = pDoc; }
+	void setDocument( const CqDocument* pDoc ) { _pDocument = pDoc; }
 	const CqDocument* document() const { return _pDocument; }
 	
 private:
 
-	QString getSubelementText( const QString& tag, const QString&  type ) const;
+	QDomElement getNextElement( const QString& tag, const QString&  type = QString::null ) const;
+	QString getSubelementText( const QString& tag, const QString&  type) const;
 		
 	QDomElement	_element;
 	mutable QDomElement _lastFound; ///< Iterator
+	mutable QString _lastTag;
 	CqItem* itemFromElement( const QDomElement& element ) const;
 	
-	CqDocument*	_pDocument;		///< Owner document
+	const CqDocument*	_pDocument;		///< Owner document
 	
 };
 

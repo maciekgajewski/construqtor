@@ -211,17 +211,9 @@ void CqElement::appendElement( const QString& tag, const CqElement& element )
 QString CqElement::getSubelementText( const QString& tag, const QString& type ) const
 {
 	// get element
-	QDomElement e = _element.firstChildElement( tag );
+	QDomElement e = getNextElement( tag, type );
 	if ( e.isNull() )
 	{
-		qWarning("no element with tag %s", qPrintable( tag ) );
-		return QString::null;
-	}
-	
-	// check type
-	if ( e.attribute( ATTR_TYPE, QString::null ) != type )
-	{
-		qWarning("element %s is not of expected type %s", qPrintable( tag ), qPrintable( type ) );
 		return QString::null;
 	}
 	
@@ -268,10 +260,9 @@ int CqElement::readInt( const QString& tag ) const
 // ==================================================================
 QPointF	CqElement::readPointF( const QString& tag ) const
 {
-	QDomElement e = _element.firstChildElement( tag );
-	if ( e.attribute( ATTR_TYPE, QString::null ) != TYPE_POINT )
+	QDomElement e = getNextElement( tag, TYPE_POINT );
+	if ( e.isNull() )
 	{
-		qWarning("no point element with tag %s", qPrintable( tag ) );
 		return QPointF();
 	}
 	
@@ -286,10 +277,9 @@ QPointF	CqElement::readPointF( const QString& tag ) const
 // ==================================================================
 QSizeF	CqElement::readSizeF( const QString& tag ) const
 {
-	QDomElement e = _element.firstChildElement( tag );
-	if ( e.attribute( ATTR_TYPE, QString::null ) != TYPE_SIZE )
+	QDomElement e = getNextElement( tag, TYPE_SIZE );
+	if ( e.isNull() )
 	{
-		qWarning("no size element with tag %s", qPrintable( tag ) );
 		return QSizeF();
 	}
 	
@@ -304,10 +294,9 @@ QSizeF	CqElement::readSizeF( const QString& tag ) const
 // ==================================================================
 QRectF	CqElement::readRectF( const QString& tag /*= TAG_ITEM*/ ) const
 {
-	QDomElement e = _element.firstChildElement( tag );
-	if ( e.attribute( ATTR_TYPE, QString::null ) != TYPE_RECT )
+	QDomElement e = getNextElement( tag, TYPE_RECT );
+	if ( e.isNull() )
 	{
-		qWarning("no rect element with tag %s", qPrintable( tag ) );
 		return QRectF();
 	}
 	
@@ -322,10 +311,9 @@ QRectF	CqElement::readRectF( const QString& tag /*= TAG_ITEM*/ ) const
 // ==================================================================
 QPolygonF CqElement::readPolygonF( const QString& tag ) const
 {
-	QDomElement e = _element.firstChildElement( tag );
-	if ( e.attribute( ATTR_TYPE, QString::null ) != TYPE_POLYGON )
+	QDomElement e = getNextElement( tag, TYPE_POLYGON );
+	if ( e.isNull() )
 	{
-		qWarning("no polygon element with tag %s", qPrintable( tag ) );
 		return QPolygonF();
 	}
 	
@@ -350,10 +338,9 @@ CqItem*	CqElement::readItemPointer( const QString& tag ) const
 {
 	Q_ASSERT( _pDocument );
 	
-	QDomElement e = _element.nextSiblingElement( tag );
-	if ( e.attribute( ATTR_TYPE, QString::null ) != TYPE_POINTER )
+	QDomElement e = getNextElement( tag, TYPE_POINTER );
+	if ( e.isNull() )
 	{
-		qWarning("no pointer element with tag %s", qPrintable( tag ) );
 		return NULL;
 	}
 	
@@ -367,16 +354,8 @@ CqItem*	CqElement::readItemPointer( const QString& tag ) const
 /// Item is created with \b new, and is not owned. Should be destroyed by caller
 CqItem*	CqElement::readItem( const QString& tag ) const
 {
-	if ( _lastFound.isNull() )
-	{
-		_lastFound = _element.firstChildElement( tag );
-	}
-	else
-	{
-		_lastFound = _lastFound.nextSiblingElement( tag );
-	}
 	
-	return itemFromElement( _lastFound );
+	return itemFromElement( getNextElement( tag, TYPE_ITEM ) );
 }
 
 
@@ -387,7 +366,7 @@ CqItem*	CqElement::itemFromElement( const QDomElement& element ) const
 	
 	if ( element.attribute( ATTR_TYPE, QString::null ) != TYPE_ITEM )
 	{
-		qWarning("no item element with tag %s", qPrintable( element.tagName() ) );
+		//qWarning("no item element with tag %s", qPrintable( element.tagName() ) );
 		return NULL;
 	}
 	
@@ -401,9 +380,13 @@ CqItem*	CqElement::itemFromElement( const QDomElement& element ) const
 	// get pre-reated item
 	CqItem* pItem = _pDocument->itemFromDictionary( id );
 	
+	// create wrapper
+	CqElement wrapper( element );
+	wrapper.setDocument( document() );
+		
 	// read item
 	pItem->setId( id );
-	pItem->load( element );
+	pItem->load( wrapper );
 	
 	return pItem;
 }
@@ -411,13 +394,57 @@ CqItem*	CqElement::itemFromElement( const QDomElement& element ) const
 // ==================================================================
 CqElement CqElement::readElement( const QString& tag  ) const
 {
-	return _element.firstChildElement( tag );
+	return getNextElement( tag );
 }
 
 // ==================================================================
 bool CqElement::hasElement( const QString& tag ) const
 {
 	return ! _element.firstChildElement( tag ).isNull();
+}
+
+// ==================================================================
+/// Seeks for next element with given tag and type
+/// Ignores type if null type=QString::null
+QDomElement CqElement::getNextElement( const QString& tag, const QString&  type ) const
+{
+	// rewind if new tag is searched
+	if ( _lastTag != tag )
+	{
+		_lastTag = tag;
+		_lastFound = QDomElement(); // rewind
+	}
+	do
+	{
+		if ( _lastFound.isNull() )
+		{
+			_lastFound = _element.firstChildElement( tag );
+		}
+		else
+		{
+			_lastFound = _lastFound.nextSiblingElement( tag );
+		}
+		
+		if ( _lastFound.isNull() )
+		{
+			//qWarning("no element with tag %s", qPrintable( tag ) );
+			return QDomElement();
+		}
+		
+		// check type
+		if ( type.isNull() || _lastFound.attribute( ATTR_TYPE, QString::null ) == type )
+		{
+			return _lastFound;
+		}
+		
+	} while ( ! _lastFound.isNull() );
+	
+	if ( _lastFound.isNull() )
+	{
+		qWarning("could not find element with tag %s ant type %s", qPrintable( tag ), qPrintable( type ) );
+	}
+	
+	return _lastFound;
 }
 
 // EOF

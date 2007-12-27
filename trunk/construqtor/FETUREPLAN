@@ -33,10 +33,10 @@ Elements
 World
 [ * ] Polygonanl pody - uses triangulation
 [ * ] Controllers - framework for controllnig motorized objects, with UI
-[   ] Random gorund bodym with some terrain
+[ * ] Random gorund bodym with some terrain
 [   ] Some randon stones on ground (low)
-[   ] Saving and loading world state to file  - propably XML
-[   ] Breakable nails / bolts (low)
+[ * ] Saving and loading world state to file  - propably XML
+[ * ] Breakable nails / bolts (low)
 [   ] Breakable girdes/rods (ff)
 [   ] Editable area
 [   ] Reset

@@ -173,7 +173,7 @@ void CqRevoluteJoint::store( CqElement& element ) const
 // ================================= load ========================
 void CqRevoluteJoint::load( const CqElement& element )
 {
-	CqItem::load( element );
+	CqJoint::load( element );
 
 	_anchorPoint = element.readPointF( TAG_ANCHOR_POINT );
 	

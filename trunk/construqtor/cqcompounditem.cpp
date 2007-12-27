@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2007 by Maciek Gajewski   *
- *   maciej.gajewski0@gmail.com   *
+ *   Copyright (C) 2007 by Maciek Gajewski                                 *
+ *   maciej.gajewski0@gmail.com                                            *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -47,6 +47,9 @@ void CqCompoundItem::init()
 void CqCompoundItem::addChild( CqItem* pChild )
 {
 	Q_ASSERT( pChild );
+	
+	// take ownership
+	pChild->setParent( this );
 	
 	// sanitize child
 	pChild->setEditorFlags( pChild->editorFlags() & ~Selectable );
@@ -223,7 +226,7 @@ void CqCompoundItem::load( const CqElement& element )
 	// populate list of children with sub-elements
 	while( CqItem* pItem = element.readItem() )
 	{
-		_children.append( pItem );
+		addChild( pItem );
 	}
 	
 	// readfollowed chi;d

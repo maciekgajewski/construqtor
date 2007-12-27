@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2007 by Maciek Gajewski   *
- *   maciej.gajewski0@gmail.com   *
+ *   Copyright (C) 2007 by Maciek Gajewski                                 *
+ *   maciej.gajewski0@gmail.com                                            *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -31,6 +31,7 @@ static const char* TAG_BOX_SIZE	= "boxsize";
 CqPhysicalBox::CqPhysicalBox(QGraphicsItem* parent, CqWorld* world): CqPhysicalBody(parent, world)
 {
 	init();
+	qDebug("physical box created, this: %p", this );
 }
 
 // ==================== contructor =======================
@@ -84,6 +85,7 @@ void CqPhysicalBox::paint
 	, const QStyleOptionGraphicsItem * /*pOption*/
 	, QWidget * /*pWidget*/ )
 {
+	//qDebug("Painting %s. me: %p", qPrintable( name() ), this); // TODO remove
 	QRectF box = QRectF( QPointF( - _size.width()/2.0, - _size.height()/2.0), _size );
 	
 	// simple selection indicator

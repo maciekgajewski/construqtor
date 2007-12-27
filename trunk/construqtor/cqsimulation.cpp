@@ -202,7 +202,11 @@ void CqSimulation::addItem( CqItem* pItem )
 {
 	Q_ASSERT( pItem );
 	
-	_scene.addItem( pItem );
+	// take ownership
+	pItem->setParent( this );
+	
+	_scene.addItem( dynamic_cast<QGraphicsItem*>( pItem ) ); // TODO wild try
+	
 	pItem->setSimulation( this );
 	pItem->setWorld( _pPhysicalWorld );
 	if ( isRunning() )
@@ -309,7 +313,14 @@ void CqSimulation::loadFromXml( const QString& fileName )
 	doc.loadFromFile( fileName );
 	
 	CqElement simulation = doc.readElement( ROOT_ELEMENT );
-	load( simulation );
+	if ( ! simulation.isNull() )
+	{
+		load( simulation );
+	}
+	else
+	{
+		qWarning("No root element with tag %s", ROOT_ELEMENT );
+	}
 }
 
 // ============================= save to XML =======================
