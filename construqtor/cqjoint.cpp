@@ -133,7 +133,7 @@ void CqJoint::load( const CqElement& element )
 	CqItem::load( element );
 
 	_pBody1 = (CqPhysicalBody*)element.readItemPointer( TAG_BODY1 );
-	_pBody1 = (CqPhysicalBody*)element.readItemPointer( TAG_BODY2 );
+	_pBody2 = (CqPhysicalBody*)element.readItemPointer( TAG_BODY2 );
 }
 
 // EOF

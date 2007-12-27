@@ -26,6 +26,7 @@
 #include "cqelement.h"
 #include "gexception.h"
 #include "cqitemfactory.h"
+#include "cqitem.h"
 
 // constants
 static const char* DOCTYPE		= "constructor-data-file";
@@ -138,6 +139,9 @@ void CqDocument::preCreateItems()
 				qWarning("Could not create item of type %s", qPrintable(strClass) );
 				continue;
 			}
+			
+			// take ownership of the item
+			pItem->setParent( this );
 			
 			// store created element in doctionary
 			QUuid id( strId );

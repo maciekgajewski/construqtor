@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2007 by Maciek Gajewski   *
- *   maciej.gajewski0@gmail.com   *
+ *   Copyright (C) 2007 by Maciek Gajewski                                 *
+ *   maciej.gajewski0@gmail.com                                            *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -64,15 +64,15 @@ public:
 	void setPen( const QPen& pen ) { _pen = pen; }
 	QPen pen() const { return _pen; }
 	
-	void setBrush( const QBrush& brush ) { _brush = brush; }
-	QBrush brush() const { return _brush; }
+	void setBrush( const QBrush& brush ) { /*qDebug("set: me: %p, my brush: %p", this, &_brush);*/_brush = brush; }
+	QBrush brush() const { /*qDebug("get: me: %p, my brush: %p", this, &_brush);*/ return _brush; }
 
 	b2Body* b2body() { return _pBody; }
 	const b2Body* b2body() const { return _pBody; }
 
 	virtual int type() const;	///< RTTI
 	
-	double mass() const;								///< Body masss [kg]
+	double mass() const;								///< Body mass [kg]
 	virtual QString description(); 						///< Object description
 	
 	// operations

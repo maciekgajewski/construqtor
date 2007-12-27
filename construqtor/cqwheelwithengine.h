@@ -71,6 +71,10 @@ public:
 	/// Extends base implementation by adding controller to simulation
 	virtual void setSimulation( CqSimulation* pSimulation );
 
+	// i/o
+	virtual void load( const CqElement& element );
+	virtual void store( CqElement& element ) const;
+
 private:
 
 	// methods

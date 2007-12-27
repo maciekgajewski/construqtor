@@ -29,6 +29,12 @@
 CQ_ADD_TO_FACTORY( CqWheelWithEngine );
 CQ_ADD_TO_FACTORY( CqWheelWithEngineMotor );
 
+// tags
+static const char* TAG_ENGINE	= "engine";
+static const char* TAG_WHEEL	= "wheel";
+static const char* TAG_MOTOR	= "motor";
+
+
 // constants
 static const double MAX_SPEED	= 20.0;		// max speed [rad/s?] 
 static const double MAX_TORQUE	= 1000.0;	// max torque [Nm?]
@@ -61,10 +67,10 @@ void CqWheelWithEngine::init()
 	// init engine
 	_pEngine = new CqGirder(_wheelDiameter / 2, _wheelDiameter );
 	_pEngine->setPos( 0, _wheelDiameter * 0.4 );
-	_pEngine->setBrush( QColor( 0x80, 0x80, 0x80, 0x80 ) ); // semitransparent gray
 	_pEngine->setMaterial( ENGINE_MATERIAL );
 	_pEngine->setZValue( 0.5 );
 	_pEngine->setName("Engine");
+	_pEngine->setBrush( QColor( 0x80, 0x80, 0x80, 0x80 ) ); // semitransparent gray
 	
 	// init joint
 	_pMotor = new CqWheelWithEngineMotor();
@@ -138,6 +144,46 @@ void CqWheelWithEngine::setSimulation( CqSimulation* pSimulation )
 	CqCompoundItem::setSimulation( pSimulation );
 	
 	pSimulation->addController( &_controller );
+}
+
+// =========================== load =================================
+void CqWheelWithEngine::load( const CqElement& element )
+{
+	CqCompoundItem::load( element );
+	
+	// delete currently held items
+	delete _pEngine;
+	delete _pMotor;
+	delete _pWheel;
+	
+	// new objects are already created, we only need to extract their pointers
+	_pEngine	= dynamic_cast<CqGirder*>( element.readItemPointer( TAG_ENGINE ) );
+	_pWheel		= dynamic_cast<CqWheel*>( element.readItemPointer( TAG_WHEEL ) );
+	_pMotor		=dynamic_cast<CqWheelWithEngineMotor*>(  element.readItemPointer( TAG_MOTOR ) );
+	
+	// test
+	if ( ! _pEngine || ! _pWheel || ! _pMotor )
+	{
+		qFatal("wheel w/enigne elements not created properly");
+	}
+	
+	// freshen the controller pointer
+	_controller.setJoint( _pMotor );
+	
+	// TODO this should be loaded
+	_pEngine->setBrush( QColor( 0x80, 0x80, 0x80, 0x80 ) ); // semitransparent gray
+}
+
+// =========================== store =================================
+void CqWheelWithEngine::store( CqElement& element ) const
+{
+	CqCompoundItem::store( element );
+	
+	// remember which object is what
+	element.appendItemPointer( TAG_ENGINE, _pEngine );
+	element.appendItemPointer( TAG_WHEEL, _pWheel );
+	element.appendItemPointer( TAG_MOTOR, _pMotor );
+
 }
 
 // EOF

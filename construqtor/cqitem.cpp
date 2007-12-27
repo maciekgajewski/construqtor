@@ -29,6 +29,7 @@
 // constants - xml tags
 static const char* TAG_CENTER	= "center";
 static const char* TAG_ROTATION	= "rotation";
+static const char* TAG_ZVALUE	= "zvalue";
 static const char* TAG_POSITION	= "position";
 static const char* TAG_NAME		= "name";
 static const char* TAG_FLAGS	= "flags";
@@ -36,7 +37,8 @@ static const char* TAG_FLAGS	= "flags";
 
 // ========================== constructor ======================
 CqItem::CqItem( QGraphicsItem* parent )
-	: QGraphicsItem(parent)
+	: QObject()
+	, QGraphicsItem(parent)
 {
 	init();
 }
@@ -288,7 +290,7 @@ void CqItem::store( CqElement& element ) const
 	element.appendString( TAG_NAME, _name );
 	element.appendDouble( TAG_ROTATION, _rotation );
 	element.appendInt( TAG_FLAGS, _flags );
-	
+	element.appendDouble( TAG_ZVALUE, zValue() );
 }
 
 // ================================ load =============================
@@ -299,6 +301,7 @@ void CqItem::load( const CqElement& element )
 	_name = element.readString( TAG_NAME );
 	setPhysicalRotation( element.readDouble( TAG_ROTATION ) );
 	_flags = element.readInt( TAG_FLAGS );
+	setZValue( element.readDouble( TAG_ZVALUE ) );
 }
 
 // EOF
