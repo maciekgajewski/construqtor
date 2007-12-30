@@ -45,6 +45,9 @@ public:
 	/// Return list of CqItem children
 	QList< CqItem* > physicalChildren(){ return _children; }
 	
+	/// Return const list of CqItem children
+	const QList< CqItem* >& physicalChildren() const{ return _children; }
+	
 	// QGrpahicsItem
 	virtual void paint( QPainter*, const QStyleOptionGraphicsItem*, QWidget* );
 	virtual QRectF boundingRect() const;

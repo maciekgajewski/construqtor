@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2007 by Maciek Gajewski   *
- *   maciej.gajewski0@gmail.com   *
+ *   Copyright (C) 2007 by Maciek Gajewski                                 *
+ *   maciej.gajewski0@gmail.com                                            *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -55,6 +55,9 @@ CqNail::~CqNail()
 void CqNail::init()
 {
 	setZValue( 2.0 );
+	setEditorFlags( editorFlags() | Selectable );
+	setEditorFlags( editorFlags() & ~Movable );
+	setEditorFlags( editorFlags() & ~Rotatable );
 }
 
 // ========================= paint ======================
@@ -63,6 +66,12 @@ void CqNail::paint
 	, const QStyleOptionGraphicsItem * /*option*/
 	, QWidget * /*widget*/)
 {
+	// simple selection indicator
+	if ( selected() )
+	{
+		painter->setBrush( Qt::gray );
+	}
+	
 	painter->drawEllipse( QRectF( - QPointF( SIZE.width(), SIZE.height() ) / 2, SIZE ) );
 }
 	
@@ -78,6 +87,11 @@ void CqBrokenNail::paint
 	, const QStyleOptionGraphicsItem * /*option*/
 	, QWidget * /*widget*/  )
 {
+	// simple selection indicator
+	if ( selected() )
+	{
+		pPainter->setBrush( Qt::gray );
+	}
 	pPainter->drawEllipse( QRectF( - QPointF( SIZE.width(), SIZE.height() ) / 2, SIZE ) );
 }
 

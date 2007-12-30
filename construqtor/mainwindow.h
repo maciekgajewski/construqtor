@@ -44,6 +44,10 @@ public slots:
 	void on_buttonSave_clicked();
 	void on_buttonLoad_clicked();
 	
+	// buttons - tools
+	void on_buttonDelete_clicked();
+	void on_buttonBreak_clicked();
+	
 	// buttons - elements
 	
 	void on_buttonGirder100_clicked();

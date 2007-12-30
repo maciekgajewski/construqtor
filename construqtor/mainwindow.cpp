@@ -196,5 +196,18 @@ void MainWindow::on_buttonLoad_clicked()
 	_pSimulation->loadFromXml( "simulation.xml" );
 }
 
+// =================================================================
+void MainWindow::on_buttonDelete_clicked()
+{
+	view->toolDeleteSelected();
+}
+
+// =================================================================
+void MainWindow::on_buttonBreak_clicked()
+{
+	view->toolBreakSelected();
+}
+
+
 // EOF
 

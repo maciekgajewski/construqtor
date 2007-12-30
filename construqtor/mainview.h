@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2007 by Maciek Gajewski   *
- *   maciej.gajewski0@gmail.com   *
+ *   Copyright (C) 2007 by Maciek Gajewski                                 *
+ *   maciej.gajewski0@gmail.com                                            *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -22,12 +22,13 @@
 
 // Qt
 #include <QGraphicsView>
-
+#include <QGraphicsRectItem>
 
 // Cq
 class CqItem;
 class CqSimulation;
 class CqRevoluteJoint;
+#include "cqgroupitem.h"
 
 // local
 class CeEditorItem;
@@ -52,6 +53,12 @@ public:
 	void toolAddObject( CqItem* pItem );	///< Adds new item to scene
 	void toolAddNail( CqRevoluteJoint* pNail ); ///< Adds new nail
 
+public slots:
+
+	// toolbox
+	void toolDeleteSelected();		///< Delete selected items
+	void toolBreakSelected();		///< Break joins in selected items
+
 signals:
 
 	void pointerPos( double x, double y );	///< Signals mouse pointer pos in scene corrds
@@ -61,10 +68,11 @@ protected:
 
 	/// work modes
 	enum Mode{
-		SELECTING,
-		ADDING_OBJECT,
-		ADDING_NAIL,
-		SCROLLING
+		SELECTING,				///< Simple one-click selection
+		ADDING_OBJECT,			///< Adding object
+		ADDING_NAIL,			///< Adding nail/bolt
+		SCROLLING,				///< Pan-scrolling scene
+		RUBBERBANDING			///< Dragging rubberband selection
 		};
 
 	void setMode( Mode mode );			///< Proper way to change mode
@@ -92,14 +100,15 @@ protected:
 	
 	void selectUnderPoint( const QPoint& pos );
 	//void startDragUnderPoint( const QPoint& pos );
-	void unselectAll();
+	void unselectAll();	
+	void selectItem( CqItem* pItem );			///< Selects only this item
+	void selectGroup( const QRectF& rect );		///< Selects inside the rectangle
 	void breakJointUnderPoint( const QPoint& pos );
 	
 	bool canAddNail( const QPointF& point ) const;		///< Checks if nail may be added here
 	void addNail( QPointF& point, CqRevoluteJoint* pNail ); ///< Adds nail at point
 	
 	
-	//CqItem* _draggedItem;	///< Currently dragged item TODO remove
 	CeEditorItem* _pEditor;	///< editor item
 	
 protected slots:
@@ -115,8 +124,14 @@ private:
 	CqRevoluteJoint*	_addedNail;			///< Added joint
 	Mode				_mode;				///< Current work mode
 	QPoint				_scrollStart;		///< Scorll start point
+	QPointF				_rubberbandStart;	///< Where ruberband dragging started
+	CqItem*				_pSelectedItem;		///< Selected item
+	
+	QGraphicsRectItem	_rubberbandSelection;	///< Rubberband selection
+	CqGroupItem*		_pGroupSelection;		///< Group item fro group selection
 	
 	bool _viewportInitialized;				///< Vievport position initialized in showEvent
+	bool				_dragging;			///< Flag if currently dragging
 };
 
 #endif	// MAINVIEW_H

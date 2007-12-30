@@ -134,7 +134,7 @@ bool CqItem::canBeMoved() const
 // ==================================== can be rotated ==============
 bool CqItem::canBeRotated() const
 {
-	return ( _flags && Rotatable ) && _pSimulation->canBeRotated( this );
+	return ( _flags & Rotatable ) && _pSimulation->canBeRotated( this );
 }
 
 // ============================== set physical pos ===============
@@ -174,7 +174,6 @@ QPointF CqItem::mapToWorld( const QPointF& local )
 {
 	// TODO currently simple imeplementation, when scene coords are physical coords
 	return mapToScene( local );
-	// TODO what about rotation?
 }
 
 // ========================== map to physical =================================
@@ -185,11 +184,11 @@ double	CqItem::mapToWorld( double rotation )
 	
 	if ( pParent )
 	{
-		return rotation + pParent->mapToWorld( pParent->rotationRadians() );
+		return rotation + pParent->mapToWorld( _rotation );
 	}
 	else
 	{
-		return rotation;
+		return _rotation + rotation;
 	}
 }
 
