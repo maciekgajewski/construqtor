@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2007 by Maciek Gajewski   *
- *   maciej.gajewski0@gmail.com   *
+ *   Copyright (C) 2007 by Maciek Gajewski                                 *
+ *   maciej.gajewski0@gmail.com                                            *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -35,6 +35,8 @@
 #include "mainview.h"
 #include "ceeditoritem.h"
 
+// constants
+static const int RUBBERBAND_DRAG_SENSITIVITY	= 5;	///< number of pixels dragged before rubberband selection starts
 
 // ========================= constructor ======================
 MainView::MainView(QWidget* parent): QGraphicsView(parent)
@@ -71,16 +73,23 @@ void MainView::setSimulation( CqSimulation* pSimulation )
 // ========================== init =============================
 void MainView::init()
 {
-	//_draggedItem = NULL;
 	_pEditor = NULL;
+	_pSelectedItem = NULL;
 	
 	setRenderHint( QPainter::Antialiasing, true );
 	_pSimulation = NULL;
+	_pGroupSelection = NULL;
 	
 	_addedObject	= NULL;
 	_addedNail		= NULL;
 	_mode = SELECTING;
 	_viewportInitialized = false;
+	_dragging		= false;
+	
+	// init rubberband
+	_rubberbandSelection.setPen( QPen( Qt::blue, 0.0 ) ); // tiny blue frame
+	_rubberbandSelection.setBrush( QColor( 0x00, 0x00, 0xff, 0x40 ) ); // 25% opaque blue
+	_rubberbandSelection.setZValue( 4.0 );
 }
 
 // ========================= destructor ======================
@@ -92,13 +101,8 @@ MainView::~MainView()
 // ============================= dbl click ===================
 void MainView::mouseDoubleClickEvent(QMouseEvent* pEvent )
 {
-	 //QGraphicsView::mouseDoubleClickEvent(event);
+	QGraphicsView::mouseDoubleClickEvent(pEvent);
 	
-	// break joint woth left double click
-	if ( pEvent->button() == Qt::LeftButton )
-	{
-		breakJointUnderPoint( pEvent->pos() );
-	}
 }
 
 // =========================== move =====================
@@ -109,18 +113,58 @@ void MainView::mouseMoveEvent(QMouseEvent* pEvent)
 	emit pointerPos( pos.x(), pos.y() );
 	
 	// in 'add nail' mode update cursor
-	if ( _mode == ADDING_NAIL && canAddNail( mapToScene( pEvent->pos() ) ) )
+	switch ( _mode )
 	{
-		setCursor( Qt::CrossCursor );
-	}
-	else if ( _mode == SCROLLING )
-	{
-		scrollBy( _scrollStart - pEvent->pos() );
-		_scrollStart = pEvent->pos();
-	}
-	else
-	{
-		unsetCursor();
+		case ADDING_NAIL:
+			if ( canAddNail( mapToScene( pEvent->pos() ) ) )
+			{
+				setCursor( Qt::CrossCursor );
+			}
+			else
+			{
+				unsetCursor();
+			}
+			break;
+			
+		case SCROLLING:
+			scrollBy( _scrollStart - pEvent->pos() );
+			_scrollStart = pEvent->pos();
+			break;
+			
+		case SELECTING:
+		{
+			if ( _dragging )
+			{
+				QPoint displacement = mapFromScene( _rubberbandStart ) - pEvent->pos();
+				// calcvulate distance as inifinite module of vector
+				int distance = qMax( qAbs( displacement.x() ), qAbs( displacement.y() ) );
+				if ( distance > RUBBERBAND_DRAG_SENSITIVITY )
+				{
+					setMode( RUBBERBANDING );
+					// show rubberband
+					if ( _rubberbandSelection.scene() != scene() )
+					{
+						scene()->addItem( &_rubberbandSelection );
+					}
+					
+					QSizeF size ( pos.x() - _rubberbandStart.x(), pos.y() - _rubberbandStart.y() );
+					_rubberbandSelection.setRect( QRectF( _rubberbandStart, size ) );
+					_rubberbandSelection.show();
+				}
+			}
+			break;
+		}
+			
+		case RUBBERBANDING:
+		{
+			QSizeF size ( pos.x() - _rubberbandStart.x(), pos.y() - _rubberbandStart.y() );
+			_rubberbandSelection.setRect( QRectF( _rubberbandStart, size ) );
+			_rubberbandSelection.update();
+			break;
+		}
+	
+		default:
+			unsetCursor();
 	}
 	
 	QGraphicsView::mouseMoveEvent( pEvent );
@@ -168,11 +212,8 @@ void MainView::mousePressEvent(QMouseEvent* pEvent)
 		break;
 		case SELECTING:
 		{
-			QPoint pos = pEvent->pos();
-			
-			unselectAll();
-			
-			selectUnderPoint( pos );
+			_rubberbandStart	= scenePos;
+			_dragging			= true;
 		}
 		} // switch
 	}
@@ -187,10 +228,43 @@ void MainView::mousePressEvent(QMouseEvent* pEvent)
 // =========================== release =====================
 void MainView::mouseReleaseEvent(QMouseEvent* pEvent)
 {
-	QGraphicsView::mouseReleaseEvent( pEvent );
+	QPointF scenePos = mapToScene( pEvent->pos() );
 	
-	// stop scrolling
-	if ( pEvent->button() == Qt::RightButton )
+	// hanlde only if outside editor
+	if ( _pEditor && _pEditor->handleContains( scenePos ) )
+	{
+		QGraphicsView::mouseReleaseEvent( pEvent );
+		return;
+	}
+	
+	_dragging = false;
+	
+	// left button: end dragging
+	if ( pEvent->button() == Qt::LeftButton )
+	{
+		switch ( _mode )
+		{
+			case SELECTING:
+			{
+				selectUnderPoint( pEvent->pos() );
+				break;
+			}
+				
+			case RUBBERBANDING:
+			{
+				QSizeF size ( scenePos.x() - _rubberbandStart.x(), scenePos.y() - _rubberbandStart.y() );
+				selectGroup( QRectF( _rubberbandStart, size ) );
+				setMode( SELECTING );
+				break;
+			}
+				
+			default:
+				;// ignore
+		}
+	}
+	
+	// with right button: stop scrolling
+	else if ( pEvent->button() == Qt::RightButton )
 	{
 		if ( _mode == SCROLLING )
 		{
@@ -209,33 +283,98 @@ void MainView::selectUnderPoint( const QPoint& pos )
  		return; // no selecting when simulation is running
 	}
 	
+	// unselect all, but remeber last selected
+	//unselectAll();
+			
+	
 	QList<QGraphicsItem *> itemList = items( pos );
+	QList<CqItem*> selectableItems;
 	// simplest implementation - select first selectable CqItem
 	foreach( QGraphicsItem* pItem, itemList )
 	{
-		CqItem* pcqitem = dynamic_cast<CqItem*>( pItem );
-		if ( pcqitem )
+		CqItem* pCqItem = dynamic_cast<CqItem*>( pItem );
+		if ( pCqItem && pCqItem->canBeSelected() )
 		{
-			// selectable
-			if ( pcqitem->canBeSelected() )
+			selectableItems.append( pCqItem );
+		}
+	}
+	
+	// now select
+	CqItem* pItemToSelect = NULL;
+	if ( ! selectableItems.isEmpty() )
+	{
+		// how does it works: if currently selected is on the list, select next one
+		// otherwise, select first
+		
+		if ( _pSelectedItem )
+		{
+			int selectedIndex = selectableItems.indexOf( _pSelectedItem );
+			if ( selectedIndex  >= 0 )
 			{
-				pcqitem->setSelected( true );
-				pcqitem->update();
-				// create editor for selected
-				delete _pEditor;
-				_pEditor = new CeEditorItem( pcqitem );
-				_pEditor->setMatrix( matrix().inverted() ); //set inverted transform
-				
-				emit selectedDescription( pcqitem->description() );
-				break;
+				pItemToSelect = selectableItems[ ( selectedIndex + 1 ) % selectableItems.size() ];
+			}
+			else
+			{
+				pItemToSelect = selectableItems[ 0 ];
+			} 
+		}
+		else
+		{
+			pItemToSelect = selectableItems[ 0 ];
+		}
+	}
+	
+	selectItem( pItemToSelect ); // NULL unselects
+	
+}
+
+// ============================================================================
+/// Selects only this item
+void MainView::selectItem( CqItem* pItem )
+{
+	if ( pItem != _pSelectedItem )
+	{
+		// delete current editor
+		delete _pEditor;
+		_pEditor = NULL;
+		
+		if ( _pSelectedItem )
+		{
+			_pSelectedItem->setSelected( false );
+			_pSelectedItem->update();
+			
+			// if group selection unselected - remove all items from group
+			if ( _pSelectedItem == _pGroupSelection )
+			{
+				delete _pGroupSelection;
+				_pGroupSelection = NULL;
 			}
 		}
+		
+		if ( pItem )
+		{
+			pItem->setSelected( true );
+			pItem->update();
+			// create editor for selected
+			_pEditor = new CeEditorItem( pItem );
+			_pEditor->setMatrix( matrix().inverted() ); //set inverted transform
+			emit selectedDescription( pItem->description() ); // TODO remove this
+		}
+		else
+		{
+			emit selectedDescription( "" ); // TODO remove this
+		}
+		
+		
+		_pSelectedItem = pItem;
 	}
 }
 
 // ========================= unselect all ================
 void MainView::unselectAll()
 {
+	_pSelectedItem = NULL;
+	
 	QList<QGraphicsItem *> itemList = items();
 	foreach( QGraphicsItem* pItem, itemList )
 	{
@@ -462,17 +601,22 @@ void MainView::setMode( Mode mode )
 		{
 			delete _addedNail;
 			_addedNail = NULL;
-			unselectAll();
+			selectItem( NULL );
+			unsetCursor();
 		}
 		else if ( _mode == ADDING_OBJECT )
 		{
 			delete _addedObject;
 			_addedObject = NULL;
-			unselectAll();
+			selectItem( NULL );
 		}
 		else if ( _mode == SCROLLING )
 		{
-			setCursor( Qt::ArrowCursor );
+			unsetCursor();
+		}
+		else if ( _mode == RUBBERBANDING )
+		{
+			_rubberbandSelection.hide();
 		}
 		
 		_mode = mode;
@@ -482,6 +626,83 @@ void MainView::setMode( Mode mode )
 		{
 			setCursor( Qt::ClosedHandCursor );
 		}
+	}
+}
+
+// =============================== delete selected ==============
+void MainView::toolDeleteSelected()
+{
+	if ( _pSelectedItem )
+	{
+		// delete editor
+		delete _pEditor;
+		_pEditor = NULL;
+		// delte item
+		delete _pSelectedItem;
+		unselectAll(); // TODO or use other way to announce selection changed
+	}
+}
+
+// ================================ break joins in selected item ===
+void MainView::toolBreakSelected()
+{
+	if ( _pSelectedItem )
+	{
+		// body?
+		CqPhysicalBody* pBody = dynamic_cast<CqPhysicalBody*>( _pSelectedItem );
+		if ( pBody  )
+		{
+			pBody->breakAllJoints();
+		}
+		// joint?
+		CqJoint* pJoint = dynamic_cast<CqJoint*>( _pSelectedItem );
+		if ( pJoint )
+		{
+			pJoint->breakJoint();
+		}
+	}
+}
+
+// ============================ select group ============================
+void MainView::selectGroup( const QRectF& rect )
+{
+	// TODO ok, this is not simple task: 1. create 'group selection item', move all items iside rect to the group
+	
+	QList<QGraphicsItem *> items = scene()->items( rect, Qt::ContainsItemShape );
+	QList<CqItem*> selectedItems;
+	
+	foreach( QGraphicsItem* pItem, items )
+	{
+		CqItem* pCqItem = dynamic_cast< CqItem* >( pItem );
+		
+		if ( pCqItem && ! pCqItem->physicalParent() && pCqItem->canBeSelected() )
+		{
+			selectedItems.append( pCqItem );
+		}
+	}
+
+	// do we need to create group?
+	if ( items.size() == 0 )
+	{
+		// select nothing
+		selectItem( NULL );
+	}
+	else if ( selectedItems.size() == 1 )
+	{
+		selectItem( selectedItems[ 0 ] );
+	}
+	else
+	{
+		// delete any current group selection
+		delete _pGroupSelection;
+		_pGroupSelection = NULL;
+		
+		_pGroupSelection = new CqGroupItem( selectedItems );
+		_pSimulation->addItem( _pGroupSelection );
+		_pGroupSelection->show();
+		_pGroupSelection->setName( "Group selection" );
+		
+		selectItem( _pGroupSelection );
 	}
 }
 

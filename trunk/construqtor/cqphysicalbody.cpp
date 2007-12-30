@@ -54,6 +54,7 @@ CqPhysicalBody::CqPhysicalBody( CqWorld* world )
 // =========================== destructor ===================================
 CqPhysicalBody::~CqPhysicalBody()
 {
+	breakAllJoints();
 }
 
 // =========================== init ===================================

@@ -52,7 +52,12 @@ void CqBolt::init()
 	setZValue( 2.0 );
 	setLimits( true, 0.0, 0.0 ); // this should block any rotations
 	
+	setEditorFlags( editorFlags() | Selectable );
+	setEditorFlags( editorFlags() & ~Movable );
+	setEditorFlags( editorFlags() & ~Rotatable );
+	
 	// TODO random rotation
+	setRotationRadians( qrand() * 2* M_PI / RAND_MAX );
 }
 
 // ========================== destructor ============================
@@ -67,6 +72,12 @@ void CqBolt::paint
 	, const QStyleOptionGraphicsItem * /*option*/
 	, QWidget * /*widget*/ )
 {
+	// simple selection indicator
+	if ( selected() )
+	{
+		pPainter->setBrush( Qt::gray );
+	}
+	
 	pPainter->setPen( colorByTemperature( temperature() ) );
 	
 	pPainter->drawEllipse( QRectF( - QPointF( SIZE.width(), SIZE.height() ) / 2, SIZE ) );

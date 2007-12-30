@@ -88,6 +88,7 @@ public:
 	// signals from joint
 	void addJoint( CqJoint* pJoint );		///< Info: you have new joint
 	void removeJoint( CqJoint* pJoint );	///< Info: joint was removed
+	const QList<CqJoint*>& joints() const { return _joints; }
 	
 	// storing / reading
 	virtual void store( CqElement& element ) const;		///< stores item state 

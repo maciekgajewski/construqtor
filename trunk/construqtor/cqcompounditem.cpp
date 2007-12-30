@@ -48,11 +48,12 @@ void CqCompoundItem::addChild( CqItem* pChild )
 {
 	Q_ASSERT( pChild );
 	
-	// take ownership
+	// take ownership (in QObject terms )
 	pChild->setParent( this );
 	
 	// sanitize child
-	pChild->setEditorFlags( pChild->editorFlags() & ~Selectable );
+	// TODO hopefully not needed
+	//pChild->setEditorFlags( pChild->editorFlags() & ~Selectable );
 	
 	// make QGraphicsITem child
 	pChild->setParentItem( this );
@@ -83,6 +84,11 @@ void CqCompoundItem::removeChild( CqItem* pChild )
 	{
 		qWarning("CqCompoundItem::removeChild: item not a child" );
 	}
+	
+	// return child to parent
+	pChild->setParent( parent() ); // QObject ownership
+	pChild->setPhysicalParent( physicalParent() ); // Cq physical parenthood 
+	pChild->setParentItem( parentItem() ); // GV parenthood  TODO shouldn't this two be tied together
 }
 
 // =============================== set world ====================

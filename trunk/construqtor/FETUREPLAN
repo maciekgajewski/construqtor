@@ -2,6 +2,12 @@ Planned features fo first release. Features marked with (low) can be dropped,
 marked with (ff) are future feature and are not likely to be implemented.
 
 Short term goals
+[ * ] selecting different items under one points with multiple clickjs
+[ * ] deleting
+[   ] ruberband selection
+[   ] group move/rotate
+[   ] selectoing connected bodies with dblckick
+[   ] clipboard
 [   ] Making wheel from wheel+engine setup connectabl
 [   ] Makig only part of engine from wheel+engine setup which is outside of wheel connectable
 [   ] use some color code to indicate connectable areas
