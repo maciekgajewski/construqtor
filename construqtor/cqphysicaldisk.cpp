@@ -79,13 +79,9 @@ QList< b2ShapeDef* > CqPhysicalDisk::createShape()
 // ======================== paint ============================
 void CqPhysicalDisk::paint
 	( QPainter * pPainter
-	, const QStyleOptionGraphicsItem * pOption
-	, QWidget * pWidget )
+	, const QStyleOptionGraphicsItem * /*pOption*/
+	, QWidget * /*pWidget*/ )
 {
-	QTransform t;
-	t.rotateRadians( rotationRadians() );
-	
-	pPainter->setTransform( t, true );
 	
 	// simple selection indicator
 	QBrush b = brush();

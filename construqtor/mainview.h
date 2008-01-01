@@ -49,9 +49,12 @@ public:
 
 	void setSimulation( CqSimulation* pSimulation );
 	
+	CqItem* selectedItem() const { return _pSelectedItem; }
+	
 	// toolbox
 	void toolAddObject( CqItem* pItem );	///< Adds new item to scene
 	void toolAddNail( CqRevoluteJoint* pNail ); ///< Adds new nail
+	
 
 public slots:
 
@@ -99,15 +102,13 @@ protected:
 	void adjustScale();						///< Makes sure scale is sane
 	
 	void selectUnderPoint( const QPoint& pos );
-	//void startDragUnderPoint( const QPoint& pos );
-	void unselectAll();	
 	void selectItem( CqItem* pItem );			///< Selects only this item
 	void selectGroup( const QRectF& rect );		///< Selects inside the rectangle
 	void breakJointUnderPoint( const QPoint& pos );
 	
 	bool canAddNail( const QPointF& point ) const;		///< Checks if nail may be added here
 	void addNail( QPointF& point, CqRevoluteJoint* pNail ); ///< Adds nail at point
-	
+	void addObject( const QPointF& pointm, CqItem* pObject )	;
 	
 	CeEditorItem* _pEditor;	///< editor item
 	
@@ -115,6 +116,7 @@ protected slots:
 
 	void simulationStarted();
 	void simulationPaused();
+	void simulationStep();
 
 private:
 

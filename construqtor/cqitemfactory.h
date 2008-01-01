@@ -29,6 +29,8 @@ class CqItem;
 
 /**
 	Global item factory.
+	This class is singleton, so it is creates no earlier, and no later (sic!)
+	that it's neccesary.
 	@author Maciek Gajewski <maciej.gajewski0@gmail.com>
 */
 class CqItemFactory
@@ -48,7 +50,11 @@ public:
 	
 private:
 
-	static QMap< QString, Creator* > _creators;
+	static CqItemFactory*	instance();	///< Creates/gest s instance
+	
+	static CqItemFactory*	_pInstance;	///< Singleton instance
+	
+	QMap< QString, Creator* > _creators;
 };
 
 // Use this macro in .cpp of CqItem - derrived objects

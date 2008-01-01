@@ -79,6 +79,7 @@ public:
 	
 	QUuid id() const { return _id; }					///< Unique id
 	void setId( const QUuid& id ) { _id = id; }			///< Sets id
+	virtual void generateNewId();						///< Generates new, unique id
 	
 	// mapping coordinates 
 	QPointF mapToWorld( const QPointF& local );			///< Maps local to physical scene
@@ -117,10 +118,13 @@ public:
 	// child / parent relationship
 	CqItem* physicalParent(){ return _pPhysicalParent; }
 	const CqItem* physicalParent() const { return _pPhysicalParent; }
-	void setPhysicalParent( CqItem* pParent ){ _pPhysicalParent = pParent; }
+	void setPhysicalParent( CqItem* pParent );		///< Sets physical parent
+	virtual void  childChanged( CqItem* ){};		///< Info from child - child changed
+	virtual void notifyParent();					///< Set info to parent
 	
 	virtual void updatePhysicalPos(){};				///< Updates physical pos to item pos/rotation
 	virtual void updatePosToPhysical(){};			///< Updates item pos to physical pos (after simulation step)
+	
 	
 	// storing / reading
 	virtual void store( CqElement& element ) const;		///< stores item state 

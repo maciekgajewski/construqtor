@@ -17,38 +17,49 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef CQGROUPITEM_H
-#define CQGROUPITEM_H
+#ifndef CQCLIPBOARD_H
+#define CQCLIPBOARD_H
 
-// local
-#include "cqcompounditem.h"
+// Qt
+#include <QObject>
+
+// Cq
+#include "cqdocument.h"
 
 /**
-	Group item, which is used to 'bind' itmes togheter temporarly.
+	A clipboard. Thi is a singleton - access via instance().
 	@author Maciek Gajewski <maciej.gajewski0@gmail.com>
 */
-class CqGroupItem : public CqCompoundItem
+class CqClipboard : public QObject
 {
-	Q_OBJECT
+Q_OBJECT
 public:
-	CqGroupItem( QGraphicsItem* pParent = NULL );
-	CqGroupItem( QList<CqItem*> items, QGraphicsItem* pParent = NULL );
-	virtual ~CqGroupItem();
+	CqClipboard( QObject* parent = NULL );
+	virtual ~CqClipboard();
 	
-	void setGroupContent( QList<CqItem*> items );	///< Sets entire group content at once
-	void addToGroup( QList<CqItem*> items );	///< Moves multiple items to groups
-	void addToGroup( CqItem* pItem );			///< Moves single item to group
+	static CqClipboard* instance();
+
+	// clipboard operations
 	
-	void removeFromGroup( CqItem* pItem );		///< Removes item from group
-	void clearGroupContent();					///< Removes all items from group
+	void copy( const CqItem* pItem );		///< Stores copy of item in clipboard, removes old one
+	CqItem* get() const;					///< Creates instance of stored intem
+	void clear();							///< Clears clipboard
+	bool storesItem() const;				///< Returns \b true if any item is stored
 	
+
 private:
 
 	// methods
+	
 	void init();
+
+	// data
+
+	static CqClipboard*	_pInstance;		///< Singleton instance
+	QString				_xmlData;		///< Document which stores item
 };
 
-#endif // CQGROUPITEM_H
+#endif // CQCLIPBOARD_H
 
 // EOF
 

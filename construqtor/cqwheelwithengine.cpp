@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2007 by Maciek Gajewski   *
- *   maciej.gajewski0@gmail.com   *
+ *   Copyright (C) 2007 by Maciek Gajewski                                 *
+ *   maciej.gajewski0@gmail.com                                            *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -98,7 +98,8 @@ void CqWheelWithEngine::init()
 // ======================== constructor ===================
 CqPhysicalBody* CqWheelWithEngine::bodyHere( const QPointF& worldPoint )
 {
-	if ( _pEngine->contains( _pEngine->mapFromWorld( worldPoint ) ) )
+	QPointF engineCoords = _pEngine->mapFromWorld( worldPoint );
+	if ( _pEngine->contains( engineCoords ) )
 	{
 		return _pEngine;
 	}
@@ -112,6 +113,8 @@ bool CqWheelWithEngine::canConnectHere( const QPointF& worldPoint )
 	Q_ASSERT( _pEngine );
 	QPointF enginePoint = _pEngine->mapFromWorld( worldPoint );
 	bool contains =  _pEngine->contains( enginePoint );
+	
+	return contains;
 }
 
 // ======================== Motor : constructor ============
@@ -152,14 +155,14 @@ void CqWheelWithEngine::load( const CqElement& element )
 	CqCompoundItem::load( element );
 	
 	// delete currently held items
+	delete _pMotor; // TODO - important: delete joint before deleting bodies
 	delete _pEngine;
-	delete _pMotor;
 	delete _pWheel;
 	
 	// new objects are already created, we only need to extract their pointers
 	_pEngine	= dynamic_cast<CqGirder*>( element.readItemPointer( TAG_ENGINE ) );
 	_pWheel		= dynamic_cast<CqWheel*>( element.readItemPointer( TAG_WHEEL ) );
-	_pMotor		=dynamic_cast<CqWheelWithEngineMotor*>(  element.readItemPointer( TAG_MOTOR ) );
+	_pMotor		= dynamic_cast<CqWheelWithEngineMotor*>(  element.readItemPointer( TAG_MOTOR ) );
 	
 	// test
 	if ( ! _pEngine || ! _pWheel || ! _pMotor )

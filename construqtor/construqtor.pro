@@ -30,7 +30,8 @@ cqbolt.cpp \
  cqdocument.cpp \
  cqelement.cpp \
  cqitemfactory.cpp \
- cqgroupitem.cpp
+ cqgroupitem.cpp \
+ cqclipboard.cpp
 FORMS += mainwindow.ui \
 ControllerWidget.ui
 HEADERS += mainwindow.h \
@@ -64,7 +65,8 @@ cqbolt.h \
  cqdocument.h \
  cqelement.h \
  cqitemfactory.h \
- cqgroupitem.h
+ cqgroupitem.h \
+ cqclipboard.h
 CONFIG += debug \
 qt \
 warn_on \

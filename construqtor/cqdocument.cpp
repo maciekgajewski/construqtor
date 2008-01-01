@@ -63,7 +63,7 @@ CqElement CqDocument::readElement( const QString& tag )
 }
 
 // =============================== save to file ===============
-void CqDocument::saveToFile( const QString& path )
+void CqDocument::saveToFile( const QString& path ) const
 {
 	QFile file( path );
 	if ( ! file.open(QIODevice::WriteOnly) )
@@ -100,6 +100,19 @@ void CqDocument::loadFromFile( const QString& path )
 	// pre-create items
 	preCreateItems();
 }
+// ==============================================================
+QString CqDocument::saveToString() const
+{
+	return _document.toString( 4 ); // indent 4 spaces
+}
+
+// ==============================================================
+void CqDocument::loadFromString( const QString& s )
+{
+	_document.setContent( s ); // TODOcatch parse errors here
+	
+	preCreateItems();
+}
 
 // ================================ create element ===============
 CqElement CqDocument::createElement()
@@ -114,7 +127,9 @@ CqElement CqDocument::createElement()
 // ============================== pre - create items ============
 void CqDocument::preCreateItems()
 {
-	// TODO load all elements, create them
+	// clear dictionry first
+	_items.clear();	
+	
 	QDomNodeList itemElements = _document.documentElement().elementsByTagName( CqElement::TAG_ITEM );
 	 
 	int count = itemElements.size();
@@ -143,7 +158,7 @@ void CqDocument::preCreateItems()
 			// take ownership of the item
 			pItem->setParent( this );
 			
-			// store created element in doctionary
+			// store created element in dictionary
 			QUuid id( strId );
 			_items.insert( id, pItem );
 		}

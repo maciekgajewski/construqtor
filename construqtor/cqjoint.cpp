@@ -46,6 +46,10 @@ CqJoint::CqJoint(QGraphicsItem* parent, CqWorld* world)
 // =========================== destructor ===================
 CqJoint::~CqJoint()
 {
+	// remove from bodies list
+	if ( _pBody1 ) _pBody1->removeJoint( this );
+	if ( _pBody2 ) _pBody2->removeJoint( this );
+	
 	if ( _pJoint )
 	{
 		Q_ASSERT( world() );
@@ -81,8 +85,8 @@ void CqJoint::setConnectedBodies( CqPhysicalBody* pBody1, CqPhysicalBody* pBody2
 	_pBody1 = pBody1;
 	_pBody2 = pBody2;
 	// let bodoes know they have new joint
-	_pBody1->addJoint( this );
-	_pBody2->addJoint( this );
+	if ( _pBody1 ) _pBody1->addJoint( this );
+	if ( _pBody2 ) _pBody2->addJoint( this );
 }
 
 // =========================== destroy joint  ===================
@@ -106,7 +110,6 @@ int CqJoint::type() const
 /// Breaks the joint, frees objectm removes it from scene etc
 void CqJoint::breakJoint()
 {
-	Q_ASSERT( world() );
 	
 	// remove from body lists
 	if ( _pBody1 ) _pBody1->removeJoint( this );
@@ -132,8 +135,10 @@ void CqJoint::load( const CqElement& element )
 {
 	CqItem::load( element );
 
-	_pBody1 = (CqPhysicalBody*)element.readItemPointer( TAG_BODY1 );
-	_pBody2 = (CqPhysicalBody*)element.readItemPointer( TAG_BODY2 );
+	CqPhysicalBody* pB1 = (CqPhysicalBody*)element.readItemPointer( TAG_BODY1 );
+	CqPhysicalBody* pB2 = (CqPhysicalBody*)element.readItemPointer( TAG_BODY2 );
+	setConnectedBodies( pB1, pB2 );	
+
 }
 
 // EOF

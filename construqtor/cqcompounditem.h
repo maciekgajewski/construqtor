@@ -22,6 +22,8 @@
 
 // Local
 #include "cqitem.h"
+class CqJoint;
+class CqPhysicalBody;
 
 /**
 	Compound item - does not paint itself. Adopts shape and bounding box of it's children.
@@ -42,6 +44,8 @@ public:
 	virtual void setSelected( bool selected );			///< Selects
 	virtual void setSimulation( CqSimulation* pSimulation );
 					
+	virtual void generateNewId();						///< Generates new, unique id
+	
 	/// Return list of CqItem children
 	QList< CqItem* > physicalChildren(){ return _children; }
 	
@@ -54,6 +58,7 @@ public:
 	virtual QPainterPath shape() const;
 	
 	virtual void updatePhysicalPos();
+	virtual void  childChanged( CqItem* );		///< Info from child - child changed
 	
 	// followed child
 	void setFollowedChild( CqItem* child ){ _followedChild = child; }
@@ -65,18 +70,35 @@ public:
 	
 	// storing / reading
 	virtual void store( CqElement& element ) const;		///< stores item state 
+	
+	// editor behavior
+	virtual bool canBeMoved() const;
+	virtual bool canBeRotated() const;
+
 	virtual void load( const CqElement& element );		///< restores item state 
+
+protected:
+
+	void blockConnectionUpdate();
+	void unblockCkonnectionUpdate();
 
 private:
 
 	// methods
 	
 	void init();			
+	bool isChild( CqItem* pItem ) const;		///< Checks if item is child, or child of a child... of the group
+	void updateConnectionLists();					///< Updates list of conncted boides and joints
 	
 	// data
 	
 	QList<CqItem*> 	_children;						///< Child items
 	CqItem*			_followedChild;					///< Followed child. ITem with follow this child
+	
+	QList< CqJoint* >			_connectedJoints;	///< List of joins conncted to group
+	QList< CqPhysicalBody* > 	_connectedBodies;	///< List of conected bodies
+	bool	_blockConnectionsUpdate;				///< Blocks update of connection lists
+	bool	_conectionUpdateNeeded;					///< If delayed update is needed
 };
 
 #endif // CQCOMPOUNDITEM_H
