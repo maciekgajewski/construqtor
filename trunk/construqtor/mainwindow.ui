@@ -5,8 +5,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>699</width>
-    <height>679</height>
+    <width>761</width>
+    <height>724</height>
    </rect>
   </property>
   <property name="windowTitle" >
@@ -54,6 +54,13 @@
       <widget class="QPushButton" name="buttonBreak" >
        <property name="text" >
         <string>Break connections</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="buttonClone" >
+       <property name="text" >
+        <string>Clone</string>
        </property>
       </widget>
      </item>

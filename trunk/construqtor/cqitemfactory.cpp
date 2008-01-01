@@ -20,18 +20,18 @@
 // local
 #include "cqitemfactory.h"
 
-QMap< QString, CqItemFactory::Creator* > CqItemFactory::_creators;
+CqItemFactory* CqItemFactory::_pInstance	= NULL;
 
 // =====================================================
 void CqItemFactory::addCreator( const QString& className, Creator* pCreator )
 {
-	_creators[ className ] = pCreator;
+	instance()->_creators[ className ] = pCreator;
 }
 
 // =====================================================
 CqItem* CqItemFactory::createItem( const QString& className )
 {
-	Creator* pCreator = _creators[ className ];
+	Creator* pCreator = instance()->_creators[ className ];
 	if ( pCreator )
 	{
 		return pCreator->createObject();
@@ -39,5 +39,16 @@ CqItem* CqItemFactory::createItem( const QString& className )
 	qWarning("Item factory has no creator for %s", qPrintable( className ) );
 	
 	return NULL;
+}
+
+// =====================================================
+CqItemFactory* CqItemFactory::instance()
+{
+	if ( ! _pInstance )
+	{
+		_pInstance = new CqItemFactory();
+	}
+	
+	return _pInstance;
 }
 

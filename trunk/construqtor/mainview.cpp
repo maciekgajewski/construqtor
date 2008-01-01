@@ -59,10 +59,11 @@ void MainView::setSimulation( CqSimulation* pSimulation )
 	_pSimulation = pSimulation;
 	connect( _pSimulation, SIGNAL(simulationStarted()), SLOT(simulationStarted()));
 	connect( _pSimulation, SIGNAL(simulationPaused()), SLOT(simulationPaused()));
+	connect( _pSimulation, SIGNAL(simulationStep()), SLOT(simulationStep()) );
 	
 	setScene( pSimulation->scene() );
 	
-	// TODO experimental - tunr off scrollbars. DOES NOT WORK
+	// TODO experimental - turn off scrollbars. DOES NOT WORK
 	//setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
 	//setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
 	
@@ -189,32 +190,14 @@ void MainView::mousePressEvent(QMouseEvent* pEvent)
 		// add
 		switch ( _mode )
 		{
-		case ADDING_OBJECT:
-		{
-			if ( _pSimulation->canAddHere( _addedObject, scenePos ) )
+			case SELECTING:
 			{
-				_pSimulation->addItem( _addedObject );
-				_addedObject->setPhysicalPos( scenePos );
+				_rubberbandStart	= scenePos;
+				_dragging			= true;
+				break;
 			}
-			_addedObject = NULL;
-			setMode( SELECTING );
-		}
-		break;
-		case ADDING_NAIL:
-		{
-			if ( canAddNail( scenePos ) )
-			{
-				addNail( scenePos, _addedNail );
-				_addedNail = NULL;
-				setMode( SELECTING );
-			}
-		}
-		break;
-		case SELECTING:
-		{
-			_rubberbandStart	= scenePos;
-			_dragging			= true;
-		}
+			default:
+				;// nothing
 		} // switch
 	}
 	// cancel adding with right button
@@ -224,7 +207,24 @@ void MainView::mousePressEvent(QMouseEvent* pEvent)
 		_scrollStart = pEvent->pos();
 	}
 }
-
+// =========================================================
+void MainView::addObject( const QPointF& point, CqItem* pObject )
+{
+	Q_ASSERT( pObject );
+	Q_ASSERT( _pSimulation );
+	
+	_pSimulation->addItem( pObject );
+	pObject->setPhysicalPos( point );
+	
+	// TODO break group
+	CqGroupItem* pGroupItem = qobject_cast<CqGroupItem*>( pObject );
+	if ( pGroupItem )
+	{
+		pGroupItem->clearGroupContent();
+		delete pGroupItem; // TOD Odangerous, caller may need to use it. Consider using deleteLater()
+	}
+	
+}
 // =========================== release =====================
 void MainView::mouseReleaseEvent(QMouseEvent* pEvent)
 {
@@ -244,6 +244,26 @@ void MainView::mouseReleaseEvent(QMouseEvent* pEvent)
 	{
 		switch ( _mode )
 		{
+			case ADDING_NAIL:
+			{
+				if ( canAddNail( scenePos ) )
+				{
+					addNail( scenePos, _addedNail );
+					_addedNail = NULL;
+					setMode( SELECTING );
+				}
+				break;
+			}
+			case ADDING_OBJECT:
+			{
+				if ( _pSimulation->canAddHere( _addedObject, scenePos ) )
+				{
+					addObject( scenePos, _addedObject );
+					_addedObject = NULL;
+					setMode( SELECTING );
+				}
+				break;
+			}
 			case SELECTING:
 			{
 				selectUnderPoint( pEvent->pos() );
@@ -346,6 +366,8 @@ void MainView::selectItem( CqItem* pItem )
 			// if group selection unselected - remove all items from group
 			if ( _pSelectedItem == _pGroupSelection )
 			{
+				// move all children back to orignal parent
+				_pGroupSelection->clearGroupContent();
 				delete _pGroupSelection;
 				_pGroupSelection = NULL;
 			}
@@ -368,29 +390,6 @@ void MainView::selectItem( CqItem* pItem )
 		
 		_pSelectedItem = pItem;
 	}
-}
-
-// ========================= unselect all ================
-void MainView::unselectAll()
-{
-	_pSelectedItem = NULL;
-	
-	QList<QGraphicsItem *> itemList = items();
-	foreach( QGraphicsItem* pItem, itemList )
-	{
-		CqItem* pCqItem = dynamic_cast<CqItem*>( pItem );
-		
-		if ( pCqItem )
-		{
-			pCqItem->setSelected( false );
-		}
-	}
-	
-	// destroy editor
-	delete _pEditor;
-	_pEditor = NULL;
-	
-	emit selectedDescription( "" );
 }
 
 // ======================= break joint under point ==============
@@ -490,13 +489,20 @@ void MainView::adjustScale()
 // ========================= on simulation started ===========================
 void MainView::simulationStarted()
 {
-	unselectAll();
+	// destroy editor, if visible
+	delete _pEditor;
+	_pEditor = NULL;
 }
 
 // ========================= on simulation paused ===========================
 void MainView::simulationPaused()
 {
-	// nope
+	// recreate editor
+	if ( _pSelectedItem )
+	{
+		_pEditor = new CeEditorItem( _pSelectedItem );
+		_pEditor->setMatrix( matrix().inverted() ); //set inverted transform
+	}
 }
 
 // ============================ tool: add object ==============================
@@ -626,27 +632,42 @@ void MainView::setMode( Mode mode )
 		{
 			setCursor( Qt::ClosedHandCursor );
 		}
+		else if ( _mode == RUBBERBANDING )
+		{
+			// select nothing, removing all temporary groups before selecting
+			selectItem( NULL );
+		}
 	}
 }
 
 // =============================== delete selected ==============
 void MainView::toolDeleteSelected()
 {
-	if ( _pSelectedItem )
+	Q_ASSERT( _pSimulation );
+	
+	if ( _pSelectedItem && ! _pSimulation->isRunning()  )
 	{
 		// delete editor
 		delete _pEditor;
 		_pEditor = NULL;
 		// delte item
 		delete _pSelectedItem;
-		unselectAll(); // TODO or use other way to announce selection changed
+		// check if selected item is a group selection
+		if ( _pSelectedItem == _pGroupSelection )
+		{
+			_pGroupSelection = NULL;
+		}
+		_pSelectedItem = NULL;
+		selectItem( NULL );
 	}
 }
 
 // ================================ break joins in selected item ===
 void MainView::toolBreakSelected()
 {
-	if ( _pSelectedItem )
+	Q_ASSERT( _pSimulation );
+	
+	if ( _pSelectedItem && ! _pSimulation->isRunning() )
 	{
 		// body?
 		CqPhysicalBody* pBody = dynamic_cast<CqPhysicalBody*>( _pSelectedItem );
@@ -703,6 +724,16 @@ void MainView::selectGroup( const QRectF& rect )
 		_pGroupSelection->setName( "Group selection" );
 		
 		selectItem( _pGroupSelection );
+	}
+}
+
+// =============================================================
+void MainView::simulationStep()
+{
+	// TODO test - follow selected item
+	if ( _pSelectedItem )
+	{
+		ensureVisible( _pSelectedItem );
 	}
 }
 

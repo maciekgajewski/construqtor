@@ -47,6 +47,7 @@ public slots:
 	// buttons - tools
 	void on_buttonDelete_clicked();
 	void on_buttonBreak_clicked();
+	void on_buttonClone_clicked();
 	
 	// buttons - elements
 	

@@ -22,6 +22,7 @@
 #include "cqelement.h"
 #include "cqdocument.h"
 #include "cqitem.h"
+#include "cqitemfactory.h"
 
 // tags and attributes
 // TODO clean this mess with sttaic/class static items
@@ -377,8 +378,17 @@ CqItem*	CqElement::itemFromElement( const QDomElement& element ) const
 		return NULL;
 	}
 	
-	// get pre-reated item
+	// try get pre-created item
 	CqItem* pItem = _pDocument->itemFromDictionary( id );
+	
+	// if thi fails - create new one
+	if ( ! pItem )
+	{
+		QString type = element.attribute( ATTR_CLASS );
+		pItem = CqItemFactory::createItem( type );
+	}
+	
+	Q_ASSERT( pItem );
 	
 	// create wrapper
 	CqElement wrapper( element );

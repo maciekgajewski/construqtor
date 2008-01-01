@@ -138,6 +138,7 @@ void CqPhysicalBody::updatePosToPhysical()
 		
 		setWorldPos( QPointF( b2pos.x, b2pos.y ) - center() ); // correct pos by COG
 		setWorldRotation( b2rotation );
+		
 	}
 }
 
@@ -182,6 +183,8 @@ void CqPhysicalBody::breakAllJoints()
 	{
 		pJoint->breakJoint();
 	}
+	
+	notifyParent();
 }
 
 // ============================== update physical pos ===============
@@ -194,6 +197,8 @@ void CqPhysicalBody::updatePhysicalPos()
 		double r	= worldRotation();
 		
 		_pBody->SetCenterPosition( b2Vec2( pp.x(), pp.y() ), r );
+		//qDebug("body %s has pos %lf,%lf, rotation %lf",
+		//	qPrintable( name() ), pp.x(), pp.y(), r ); // TODO remove debug
 		update();
 	}
 }
@@ -209,6 +214,8 @@ void CqPhysicalBody::addJoint( CqJoint* pJoint )
 	else
 	{
 		_joints.append( pJoint );
+		// notify parent
+		notifyParent();
 	}
 }
 
@@ -219,6 +226,7 @@ void CqPhysicalBody::removeJoint( CqJoint* pJoint )
 	if ( _joints.contains( pJoint ) )
 	{
 		_joints.removeAll( pJoint );
+		notifyParent();
 	}
 	else
 	{

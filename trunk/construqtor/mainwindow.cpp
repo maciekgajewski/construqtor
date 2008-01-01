@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2007 by Maciek Gajewski   *
- *   maciej.gajewski0@gmail.com   *
+ *   Copyright (C) 2007 by Maciek Gajewski                                 *
+ *   maciej.gajewski0@gmail.com                                            *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -25,6 +25,7 @@
 #include "controllerwidget.h"
 #include "cqbolt.h"
 #include "cqstone.h"
+#include "cqclipboard.h"
 
 #include "mainwindow.h"
 
@@ -206,6 +207,21 @@ void MainWindow::on_buttonDelete_clicked()
 void MainWindow::on_buttonBreak_clicked()
 {
 	view->toolBreakSelected();
+}
+
+// =================================================================
+void MainWindow::on_buttonClone_clicked()
+{
+	CqClipboard* pCB = CqClipboard::instance();
+	Q_ASSERT( pCB );
+	
+	CqItem* pSelected = view->selectedItem();
+	
+	if ( pSelected )
+	{
+		pCB->copy( pSelected );
+		view->toolAddObject( pCB->get() );
+	}
 }
 
 

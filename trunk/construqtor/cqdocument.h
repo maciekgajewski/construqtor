@@ -50,8 +50,11 @@ public:
 	CqElement createElement();		///< Creates element
 
 	// i/o
-	void saveToFile( const QString& path );
+	void saveToFile( const QString& path ) const;
 	void loadFromFile( const QString& path );
+	
+	QString saveToString() const;
+	void loadFromString( const QString& );
 	
 	// item dictionary
 	CqItem* itemFromDictionary( const QUuid& id ) const { return _items[ id ]; }

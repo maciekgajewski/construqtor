@@ -17,9 +17,13 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
+// Qt
+#include <QPainter>
 
 // local
 #include "cqcompounditem.h"
+#include "cqjoint.h"
+#include "cqphysicalbody.h"
 
 // tags
 static const char* TAG_FOLLOWED_CHILD	= "followed";
@@ -41,6 +45,8 @@ CqCompoundItem::~CqCompoundItem()
 void CqCompoundItem::init()
 {
 	_followedChild = NULL;
+	_blockConnectionsUpdate	= false;
+	_conectionUpdateNeeded	= false;
 }
 
 // =============================== add child =====================
@@ -50,10 +56,6 @@ void CqCompoundItem::addChild( CqItem* pChild )
 	
 	// take ownership (in QObject terms )
 	pChild->setParent( this );
-	
-	// sanitize child
-	// TODO hopefully not needed
-	//pChild->setEditorFlags( pChild->editorFlags() & ~Selectable );
 	
 	// make QGraphicsITem child
 	pChild->setParentItem( this );
@@ -73,6 +75,15 @@ void CqCompoundItem::addChild( CqItem* pChild )
 	{
 		pChild->setSimulation( simulation() );
 	}
+	
+	if ( ! _blockConnectionsUpdate )
+	{
+		updateConnectionLists();
+	}
+	else
+	{
+		_conectionUpdateNeeded = true;
+	}
 }
 
 // =============================== remove child ====================
@@ -86,9 +97,7 @@ void CqCompoundItem::removeChild( CqItem* pChild )
 	}
 	
 	// return child to parent
-	pChild->setParent( parent() ); // QObject ownership
 	pChild->setPhysicalParent( physicalParent() ); // Cq physical parenthood 
-	pChild->setParentItem( parentItem() ); // GV parenthood  TODO shouldn't this two be tied together
 }
 
 // =============================== set world ====================
@@ -116,9 +125,17 @@ void CqCompoundItem::setSelected( bool selected )
 }
 
 // =============================== paint ============================
-void CqCompoundItem::paint( QPainter*, const QStyleOptionGraphicsItem*, QWidget* )
+void CqCompoundItem::paint( QPainter* p, const QStyleOptionGraphicsItem*, QWidget* )
 {
 	// no painting
+	
+	/* excellent debug tool:
+	QPainterPath s = shape();
+	p->strokePath( s, QPen(Qt::red) );
+	*/
+	/* another debug tool 
+	p->drawRect( boundingRect() );
+	*/
 }
 
 // ================================= bounding rect ==================
@@ -129,7 +146,13 @@ QRectF CqCompoundItem::boundingRect() const
 	foreach ( CqItem* pChild, _children )
 	{
 		QRectF childRect = pChild->boundingRect();
-		rect |= childRect.translated( pChild->pos() );
+		
+		QTransform t;
+		t.translate( pChild->pos().x(), pChild->pos().y() );
+		t.rotateRadians( pChild->rotationRadians() );
+		QRectF trasformedRect = t.map( childRect ).boundingRect();
+		
+		rect |= trasformedRect;
 	}
 	
 	return rect;
@@ -142,8 +165,9 @@ QPainterPath CqCompoundItem::shape() const
 	
 	foreach ( CqItem* pChild, _children )
 	{
-		QMatrix m;
+		QTransform m;
 		m.translate( pChild->pos().x(), pChild->pos().y() );
+		m.rotateRadians( pChild->rotationRadians() );
 		QPainterPath childShape = pChild->shape();
 		s.addPath( m.map( childShape ) );
 	}
@@ -235,9 +259,146 @@ void CqCompoundItem::load( const CqElement& element )
 		addChild( pItem );
 	}
 	
-	// readfollowed chi;d
+	// readfollowed child
 	_followedChild = element.readItemPointer( TAG_FOLLOWED_CHILD );
 	
+	updateConnectionLists();
+	
+}
+// ========CqCompoundItem=========================================================
+bool CqCompoundItem::canBeMoved() const
+{
+	// check own movable flag
+	if ( ! ( editorFlags() & Movable ) )
+	{
+		return false;
+	}
+	
+	// check outside connections
+	if ( ! _connectedBodies.isEmpty() || ! _connectedJoints.isEmpty() )
+	{
+		// sorry, Wonetou, but this mountain can not be moved
+		return false;
+	}
+	
+	return true;
+}
+
+// =================================================================
+bool CqCompoundItem::canBeRotated() const
+{
+	// check own flag
+	if ( ! ( editorFlags() & Rotatable ) )
+	{
+		return false;
+	}
+	
+	// check outside connections
+	if ( ! _connectedBodies.isEmpty() || ! _connectedJoints.isEmpty() )
+	{
+		// sorry, Wonetou, but this mountain can not be rotated
+		return false;
+	}
+	
+	return true;
+}
+
+// =================================================================
+void CqCompoundItem::updateConnectionLists()
+{
+	// first - clear the lists
+	_connectedBodies.clear();
+	_connectedJoints.clear();
+	
+	const QList< CqItem* >& children = physicalChildren();
+	
+	foreach( CqItem* pChild, children )
+	{
+		// check body's joints
+		CqPhysicalBody* pBody = dynamic_cast< CqPhysicalBody* > ( pChild );
+		if ( pBody )
+		{
+			// add to list all body's joint, which does not belong to the group
+			foreach( CqJoint* pJoint, pBody->joints() )
+			{
+				if ( ! children.contains( pJoint ) )
+				{
+					if ( ! _connectedJoints.contains( pJoint ) )
+						_connectedJoints.append( pJoint );
+				}
+			}
+		}
+		
+		// checks joint's bodies
+		CqJoint* pJoint = dynamic_cast< CqJoint* > ( pChild );
+		if ( pJoint )
+		{
+			if ( ! isChild( pJoint->body1() ) )
+			{
+				if ( ! _connectedBodies.contains( pJoint->body1() ) )
+					_connectedBodies.append( pJoint->body1() );
+			}
+			if ( ! isChild( pJoint->body2() ) )
+			{
+				if ( ! _connectedBodies.contains( pJoint->body2() ) )
+					_connectedBodies.append( pJoint->body2() );
+			}
+		}
+	}
+	_conectionUpdateNeeded = false;
+	
+	// TODO debug report
+	//qDebug("%d connected joints and %d connected bodies found", _connectedJoints.size(), _connectedBodies.size() );
+}
+
+// ========================================================================
+bool CqCompoundItem::isChild( CqItem* pItem ) const
+{
+	while( pItem )
+	{
+		if ( physicalChildren().contains( pItem ) )
+		{
+			return true;
+		}
+		
+		// if no, try parent
+		pItem = pItem->physicalParent();
+	}
+	
+	return false;
+}
+
+// ========================================================================
+void CqCompoundItem::blockConnectionUpdate()
+{
+	_blockConnectionsUpdate = true;
+}
+
+// ========================================================================
+void CqCompoundItem::unblockCkonnectionUpdate()
+{
+	_blockConnectionsUpdate = false;
+	if ( _conectionUpdateNeeded )
+	{
+		updateConnectionLists();
+	}
+}
+
+// ========================================================================
+void CqCompoundItem::childChanged( CqItem* )
+{
+	updateConnectionLists();
+}
+
+// ========================================================================
+void CqCompoundItem::generateNewId()
+{
+	CqItem::generateNewId();
+	
+	foreach( CqItem* pChild, _children )
+	{
+		pChild->generateNewId();
+	}
 }
 
 // EOF

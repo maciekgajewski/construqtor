@@ -188,7 +188,7 @@ double	CqItem::mapToWorld( double rotation )
 	}
 	else
 	{
-		return _rotation + rotation;
+		return rotation + _rotation;
 	}
 }
 
@@ -205,11 +205,11 @@ double CqItem::mapFromWorld( double rotation )
 	
 	if ( pParent )
 	{
-		return rotation - pParent->mapToWorld( pParent->rotationRadians() );
+		return rotation - pParent->mapFromWorld( _rotation );
 	}
 	else
 	{
-		return rotation;
+		return rotation - _rotation;
 	}
 }
 
@@ -301,6 +301,35 @@ void CqItem::load( const CqElement& element )
 	setPhysicalRotation( element.readDouble( TAG_ROTATION ) );
 	_flags = element.readInt( TAG_FLAGS );
 	setZValue( element.readDouble( TAG_ZVALUE ) );
+}
+
+// =============================================================
+void CqItem::notifyParent()
+{
+	if ( _pPhysicalParent )
+	{
+		_pPhysicalParent->childChanged( this );
+	}
+}
+
+// =============================================================
+void CqItem::setPhysicalParent( CqItem* pParent )
+{
+	// notify old parent about change
+	notifyParent();
+	
+	// set new parent
+	_pPhysicalParent = pParent;
+	setParent( pParent );		// parent QObject (owner)
+	setParentItem( pParent );	// parent item
+	
+	// TODO addto parent here?
+}
+
+// =============================================================
+void CqItem::generateNewId()
+{
+	_id = QUuid::createUuid();
 }
 
 // EOF
