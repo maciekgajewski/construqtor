@@ -85,7 +85,6 @@ void CqPhysicalBox::paint
 	, const QStyleOptionGraphicsItem * /*pOption*/
 	, QWidget * /*pWidget*/ )
 {
-	//qDebug("Painting %s. me: %p", qPrintable( name() ), this); // TODO remove
 	QRectF box = QRectF( QPointF( - _size.width()/2.0, - _size.height()/2.0), _size );
 	
 	// simple selection indicator

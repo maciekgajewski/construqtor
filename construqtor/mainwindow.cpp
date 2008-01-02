@@ -18,6 +18,10 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+// Qt
+#include <QFile>
+
+// Cq
 #include "cqnail.h"
 #include "cqgirder.h"
 #include "cqwheel.h"
@@ -27,6 +31,7 @@
 #include "cqstone.h"
 #include "cqclipboard.h"
 
+// local
 #include "mainwindow.h"
 
 // =========================== cosntructor =======================
@@ -138,6 +143,16 @@ void MainWindow::on_buttonWheel40_clicked()
 void MainWindow::on_buttonWheel80_clicked()
 {
 	CqWheel* pWheel = new CqWheel( 0.80 );
+	// load svg
+	QFile file( "graphics/tire80.svg" );
+	if ( file.open( QIODevice::ReadOnly ) )
+	{
+		pWheel->setSvgAppearance( file.readAll() );
+	}
+	else
+	{
+		qWarning("could ot open file: %s", qPrintable( file.errorString() ) );
+	}
 	view->toolAddObject( pWheel );
 }
 

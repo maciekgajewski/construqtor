@@ -25,6 +25,11 @@
 
 CQ_ADD_TO_FACTORY( CqWheel );
 
+// tags
+static const char* TAG_CONNECTABLE_DIAMETER	= "connectablediameter";
+static const char* TAG_SVG_APPEARANCE		= "svgappearance";
+
+
 // ============================== constructor ===============
 CqWheel::CqWheel( double diameter ) : CqPhysicalDisk()
 {
@@ -66,6 +71,60 @@ bool CqWheel::canBeRotated() const
 {
 	// if there is no joins, then yes
 	return _joints.empty()  && CqPhysicalDisk::canBeRotated();
+}
+
+// ==============================================================
+void CqWheel::setSvgAppearance( const QByteArray& svg )
+{
+	_svgAppearanceCode = svg;
+	_svgAppearance.load( svg );
+	
+	if ( ! _svgAppearance.isValid() )
+	{
+		qWarning("invalid SVG loaded");
+	}
+}
+
+// ==============================================================
+void CqWheel::paint
+	( QPainter * pPainter
+	, const QStyleOptionGraphicsItem * option
+	, QWidget * widget )
+{
+	if ( _svgAppearance.isValid() )
+	{
+		_svgAppearance.render( pPainter, boundingRect() );
+	}
+	else
+	{
+		CqPhysicalDisk::paint( pPainter, option, widget );
+	}
+}
+	
+// ==============================================================
+QRectF CqWheel::boundingRect() const
+{
+	// TODO remove if not needed
+	return CqPhysicalDisk::boundingRect();
+}
+
+// ==============================================================
+void CqWheel::store( CqElement& element ) const
+{
+	CqPhysicalDisk::store( element );
+	
+	element.appendDouble( TAG_CONNECTABLE_DIAMETER, _connectableDiameter );
+	element.appendData( TAG_SVG_APPEARANCE, _svgAppearanceCode );
+}
+
+// ==============================================================
+void CqWheel::load( const CqElement& element )
+{
+	CqPhysicalDisk::load( element );
+	
+	_connectableDiameter = element.readDouble( TAG_CONNECTABLE_DIAMETER );
+	setSvgAppearance( element.readData( TAG_SVG_APPEARANCE ) );
+	
 }
 
 // EOF

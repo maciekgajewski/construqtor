@@ -64,6 +64,7 @@ public:
 	void appendString( const QString& tag, const QString& value );
 	void appendDouble( const QString& tag, double value );
 	void appendInt( const QString& tag, int value );
+	void appendData( const QString& tag, const QByteArray& data );
 	void appendPointF( const QString& tag, const QPointF& value );
 	void appendSizeF( const QString& tag, const QSizeF& value );
 	void appendRectF( const QString& tag, const QRectF& value );
@@ -79,6 +80,7 @@ public:
 	QString		readString( const QString& tag ) const;
 	double		readDouble( const QString& tag ) const;
 	int			readInt( const QString& tag ) const;
+	QByteArray	readData( const QString& tag ) const;
 	QPointF		readPointF( const QString& tag ) const;
 	QSizeF		readSizeF( const QString& tag ) const;
 	QRectF		readRectF( const QString& tag ) const;

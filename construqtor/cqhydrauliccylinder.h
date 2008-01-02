@@ -17,82 +17,38 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef CQWHEELWITHENGINE_H
-#define CQWHEELWITHENGINE_H
+#ifndef CQHYDRAULICCYLINDER_H
+#define CQHYDRAULICCYLINDER_H
 
-// Local
-#include "cqgirder.h"
-#include "cqwheel.h"
-#include "cqrevolutejoint.h"
+// local
 #include "cqcompounditem.h"
-#include "cqrevolutevelocitycontroler.h"
-
-class CqWheelWithEngine;
-///\internal
-class CqWheelWithEngineMotor : public CqRevoluteJoint
-{
-	Q_OBJECT
-public:
-	
-	CqWheelWithEngineMotor( CqWheelWithEngine* parent = 0 );
-	virtual ~CqWheelWithEngineMotor(){}
-	
-	// operations
-	virtual void paint
-		( QPainter * painter
-		, const QStyleOptionGraphicsItem * option
-		, QWidget * widget = 0 );
-		
-	virtual QRectF boundingRect() const;
-
-	
-};
-
-
+class CqGirder;
+class CqPrismaticJoint;
 
 /**
-	 Compound item. Consist of 'motor' and 'wheel' conected wityh motorized
-	 revolute joint.
-	 
+	Hydraulic cylinder - two long bodies connected together with prismatic joint,
+	translating along longitudinal axis.
 	@author Maciek Gajewski <maciej.gajewski0@gmail.com>
 */
-class CqWheelWithEngine : public CqCompoundItem
+class CqHydraulicCylinder : public CqCompoundItem
 {
 	Q_OBJECT
 public:
-	CqWheelWithEngine( double wheelDiameter = 0.0 );
-	virtual ~CqWheelWithEngine();
-	
-	/// If connection (nail/bolt/...) can be attached at this point
-	virtual bool canConnectHere( const QPointF& worldPoint );
-	/// Physical body connected to joint in this location
-	virtual CqPhysicalBody* bodyHere( const QPointF& scenePoint );
-	
-	/// Extends base implementation by adding controller to simulation
-	virtual void setSimulation( CqSimulation* pSimulation );
 
-	// i/o
-	virtual void load( const CqElement& element );
-	virtual void store( CqElement& element ) const;
+	// construction / destruction
+	CqHydraulicCylinder( QGraphicsItem* pParent = NULL );
+	virtual ~CqHydraulicCylinder();
 
 private:
 
-	// methods
-	
-	void init();				///< Init
-	
 	// data
+	CqGirder*			_pBarrel;
+	CqGirder*			_pPiston;
+	CqPrismaticJoint*	_pMotor;
 	
-	CqGirder*		_pEngine;		///< Engine sub-element
-	CqWheel*		_pWheel;		///< Wheel sub-element
-	CqWheelWithEngineMotor*		_pMotor;		///< Motorized revolute joint
-	
-	CqRevoluteVelocityControler _controller;	///< Motor controller
-	
-	double _wheelDiameter;
 };
 
-#endif // CQWHEELWITHENGINE_H
+#endif // CQHYDRAULICCYLINDER_H
 
 // EOF
 

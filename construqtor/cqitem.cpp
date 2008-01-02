@@ -184,7 +184,7 @@ double	CqItem::mapToWorld( double rotation )
 	
 	if ( pParent )
 	{
-		return rotation + pParent->mapToWorld( _rotation );
+		return rotation + worldRotation();
 	}
 	else
 	{
@@ -205,7 +205,7 @@ double CqItem::mapFromWorld( double rotation )
 	
 	if ( pParent )
 	{
-		return rotation - pParent->mapFromWorld( _rotation );
+		return rotation - worldRotation();
 	}
 	else
 	{
