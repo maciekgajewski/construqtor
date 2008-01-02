@@ -134,7 +134,7 @@ void MainView::mouseMoveEvent(QMouseEvent* pEvent)
 			
 		case SELECTING:
 		{
-			if ( _dragging )
+			if ( _dragging && ! _pSimulation->isRunning() )
 			{
 				QPoint displacement = mapFromScene( _rubberbandStart ) - pEvent->pos();
 				// calcvulate distance as inifinite module of vector

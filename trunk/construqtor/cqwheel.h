@@ -20,6 +20,10 @@
 #ifndef CQWHEEL_H
 #define CQWHEEL_H
 
+// Qt
+#include <QByteArray>
+#include <QSvgRenderer>
+
 // local
 #include "cqphysicaldisk.h"
 
@@ -31,6 +35,9 @@
 class CqWheel : public CqPhysicalDisk
 {
 	Q_OBJECT
+	
+	Q_PROPERTY( double diameter READ diameter WRITE setDiameter DESIGNABLE true );
+	Q_PROPERTY( double connectableDiameter READ connectableDiameter WRITE setConnectableDiameter DESIGNABLE true );
 public:
 
 	// construction / destruction 
@@ -43,9 +50,34 @@ public:
 	virtual bool canBeRotated() const;
 	virtual bool canConnectHere( const QPointF& /*worldPoint*/ ) { return true; } // connect on entire surface
 
+	// graphics item
+	// operations 
+	virtual void paint
+		( QPainter * painter
+		, const QStyleOptionGraphicsItem * option
+		, QWidget * widget = 0 );
+		
+    virtual QRectF boundingRect() const;
+
+	// properties
+	void setSvgAppearance( const QByteArray& svg );
+	QByteArray svgApperance() const { return _svgAppearanceCode; } // TODO is this needed?
+
+	double connectableDiameter() const { return _connectableDiameter; }
+	void setConnectableDiameter( double d ) { _connectableDiameter = d; }
+
+	// i/o
+	virtual void store( CqElement& element ) const;		///< stores item state 
+	virtual void load( const CqElement& element );		///< restores item state 
+
 private:
 
 	void init();
+	
+	QByteArray		_svgAppearanceCode;		///< Source code of wheel appearance
+	QSvgRenderer	_svgAppearance;			///< Wheel appearance
+	
+	double	_connectableDiameter;			///< diameter of connectable sub-disk
 };
 
 

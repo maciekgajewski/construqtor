@@ -17,27 +17,28 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef CQREVOLUTEJOINT_H
-#define CQREVOLUTEJOINT_H
+#ifndef CQPRYSMATICJOINT_H
+#define CQPRYSMATICJOINT_H
 
+// local
 #include "cqjoint.h"
 
 /**
-	Revolute joint object.
-
 	@author Maciek Gajewski <maciej.gajewski0@gmail.com>
 */
-class CqRevoluteJoint : public CqJoint
+class CqPrysmaticJoint : public CqJoint
 {
 	Q_OBJECT
 public:
 	
-	// construction destruction
+	// construction / destruction
+	CqPrysmaticJoint( QGraphicsItem* parent, CqWorld* world = NULL );
+	CqPrysmaticJoint( CqWorld* world = NULL );
+	virtual ~CqPrysmaticJoint();
 	
-	CqRevoluteJoint(QGraphicsItem* parent, CqWorld* world = NULL);
-	CqRevoluteJoint(CqWorld* world = NULL);
-	virtual ~CqRevoluteJoint();
-	
+	// joint
+	virtual b2Joint* createJoint(CqWorld* pWorld);
+
 	// properties
 	
 	/// Sets anchor point (in local coords)
@@ -45,31 +46,31 @@ public:
 	/// Returns anchor point (in local coords)
 	QPointF anchorPoint() const { return _anchorPoint; }
 	/// Enables and configures motor
-	void setMotorEnabled( bool enabled, double speed, double torque );
+	void setMotorEnabled( bool enabled, double speed, double force );
 	/// Enables and configures motor limits
 	void setLimits( bool limits, double upper, double lower );
 	
 	bool motorEnabled() const { return _enableMotor; }
 	
-	double maxTorque() const { return _maxTorque; }
+	double maxForce() const { return _maxForce; }
 	double maxSpeed() const { return _maxSpeed; }
 
 	// signal from simulation
 
-	virtual void updatePosToPhysical();		///< Updates position and rotation to physical
+	virtual void updatePosToPhysical();					///< Updates position and translation to physical
 	
 	// storing / reading
 	virtual void store( CqElement& element ) const;		///< stores item state 
 	virtual void load( const CqElement& element );		///< restores item state 
 
-protected:
-
+private:
+	
 	// methods
+	
 	void init();
 	
-    virtual b2Joint* createJoint( CqWorld* pWorld );	///< Creates joint
-		
-		
+	// data
+	
 	QPointF	_anchorPoint;							///< Anchor point, in local coords
 		
 	// motor specfication
@@ -77,16 +78,15 @@ protected:
 	bool	_enableLimits;							///< Flag: apply limits to motor
 	double	_upperLimit, _lowerLimit;
 	
-	double	_maxTorque;
+	double	_maxForce;
 	double	_maxSpeed;
 	
 	// physica lproperties
 	double	_initialSpeed;
-	double	_initialAngle;
-
+	double	_initialTranslation;
 };
 
-#endif // CQREVOLUTEJOINT_H
+#endif // CQPRYSMATICJOINT_H
 
 // EOF
 

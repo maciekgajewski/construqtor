@@ -48,6 +48,7 @@ static const char* TYPE_POLYGON	= "polygon";
 static const char* TYPE_RECT	= "rectangle";
 const char* CqElement::TYPE_ITEM	= "item";
 static const char* TYPE_STRING	= "string";
+static const char* TYPE_DATA	= "data";
 static const char* TYPE_DOUBLE	= "double";
 static const char* TYPE_INT		= "int";
 static const char* TYPE_SIZE	= "size";
@@ -118,6 +119,16 @@ void CqElement::appendInt( const QString& tag, int value )
 	e.setAttribute( ATTR_TYPE, TYPE_INT );
 	QDomText text = _element.ownerDocument().createTextNode( QString::number( value ) );
 	e.appendChild( text );
+	_element.appendChild( e );
+}
+
+// ==================================================================
+void CqElement::appendData( const QString& tag, const QByteArray& data )
+{
+	QDomElement e = _element.ownerDocument().createElement( tag );
+	e.setAttribute( ATTR_TYPE, TYPE_DATA );
+	QDomCDATASection cdata = _element.ownerDocument().createCDATASection( data );
+	e.appendChild( cdata );
 	_element.appendChild( e );
 }
 
@@ -226,6 +237,12 @@ QString CqElement::getSubelementText( const QString& tag, const QString& type ) 
 QString	CqElement::readString( const QString& tag ) const
 {
 	return getSubelementText( tag, TYPE_STRING );
+}
+
+// ==================================================================
+QByteArray CqElement::readData( const QString& tag ) const
+{
+	return getSubelementText( tag, TYPE_DATA).toAscii(); // TODO wild try
 }
 
 // ==================================================================

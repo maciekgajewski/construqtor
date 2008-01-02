@@ -20,6 +20,7 @@
 
 // Qt
 #include <QPainter>
+#include <QFile>
 
 // local
 #include "cqsimulation.h"
@@ -63,6 +64,12 @@ void CqWheelWithEngine::init()
 	_pWheel = new CqWheel( _wheelDiameter );
 	_pWheel->setEditorFlags( _pWheel->editorFlags() & ~Selectable );
 	_pWheel->setZValue( 0.7 );
+	// some aesthetic
+	QFile f( "graphics/tire80.svg" );	
+	if ( f.open( QIODevice::ReadOnly ) )
+	{
+		_pWheel->setSvgAppearance( f.readAll() );
+	}
 	
 	// init engine
 	_pEngine = new CqGirder(_wheelDiameter / 2, _wheelDiameter );

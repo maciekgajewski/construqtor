@@ -31,7 +31,9 @@ cqbolt.cpp \
  cqelement.cpp \
  cqitemfactory.cpp \
  cqgroupitem.cpp \
- cqclipboard.cpp
+ cqclipboard.cpp \
+ cqprysmaticjoint.cpp \
+ cqhydrauliccylinder.cpp
 FORMS += mainwindow.ui \
 ControllerWidget.ui
 HEADERS += mainwindow.h \
@@ -66,14 +68,17 @@ cqbolt.h \
  cqelement.h \
  cqitemfactory.h \
  cqgroupitem.h \
- cqclipboard.h
+ cqclipboard.h \
+ cqprysmaticjoint.h \
+ cqhydrauliccylinder.h
 CONFIG += debug \
 qt \
 warn_on \
 rtti
 QT += core \
 gui \
-xml
+xml \
+svg
 TARGET = ../bin/construqtor
 
 OBJECTS_DIR = .obj

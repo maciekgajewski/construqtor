@@ -1,13 +1,22 @@
 Planned features fo first release. Features marked with (low) can be dropped, 
 marked with (ff) are future feature and are not likely to be implemented.
 
+
+Features for 0.5 release, january 2007
+[   ] Hydraulic cylinder - different sizes
+[   ] Box - a "game" element, not editable
+[   ] Pallet - for box
+[   ] Forklift's fork - to carry pallet
+[   ] Editable area
+[   ] Reset
+[   ] Bugfixing: problems with rubberband selection
+[   ] Bugfix: problem with invisible objects remaining after deleting
+[   ] Better terrain geenration,random stones
+[   ] "gameification" - controlling gameplay, leve lof difficulty, making sure that available
+      elements allow for completing the game
+
 Short term goals
-[ * ] selecting different items under one points with multiple clickjs
-[ * ] deleting
-[ * ] ruberband selection
-[ * ] group move/rotate
 [   ] selectoing connected bodies with dblckick
-[   ] clipboard
 [   ] Making wheel from wheel+engine setup connectable
 [   ] Makig only part of engine from wheel+engine setup which is outside of wheel connectable
 [   ] use some color code to indicate connectable areas
@@ -23,18 +32,15 @@ Editor
 
 Elements
 [75%] Wheel + engine - different sizes [missing different sizes]
-[   ] Hydraulic cylinder - different sizes
 [   ] Small rods
 [   ] Wheel with suspension (low)
 [   ] Hinge with motor (low)
 [   ] Winder - two elements connected by rope (low)
-[   ] Box - a "game" element, not editable
-[   ] Pallet - for box
-[   ] Forklift's fork - to carry pallet
 [ * ] Bolt - non-rotatable nail
 [   ] Editable small polygonal objects - limited size and propably number of sides (ff)
 [   ] Rocket engine (ff)
 [   ] Spring (ff)
+[   ] Element loading it's shape, connectable areas and appearance from SVG file
 
 World
 [ * ] Polygonanl pody - uses triangulation
@@ -44,8 +50,7 @@ World
 [ * ] Saving and loading world state to file  - propably XML
 [ * ] Breakable nails / bolts (low)
 [   ] Breakable girdes/rods (ff)
-[   ] Editable area
-[   ] Reset
+[   ] Breaking joints of grouped objects 
 
 Controllers
 [ * ] Business logic - framework connecting motorized elements with UI. Cotrolling velocity or position

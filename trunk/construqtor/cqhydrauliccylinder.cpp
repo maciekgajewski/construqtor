@@ -17,67 +17,15 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef CQPHYSICALDISK_H
-#define CQPHYSICALDISK_H
+#include "cqhydrauliccylinder.h"
 
-// local
-#include "cqphysicalbody.h"
-
-
-/**
-	Uniform monolithi physical body with a shape of a disk
-	@author Maciek Gajewski <maciej.gajewski0@gmail.com>
-*/
-class CqPhysicalDisk : public CqPhysicalBody
+CqHydraulicCylinder::CqHydraulicCylinder(QGraphicsItem* pParent): CqCompoundItem(pParent)
 {
-	Q_OBJECT
-public:
-	
-	// construction / destruction
-	CqPhysicalDisk(QGraphicsItem* parent, CqWorld* world = NULL);
-	CqPhysicalDisk(CqWorld* world = NULL);
-	virtual ~CqPhysicalDisk();
+}
 
-	
-	// properties
-	void setDiameter( double diameter );			///< Sets/ changes diameter
-	double diameter() const { return _diameter; };	///< Returns diameter
 
-	// operations 
-	virtual void paint
-		( QPainter * painter
-		, const QStyleOptionGraphicsItem * option
-		, QWidget * widget = 0 );
-		
-    virtual QRectF boundingRect() const;
-    virtual QPainterPath shape() const;
-	
-	/// Returns body under poitn - single body everywhere
-	virtual CqPhysicalBody* bodyHere( const QPointF& /*worldPoint*/ ) { return this; }
-	
-	// storing / reading
-	virtual void store( CqElement& element ) const;		///< stores item state 
-	virtual void load( const CqElement& element );		///< restores item state 
-	
-protected:
-
-	// reimplementables
-	
-    virtual QList< b2ShapeDef* > createShape();
-
-private:
-
-	// methods
-	void init();		///< Initializes instance
-
-	// data
-	
-	double	_diameter;		///< diameter
-
-};
-
-#endif // CQPHYSICALDISK_H
-
-// EOF
+CqHydraulicCylinder::~CqHydraulicCylinder()
+{
+}
 
 
