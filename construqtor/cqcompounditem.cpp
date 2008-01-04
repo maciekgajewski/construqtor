@@ -29,7 +29,7 @@
 static const char* TAG_FOLLOWED_CHILD	= "followed";
 
 // ======================== constructor =====================
-CqCompoundItem::CqCompoundItem( QGraphicsItem *pParent )
+CqCompoundItem::CqCompoundItem( CqItem *pParent )
  : CqItem(pParent)
 {
 	init();
@@ -54,35 +54,34 @@ void CqCompoundItem::addChild( CqItem* pChild )
 {
 	Q_ASSERT( pChild );
 	
-	// take ownership (in QObject terms )
-	pChild->setParent( this );
-	
-	// make QGraphicsITem child
-	pChild->setParentItem( this );
-	
-	// add to list
-	_children.append( pChild );
-	
-	// introduce yourself to the child: "Luke, I am your father"
-	pChild->setPhysicalParent( this );
-	
-	// if world and/or simulation know, show it to the children
-	if ( world() )
+	if ( ! _children.contains( pChild ) ) // avopids recursion from CqItem::setPhysicalParent
 	{
-		pChild->setWorld( world() );
-	}
-	if ( simulation() )
-	{
-		pChild->setSimulation( simulation() );
-	}
-	
-	if ( ! _blockConnectionsUpdate )
-	{
-		updateConnectionLists();
-	}
-	else
-	{
-		_conectionUpdateNeeded = true;
+		
+		// add to list
+		_children.append( pChild );
+		
+		// introduce yourself to the child: "Luke, I am your father"
+		pChild->setPhysicalParent( this );
+		
+		// if world and/or simulation know, show it to the children
+		if ( world() )
+		{
+			pChild->setWorld( world() );
+		}
+		if ( simulation() )
+		{
+			pChild->setSimulation( simulation() );
+		}
+		
+		if ( ! _blockConnectionsUpdate )
+		{
+			updateConnectionLists();
+		}
+		else
+		{
+			_conectionUpdateNeeded = true;
+		}
+		
 	}
 }
 

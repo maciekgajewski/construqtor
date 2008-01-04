@@ -35,8 +35,8 @@ class CqGroundBody : public CqPhysicalBody
 {
 	Q_OBJECT
 public:
-	CqGroundBody(QGraphicsItem* parent, CqWorld* world = NULL);
-	CqGroundBody(CqWorld* world = NULL);
+	
+	explicit CqGroundBody( CqItem* parent = NULL);
 	virtual ~CqGroundBody();
 	
 	double height( double x );							///< Calculates ground height at specified x

@@ -34,7 +34,7 @@ class CqCompoundItem : public CqItem
 	Q_OBJECT
 public:
 	
-	CqCompoundItem( QGraphicsItem *pParent = 0 );
+	explicit CqCompoundItem( CqItem *pParent = 0 );
 	virtual ~CqCompoundItem();
 
 	void addChild( CqItem* pChild );					///< adds child

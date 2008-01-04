@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2007 by Maciek Gajewski   *
- *   maciej.gajewski0@gmail.com   *
+ *   Copyright (C) 2007 by Maciek Gajewski                                 *
+ *   maciej.gajewski0@gmail.com                                            *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -41,8 +41,7 @@ class CqWheel : public CqPhysicalDisk
 public:
 
 	// construction / destruction 
-	CqWheel( double diameter = 0.0 );
-	CqWheel( QGraphicsItem* parent );
+	explicit CqWheel( CqItem* parent = NULL );
 	virtual ~CqWheel();
 	
 	// editor flags

@@ -34,15 +34,8 @@ static const char* TAG_COOLING			= "cooling";
 static const char* TAG_TEMP				= "temperature";
 
 // ================================ constructor ==================
-CqFragileRevoluteJoint::CqFragileRevoluteJoint( QGraphicsItem* parent, CqWorld* world )
-	: CqRevoluteJoint( parent, world )
-{
-	init();
-}
-
-// ================================ constructor ==================
-CqFragileRevoluteJoint::CqFragileRevoluteJoint( CqWorld* world )
-	: CqRevoluteJoint( world )
+CqFragileRevoluteJoint::CqFragileRevoluteJoint( CqItem* parent )
+	: CqRevoluteJoint( parent )
 {
 	init();
 }

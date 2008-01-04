@@ -35,7 +35,7 @@ class CqGirder : public CqPhysicalBox
 public:
 
 	// construction / destruction 
-	CqGirder( double length = 0.0, double width = 0.0 );
+	explicit CqGirder( CqItem* parent = NULL );
 	virtual ~CqGirder();
 	
 	// editor flags

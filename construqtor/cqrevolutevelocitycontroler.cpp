@@ -59,7 +59,7 @@ double CqRevoluteVelocityControler::getCurrentForce() const
 	if ( _pJoint && _pJoint->b2joint() )
 	{
 		b2RevoluteJoint* pRj = (b2RevoluteJoint*)_pJoint->b2joint();
-		double torque =  pRj->GetMotorTorque( _pJoint->simulation()->invTimeStep() ); // TODO get from simulation
+		double torque =  pRj->GetMotorTorque( _pJoint->simulation()->invTimeStep() );
 		return torque;
 	}
 

@@ -29,15 +29,8 @@
 static const char* TAG_SHAPE	= "shape";
 
 // ============================== constructor ==========================
-CqPolygonalBody::CqPolygonalBody( CqWorld* world )
-	: CqPhysicalBody( world )
-{
-	init();
-}
-
-// ============================== constructor ==========================
-CqPolygonalBody::CqPolygonalBody( QGraphicsItem* parent, CqWorld* world )
-	: CqPhysicalBody( parent, world )
+CqPolygonalBody::CqPolygonalBody( CqItem* parent )
+	: CqPhysicalBody( parent )
 {
 	init();
 }

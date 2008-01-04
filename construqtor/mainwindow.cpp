@@ -30,6 +30,7 @@
 #include "cqbolt.h"
 #include "cqstone.h"
 #include "cqclipboard.h"
+#include "cqhydrauliccylinder.h"
 
 // local
 #include "mainwindow.h"
@@ -100,21 +101,25 @@ void MainWindow::scenePointerPos( double x, double y )
 // =========================== girder 200 =======================
 void MainWindow::on_buttonGirder100_clicked()
 {
-	CqGirder* pGirder = new CqGirder( 1.0, 0.2 ); // 100x20 cm
+	CqGirder* pGirder = new CqGirder(); // 100x20 cm
+	pGirder->setSize( QSizeF( 1.0, 0.2 ) );
+	
 	view->toolAddObject( pGirder );
 }
 
 // =========================== girder 200 =======================
 void MainWindow::on_buttonGirder200_clicked()
 {
-	CqGirder* pGirder = new CqGirder( 2.0, 0.2 ); // 200x20 cm
+	CqGirder* pGirder = new CqGirder(); // 200x20 cm
+	pGirder->setSize( QSizeF( 2.0, 0.2 ) );
 	view->toolAddObject( pGirder );
 }
 
 // =========================== girder 200 =======================
 void MainWindow::on_buttonGirder300_clicked()
 {
-	CqGirder* pGirder = new CqGirder( 3.0, 0.2 ); // 300x20 cm
+	CqGirder* pGirder = new CqGirder(); // 300x20 cm
+	pGirder->setSize( QSizeF( 3.0, 0.2 ) );
 	view->toolAddObject( pGirder );
 }
 
@@ -135,14 +140,16 @@ void MainWindow::on_buttonBolt_clicked()
 // ============================ wheel 40  ==============================
 void MainWindow::on_buttonWheel40_clicked()
 {
-	CqWheel* pWheel = new CqWheel( 0.40 );
+	CqWheel* pWheel = new CqWheel();
+	pWheel->setDiameter( 0.40 );
 	view->toolAddObject( pWheel );
 }
 
 // ============================ wheel 80  ==============================
 void MainWindow::on_buttonWheel80_clicked()
 {
-	CqWheel* pWheel = new CqWheel( 0.80 );
+	CqWheel* pWheel = new CqWheel();
+	pWheel->setDiameter( 0.80 );
 	// load svg
 	QFile file( "graphics/tire80.svg" );
 	if ( file.open( QIODevice::ReadOnly ) )
@@ -159,7 +166,8 @@ void MainWindow::on_buttonWheel80_clicked()
 // ============================= Wheel with engine =======================
 void MainWindow::on_buttonWwE_clicked()
 {
-	CqWheelWithEngine* pWwE = new CqWheelWithEngine( 0.80 );
+	CqWheelWithEngine* pWwE = new CqWheelWithEngine();
+	pWwE->setWheelDiameter( 0.80 );
 	view->toolAddObject( pWwE );
 }
 
@@ -237,6 +245,16 @@ void MainWindow::on_buttonClone_clicked()
 		pCB->copy( pSelected );
 		view->toolAddObject( pCB->get() );
 	}
+}
+
+// ==================================================================
+void MainWindow::on_buttonCylinder100_clicked()
+{
+	CqHydraulicCylinder* pCylinder = new CqHydraulicCylinder();
+	pCylinder->setLength( 1.0 );
+	pCylinder->setDiameter( 0.1 );
+	
+	view->toolAddObject( pCylinder );
 }
 
 

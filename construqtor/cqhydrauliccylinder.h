@@ -22,8 +22,32 @@
 
 // local
 #include "cqcompounditem.h"
+#include "cqprismaticjoint.h"
+#include "cqprismatictraslationcontroller.h"
 class CqGirder;
-class CqPrismaticJoint;
+
+/// \internal
+class CqHydraulicCylinderMotor : public CqPrismaticJoint
+{
+	Q_OBJECT
+public:
+	explicit CqHydraulicCylinderMotor( CqItem* parent = NULL ) : CqPrismaticJoint( parent ) {}
+	virtual ~CqHydraulicCylinderMotor(){};
+	
+	virtual void paint
+		( QPainter * /*painter*/
+		, const QStyleOptionGraphicsItem * /*option*/
+		, QWidget * /*widget = 0*/ )
+	{
+		// no painting
+	}
+		
+    virtual QRectF boundingRect() const
+	{
+    	return QRectF(); // no bounding rect
+	}
+};
+
 
 /**
 	Hydraulic cylinder - two long bodies connected together with prismatic joint,
@@ -33,21 +57,53 @@ class CqPrismaticJoint;
 class CqHydraulicCylinder : public CqCompoundItem
 {
 	Q_OBJECT
+	
+	Q_PROPERTY( double length READ length WRITE setLength DESIGNABLE true );
+	Q_PROPERTY( double diameter READ diameter WRITE setDiameter DESIGNABLE true );
+	Q_PROPERTY( double maxForce READ maxForce WRITE setMaxForce DESIGNABLE true );
+	Q_PROPERTY( double maxSpeed READ maxSpeed WRITE setMaxSpeed DESIGNABLE true );
 public:
 
 	// construction / destruction
-	CqHydraulicCylinder( QGraphicsItem* pParent = NULL );
+	CqHydraulicCylinder( CqItem* pParent = NULL );
 	virtual ~CqHydraulicCylinder();
+
+	/// Extends base implementation by adding controller to simulation
+	virtual void setSimulation( CqSimulation* pSimulation );
+	
+	// properties
+	
+	void setLength( double l );
+	double length() const { return _length; }
+	
+	void setDiameter( double d );
+	double diameter() const { return _diameter; }
+	
+	void setMaxForce( double f );
+	double maxForce() const;
+	
+	void setMaxSpeed( double s );
+	double maxSpeed() const;
 
 private:
 
+	// methods
+	
+	void init();
+	void setupGeometry();				///< set's up relative child geometry
+
 	// data
+	
 	CqGirder*			_pBarrel;
 	CqGirder*			_pPiston;
-	CqPrismaticJoint*	_pMotor;
+	CqHydraulicCylinderMotor*	_pMotor;
+	
+	double				_length;		///< cylinder length (when shortest. longest is 180% of this)
+	double				_diameter;		///< Barrel diameter 
+	
+	CqPrismaticTraslationController _controller;	///< Motor controller
 	
 };
-
 #endif // CQHYDRAULICCYLINDER_H
 
 // EOF

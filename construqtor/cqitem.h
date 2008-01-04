@@ -50,7 +50,7 @@ public:
 	};
 	
 	// constrution / destruction
-	CqItem( QGraphicsItem* parent = NULL );
+	explicit CqItem( CqItem* parent = NULL );
 	virtual ~CqItem();
 	
 	// signals form simulation
@@ -119,7 +119,7 @@ public:
 	CqItem* physicalParent(){ return _pPhysicalParent; }
 	const CqItem* physicalParent() const { return _pPhysicalParent; }
 	void setPhysicalParent( CqItem* pParent );		///< Sets physical parent
-	virtual void  childChanged( CqItem* ){};		///< Info from child - child changed
+	virtual void childChanged( CqItem* ){};		///< Info from child - child changed
 	virtual void notifyParent();					///< Set info to parent
 	
 	virtual void updatePhysicalPos(){};				///< Updates physical pos to item pos/rotation

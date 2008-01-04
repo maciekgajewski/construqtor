@@ -17,65 +17,50 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef CQPOLYGONALBODY_H
-#define CQPOLYGONALBODY_H
-
-// Qt
-#include <QPolygonF>
+#ifndef CQPRISMATICTRASLATIONCONTROLLER_H
+#define CQPRISMATICTRASLATIONCONTROLLER_H
 
 // local
-#include "cqphysicalbody.h"
+#include "cqmotorcontroller.h"
+class CqPrismaticJoint;
 
 /**
-	This is a physical body with shape defined by polygon.
-	Polygon is spilt into triangles using GPC library.
 	@author Maciek Gajewski <maciej.gajewski0@gmail.com>
 */
-class CqPolygonalBody : public CqPhysicalBody
+class CqPrismaticTraslationController : public CqMotorController
 {
 	Q_OBJECT
 public:
-	// constrution / destruction
-	explicit CqPolygonalBody( CqItem* parent = NULL );
-	virtual ~CqPolygonalBody();
 	
-	// shape definition
-	void setPolygon( const QPolygonF& ploygon );		///< Sets shape
-	QPolygonF polygon() const { return _polygon; }		///< Returns shape
+	CqPrismaticTraslationController( QObject* parent = NULL );
+	virtual ~CqPrismaticTraslationController();
 	
-	// operations 
-	virtual void paint
-		( QPainter * painter
-		, const QStyleOptionGraphicsItem * option
-		, QWidget * widget = 0 );
-		
-    virtual QRectF boundingRect() const;
-	virtual CqPhysicalBody* bodyHere( const QPointF& /*worldPoint*/ ) { return this; }
+	virtual double getCurrentForce() const;
+	virtual double getCurrentValue() const;
+	virtual double getDesiredValue() const;
+	virtual void setDesiredValue(double value);
 	
-	// storing / reading
-	virtual void store( CqElement& element ) const;		///< stores item state 
-	virtual void load( const CqElement& element );		///< restores item state 
+	void setJoint( CqPrismaticJoint* pJoint );
+	CqPrismaticJoint* joint() const { return _pJoint; }
 
-protected:
+public slots:
+
+	void simulationStep();	///< Hanldes controller calculations on simulatio step
 	
-	virtual QList<b2ShapeDef*> createShape();			///< Creates body shape
-	
-private:	
+private:
 
 	// methods
 	
 	void init();
-	/// Creates polygonal b2ShapeDef, based on three points
-	static b2PolyDef* createTriangleB2Shape( const QPointF& a, const QPointF& b, const QPointF& c );
-	/// Calculates cross product of two vectors
-	static double product( const QPointF& a, const QPointF& b );
-
+	
 	// data
 	
-	QPolygonF	_polygon;		///< shape, as polygon
-	
+	CqPrismaticJoint*	_pJoint;
+	double				_desiredTranslation;
 };
 
-#endif // CQPOLYGONALBODY_H
+#endif // CQPRISMATICTRASLATIONCONTROLLER_H
 
 // EOF
+
+

@@ -31,8 +31,7 @@ class CqStone : public CqPolygonalBody
 	Q_OBJECT
 public:
 	// construction / destruction
-	CqStone(QGraphicsItem* parent, CqWorld* world = NULL);
-	CqStone(CqWorld* world = NULL);
+	explicit CqStone( CqItem* parent = NULL );
 	virtual ~CqStone();
 
 	/// Utility: creates random stone

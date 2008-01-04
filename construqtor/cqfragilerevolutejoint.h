@@ -38,8 +38,7 @@ class CqFragileRevoluteJoint: public CqRevoluteJoint
 public:
 
 	// construction / destruction
-	CqFragileRevoluteJoint(QGraphicsItem* parent, CqWorld* world = NULL);
-	CqFragileRevoluteJoint(CqWorld* world = NULL);
+	CqFragileRevoluteJoint( CqItem* parent = NULL);
 	virtual ~CqFragileRevoluteJoint();
 	
 	// info from simulatiom

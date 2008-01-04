@@ -53,8 +53,7 @@ class CqPhysicalBody : public CqItem
 public:
 	
 	// constrution / destruction
-	CqPhysicalBody( CqWorld* world = NULL );
-	explicit CqPhysicalBody( QGraphicsItem* parent, CqWorld* world = NULL );
+	explicit CqPhysicalBody( CqItem* parent = NULL);
 	virtual ~CqPhysicalBody();
 
 	// properties

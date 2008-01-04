@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2007 by Maciek Gajewski   *
- *   maciej.gajewski0@gmail.com   *
+ *   Copyright (C) 2007 by Maciek Gajewski                                 *
+ *   maciej.gajewski0@gmail.com                                            *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -29,18 +29,10 @@ static const char* TAG_BODY1	= "body1";
 static const char* TAG_BODY2	= "body2";
 
 // =========================== constructor ===================
-CqJoint::CqJoint(CqWorld* world)
-	: CqItem()
+CqJoint::CqJoint( CqItem* parent )
+	: CqItem( parent )
 {
 	init();
-	setWorld( world );
-}
-// =========================== constructor ===================
-CqJoint::CqJoint(QGraphicsItem* parent, CqWorld* world)
-	: CqItem(parent)
-{
-	init();
-	setWorld( world );
 }
 
 // =========================== destructor ===================
@@ -139,6 +131,19 @@ void CqJoint::load( const CqElement& element )
 	CqPhysicalBody* pB2 = (CqPhysicalBody*)element.readItemPointer( TAG_BODY2 );
 	setConnectedBodies( pB1, pB2 );	
 
+}
+
+// ====================================================================
+void CqJoint::recreateJoint()
+{
+	if ( _pJoint )
+	{
+		CqWorld* pWorld = world();
+		Q_ASSERT( pWorld );
+		
+		destroyJoint( pWorld );
+		_pJoint = createJoint( pWorld );
+	}
 }
 
 // EOF

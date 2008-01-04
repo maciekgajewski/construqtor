@@ -32,15 +32,8 @@ CQ_ADD_TO_FACTORY( CqBrokenNail );
 static const QSizeF SIZE = QSizeF( 0.02, 0.02 );
 
 // ========================= construction ======================
-CqNail::CqNail( CqWorld* world  )
-	: CqFragileRevoluteJoint(world)
-{
-	init();
-}
-
-// ========================= construction ======================
-CqNail::CqNail( QGraphicsItem* parent, CqWorld* world  )
-	:CqFragileRevoluteJoint( parent, world )
+CqNail::CqNail( CqItem* parent  )
+	: CqFragileRevoluteJoint(parent)
 {
 	init();
 }
