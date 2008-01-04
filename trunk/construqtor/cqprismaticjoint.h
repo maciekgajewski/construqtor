@@ -17,8 +17,8 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef CQPRYSMATICJOINT_H
-#define CQPRYSMATICJOINT_H
+#ifndef CQPRISMATICJOINT_H
+#define CQPRISMATICJOINT_H
 
 // local
 #include "cqjoint.h"
@@ -26,15 +26,14 @@
 /**
 	@author Maciek Gajewski <maciej.gajewski0@gmail.com>
 */
-class CqPrysmaticJoint : public CqJoint
+class CqPrismaticJoint : public CqJoint
 {
 	Q_OBJECT
 public:
 	
 	// construction / destruction
-	CqPrysmaticJoint( QGraphicsItem* parent, CqWorld* world = NULL );
-	CqPrysmaticJoint( CqWorld* world = NULL );
-	virtual ~CqPrysmaticJoint();
+	CqPrismaticJoint( CqItem* parent = NULL );
+	virtual ~CqPrismaticJoint();
 	
 	// joint
 	virtual b2Joint* createJoint(CqWorld* pWorld);
@@ -46,14 +45,28 @@ public:
 	/// Returns anchor point (in local coords)
 	QPointF anchorPoint() const { return _anchorPoint; }
 	/// Enables and configures motor
-	void setMotorEnabled( bool enabled, double speed, double force );
-	/// Enables and configures motor limits
-	void setLimits( bool limits, double upper, double lower );
+	void setMotorEnabled( bool enabled );
 	
 	bool motorEnabled() const { return _enableMotor; }
 	
+	/// Enables and configures motor limits
+	void setLimitsEnabled( bool limitsEnabled );
+	bool limitsEnabled() const { return _enableLimits; }
+	
+	void setUpperLimit( double limit );
+	double upperLimit() const { return _upperLimit; }
+	
+	void setLowerLimit( double limit );
+	double lowerLimit() const { return _lowerLimit; }
+	
+	void  setMaxForce( double f );
 	double maxForce() const { return _maxForce; }
+	
+	void setMaxSpeed( double s );
 	double maxSpeed() const { return _maxSpeed; }
+	
+	void setAxis( const QPointF& axis );
+	QPointF axis() const { return _axis; }
 
 	// signal from simulation
 
@@ -72,6 +85,7 @@ private:
 	// data
 	
 	QPointF	_anchorPoint;							///< Anchor point, in local coords
+	QPointF	_axis;									///< Joint's axis
 		
 	// motor specfication
 	bool	_enableMotor;							///< Flag - create joint with motor
@@ -81,12 +95,11 @@ private:
 	double	_maxForce;
 	double	_maxSpeed;
 	
-	// physica lproperties
 	double	_initialSpeed;
 	double	_initialTranslation;
 };
 
-#endif // CQPRYSMATICJOINT_H
+#endif // CQPRISMATICJOINT_H
 
 // EOF
 

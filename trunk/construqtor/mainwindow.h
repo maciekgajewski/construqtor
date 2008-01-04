@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2007 by Maciek Gajewski   *
- *   maciej.gajewski0@gmail.com   *
+ *   Copyright (C) 2007 by Maciek Gajewski                                 *
+ *   maciej.gajewski0@gmail.com                                            *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -64,6 +64,8 @@ public slots:
 	void on_buttonWwE_clicked();
 	
 	void on_buttonStone_clicked();
+	
+	void on_buttonCylinder100_clicked();
 	
 	void scenePointerPos( double x, double y );
 	

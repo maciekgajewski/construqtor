@@ -59,8 +59,9 @@ public:
 class CqWheelWithEngine : public CqCompoundItem
 {
 	Q_OBJECT
+	Q_PROPERTY( double wheelDiameter READ wheelDiameter WRITE setWheelDiameter DESIGNABLE true );
 public:
-	CqWheelWithEngine( double wheelDiameter = 0.0 );
+	explicit CqWheelWithEngine( CqItem* parent = NULL );
 	virtual ~CqWheelWithEngine();
 	
 	/// If connection (nail/bolt/...) can be attached at this point
@@ -70,6 +71,10 @@ public:
 	
 	/// Extends base implementation by adding controller to simulation
 	virtual void setSimulation( CqSimulation* pSimulation );
+
+	// properties
+	void setWheelDiameter( double diameter );
+	double wheelDiameter() const { return _wheelDiameter; }
 
 	// i/o
 	virtual void load( const CqElement& element );

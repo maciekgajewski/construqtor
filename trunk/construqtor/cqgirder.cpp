@@ -26,11 +26,10 @@
 CQ_ADD_TO_FACTORY( CqGirder );
 
 // ============================== constructor ===============
-CqGirder::CqGirder( double length, double width ) : CqPhysicalBox()
+CqGirder::CqGirder( CqItem* parent ) : CqPhysicalBox( parent )
 {
-	setSize( QSizeF(length, width) );
 	setEditorFlags( editorFlags() | Selectable | Movable | Rotatable );
-	setName( QString("Girder %1x%2").arg(length).arg(width) );
+	setName( "Girder" );
 }
 
 // ============================ destructor ==================

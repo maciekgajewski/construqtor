@@ -31,8 +31,8 @@ class CqGroupItem : public CqCompoundItem
 {
 	Q_OBJECT
 public:
-	CqGroupItem( QGraphicsItem* pParent = NULL );
-	CqGroupItem( QList<CqItem*> items, QGraphicsItem* pParent = NULL );
+	CqGroupItem( CqItem* pParent = NULL );
+	CqGroupItem( QList<CqItem*> items, CqItem* pParent = NULL );
 	virtual ~CqGroupItem();
 	
 	void setGroupContent( QList<CqItem*> items );	///< Sets entire group content at once

@@ -31,17 +31,9 @@ static const char* TAG_SVG_APPEARANCE		= "svgappearance";
 
 
 // ============================== constructor ===============
-CqWheel::CqWheel( double diameter ) : CqPhysicalDisk()
+CqWheel::CqWheel( CqItem* parent ) : CqPhysicalDisk( parent )
 {
 	init();
-	setDiameter( diameter );
-}
-
-// ============================== constructor ===============
-CqWheel::CqWheel( QGraphicsItem* parent ) : CqPhysicalDisk( parent )
-{
-	init();
-	setDiameter( 0.0 );
 }
 
 // ============================ destructor ==================
@@ -56,7 +48,7 @@ void CqWheel::init()
 	setEditorFlags( editorFlags() | Selectable | Movable );
 	setMaterial( CqMaterial( 100.0, 2.0, 0.3 ) );
 	
-	setName( QString("Wheel %1").arg( diameter() ) );
+	setName( "Wheel" );
 }
 
 // ========================= can be moved ================

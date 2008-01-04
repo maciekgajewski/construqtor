@@ -36,19 +36,10 @@ static const char* TAG_LINEAR_VEL = "linearvelocity";
 static const char* TAG_ANGULAR_VEL = "angularvelocity";
 
 // ========================== constructor =================================
-CqPhysicalBody::CqPhysicalBody( QGraphicsItem* parent, CqWorld* world )
+CqPhysicalBody::CqPhysicalBody( CqItem* parent )
 	: CqItem( parent )
 {
 	init();
-	setWorld( world );
-}
-
-// ========================== constructor =================================
-CqPhysicalBody::CqPhysicalBody( CqWorld* world )
-	: CqItem( NULL )
-{
-	init();
-	setWorld( world );
 }
 
 // =========================== destructor ===================================

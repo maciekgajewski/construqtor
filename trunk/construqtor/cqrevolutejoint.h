@@ -34,8 +34,7 @@ public:
 	
 	// construction destruction
 	
-	CqRevoluteJoint(QGraphicsItem* parent, CqWorld* world = NULL);
-	CqRevoluteJoint(CqWorld* world = NULL);
+	explicit CqRevoluteJoint( CqItem* parent = NULL);
 	virtual ~CqRevoluteJoint();
 	
 	// properties

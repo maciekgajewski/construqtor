@@ -34,8 +34,7 @@ class CqBolt : public CqFragileRevoluteJoint
 	Q_OBJECT
 public:
 	// construction / destruction
-	CqBolt(CqWorld* world = NULL );
-	CqBolt(QGraphicsItem* parent, CqWorld* world = NULL );
+	CqBolt( CqItem* parent = NULL );
 	virtual ~CqBolt();
 
 	// operations 
@@ -62,7 +61,7 @@ class CqBrokenBolt : public CqPhysicalBody
 {
 public:
 
-	CqBrokenBolt( CqWorld* world = NULL ) : CqPhysicalBody( world ){ init(); }
+	CqBrokenBolt( CqItem* parent = NULL ) : CqPhysicalBody( parent ){ init(); }
 	virtual ~CqBrokenBolt(){}
 	// operations 
 	virtual void paint

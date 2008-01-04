@@ -28,14 +28,8 @@
 static const char* TAG_BOX_SIZE	= "boxsize";
 
 // ==================== contructor =======================
-CqPhysicalBox::CqPhysicalBox(QGraphicsItem* parent, CqWorld* world): CqPhysicalBody(parent, world)
-{
-	init();
-	qDebug("physical box created, this: %p", this );
-}
-
-// ==================== contructor =======================
-CqPhysicalBox::CqPhysicalBox(CqWorld* world): CqPhysicalBody(world)
+CqPhysicalBox::CqPhysicalBox( CqItem* parent )
+	: CqPhysicalBody( parent )
 {
 	init();
 }

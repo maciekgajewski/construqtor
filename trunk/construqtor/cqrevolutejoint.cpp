@@ -38,14 +38,8 @@ static const char* TAG_JOINT_ANGLE		= "jointangle";
 
 
 // =========================== constructor ===================
-CqRevoluteJoint::CqRevoluteJoint(QGraphicsItem* parent, CqWorld* world): CqJoint(parent, world)
-{
-	init();
-}
-
-
-// =========================== constructor ===================
-CqRevoluteJoint::CqRevoluteJoint(CqWorld* world): CqJoint(world)
+CqRevoluteJoint::CqRevoluteJoint( CqItem* parent )
+	: CqJoint( parent )
 {
 	init();
 }

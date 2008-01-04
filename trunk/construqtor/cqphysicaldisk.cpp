@@ -28,13 +28,8 @@
 static const char* TAG_DISK_DIAMETER = "diameter";
 
 // ==================== contructor =======================
-CqPhysicalDisk::CqPhysicalDisk(QGraphicsItem* parent, CqWorld* world): CqPhysicalBody(parent, world)
-{
-	init();
-}
-
-// ==================== contructor =======================
-CqPhysicalDisk::CqPhysicalDisk(CqWorld* world): CqPhysicalBody(world)
+CqPhysicalDisk::CqPhysicalDisk( CqItem* parent )
+	: CqPhysicalBody( parent )
 {
 	init();
 }
@@ -42,7 +37,7 @@ CqPhysicalDisk::CqPhysicalDisk(CqWorld* world): CqPhysicalBody(world)
 // ==================== init =======================
 void CqPhysicalDisk::init()
 {
-	_diameter = 0.0;
+	_diameter = 1.0;
 }
 
 // ==================== destructor =======================

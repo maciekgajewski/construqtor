@@ -32,15 +32,8 @@ CQ_ADD_TO_FACTORY( CqGroundBody );
 static const char* TAG_HEIGHTMAP = "heightmap";
 
 // =============================== constructor =======================
-CqGroundBody::CqGroundBody(QGraphicsItem* parent, CqWorld* world)
-	: CqPhysicalBody(parent, world)
-{
-	init();
-}
-
-// =============================== constructor =======================
-CqGroundBody::CqGroundBody(CqWorld* world)
-	: CqPhysicalBody(world)
+CqGroundBody::CqGroundBody( CqItem* parent )
+	: CqPhysicalBody(parent)
 {
 	init();
 }

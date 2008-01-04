@@ -22,7 +22,7 @@
 #include "b2PrismaticJoint.h"
 
 // local
-#include "cqprysmaticjoint.h"
+#include "cqprismaticjoint.h"
 #include "cqphysicalbody.h"
 #include "cqworld.h"
 
@@ -38,37 +38,36 @@ static const char* TAG_JOINT_SPEED		= "jointspeed";
 static const char* TAG_JOINT_TRANSLATION	= "jointtranslation";
 
 // ==========================================================================
-CqPrysmaticJoint::CqPrysmaticJoint(QGraphicsItem* parent, CqWorld* world)
-	: CqJoint(parent, world)
+CqPrismaticJoint::CqPrismaticJoint( CqItem* parent )
+	: CqJoint( parent )
 {
 	init();
 }
 
 // ==========================================================================
-CqPrysmaticJoint::CqPrysmaticJoint(CqWorld* world)
-	: CqJoint( world)
-{
-	init();
-}
-
-// ==========================================================================
-CqPrysmaticJoint::~CqPrysmaticJoint()
+CqPrismaticJoint::~CqPrismaticJoint()
 {
 	// nope
 }
 
 // ==========================================================================
-void CqPrysmaticJoint::init()
+void CqPrismaticJoint::init()
 {
 	_enableMotor		= false;
 	_enableLimits		= false;
 	_anchorPoint		= QPointF( 0, 0 );
 	_initialSpeed		= 0.0;
 	_initialTranslation	= 0.0;
+	
+	_lowerLimit			= 0.0;
+	_upperLimit			= 1.0;
+	
+	_maxSpeed			= 1.0;
+	_maxForce			= 1000.0;
 }
 
 // ==========================================================================
-b2Joint* CqPrysmaticJoint::createJoint(CqWorld* pWorld)
+b2Joint* CqPrismaticJoint::createJoint(CqWorld* pWorld)
 {
 	Q_ASSERT( pWorld );
 	
@@ -94,10 +93,12 @@ b2Joint* CqPrysmaticJoint::createJoint(CqWorld* pWorld)
 		jointDef.enableLimit		= _enableLimits;
 		jointDef.upperTranslation	= _upperLimit;
 		jointDef.lowerTranslation	= _lowerLimit;
+		jointDef.axis.Set( _axis.x(), _axis.y() ); // TODO transform this to world rotatation
 		
 		b2PrismaticJoint* pJoint = (b2PrismaticJoint*)pWorld->CreateJoint( & jointDef );
 		
-		// TODO what to do with initial translation?
+		// apply initial trnaslation
+		// TODO no! the cake is a lie!
 		
 		return pJoint;
 	}
@@ -107,7 +108,7 @@ b2Joint* CqPrysmaticJoint::createJoint(CqWorld* pWorld)
 }
 	
 // ==========================================================================
-void CqPrysmaticJoint::updatePosToPhysical()
+void CqPrismaticJoint::updatePosToPhysical()
 {
 	if ( b2joint() )
 	{
@@ -118,23 +119,21 @@ void CqPrysmaticJoint::updatePosToPhysical()
 }
 
 // ================================ set motor enabled ===========================
-void CqPrysmaticJoint::setMotorEnabled( bool enabled, double speed, double force )
+void CqPrismaticJoint::setMotorEnabled( bool enabled )
 {
 	_enableMotor	= enabled;
-	_maxSpeed		= speed;
-	_maxForce		= force; // TODO stil ot sure if it is max torque
+	recreateJoint();
 }
 
 // ================================ set limits enabled ===========================
-void CqPrysmaticJoint::setLimits( bool limits, double upper, double lower )
+void CqPrismaticJoint::setLimitsEnabled( bool limits  )
 {
 	_enableLimits	= limits;
-	_upperLimit		= upper;
-	_lowerLimit		= lower;
+	recreateJoint();
 }
 
 // ==========================================================================
-void CqPrysmaticJoint::store( CqElement& element ) const
+void CqPrismaticJoint::store( CqElement& element ) const
 {
 	CqJoint::store( element );
 	
@@ -171,7 +170,7 @@ void CqPrysmaticJoint::store( CqElement& element ) const
 }
 
 // ==========================================================================
-void CqPrysmaticJoint::load( const CqElement& element )
+void CqPrismaticJoint::load( const CqElement& element )
 {
 	CqJoint::load( element );
 
@@ -197,6 +196,41 @@ void CqPrysmaticJoint::load( const CqElement& element )
 	// NOTE: assuming joint isn't created yet
 	_initialSpeed = element.readDouble( TAG_JOINT_SPEED );
 	_initialTranslation = element.readDouble( TAG_JOINT_TRANSLATION );
+}
+
+// =====================================================================
+void CqPrismaticJoint::setMaxForce( double f )
+{
+	_maxForce = f;
+	recreateJoint();
+}
+
+// =====================================================================
+void CqPrismaticJoint::setMaxSpeed( double s )
+{
+	_maxSpeed = s;
+	recreateJoint();
+}
+
+// =====================================================================
+void CqPrismaticJoint::setUpperLimit( double limit )
+{
+	_upperLimit = limit;
+	recreateJoint();
+}
+
+// =====================================================================
+void CqPrismaticJoint::setLowerLimit( double limit )
+{
+	_lowerLimit = limit;
+	recreateJoint();
+}
+
+// =====================================================================
+void CqPrismaticJoint::setAxis( const QPointF& axis )
+{
+	_axis = axis;
+	recreateJoint();
 }
 
 // EOF

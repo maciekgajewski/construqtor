@@ -35,13 +35,8 @@ CQ_ADD_TO_FACTORY( CqBrokenBolt );
 static const QSizeF SIZE = QSizeF( 0.05, 0.05 );
 
 // =================== constructor =======================
-CqBolt::CqBolt(CqWorld* world): CqFragileRevoluteJoint(world)
-{
-	init();
-}
-
-// =================== constructor =======================
-CqBolt::CqBolt(QGraphicsItem* parent, CqWorld* world): CqFragileRevoluteJoint(parent, world)
+CqBolt::CqBolt( CqItem* parent )
+	: CqFragileRevoluteJoint( parent )
 {
 	init();
 }

@@ -42,10 +42,9 @@ static const double MAX_TORQUE	= 1000.0;	// max torque [Nm?]
 static const CqMaterial ENGINE_MATERIAL( 400.0, 0.2, 0.1 ); // dens, friq, restit
 
 // ======================== constructor ===================
-CqWheelWithEngine::CqWheelWithEngine( double wheelDiameter )
- : CqCompoundItem()
+CqWheelWithEngine::CqWheelWithEngine( CqItem* parent )
+ : CqCompoundItem( parent )
 {
-	_wheelDiameter = wheelDiameter;
 	init();
 }
 
@@ -60,8 +59,10 @@ CqWheelWithEngine::~CqWheelWithEngine()
 // ======================== init ===================
 void CqWheelWithEngine::init()
 {
+	_wheelDiameter = 1.0;
 	// init wheel
-	_pWheel = new CqWheel( _wheelDiameter );
+	_pWheel = new CqWheel();
+	_pWheel->setDiameter( _wheelDiameter );
 	_pWheel->setEditorFlags( _pWheel->editorFlags() & ~Selectable );
 	_pWheel->setZValue( 0.7 );
 	// some aesthetic
@@ -72,7 +73,8 @@ void CqWheelWithEngine::init()
 	}
 	
 	// init engine
-	_pEngine = new CqGirder(_wheelDiameter / 2, _wheelDiameter );
+	_pEngine = new CqGirder();
+	_pEngine->setSize( QSizeF( _wheelDiameter / 2, _wheelDiameter ) );
 	_pEngine->setPos( 0, _wheelDiameter * 0.4 );
 	_pEngine->setMaterial( ENGINE_MATERIAL );
 	_pEngine->setZValue( 0.5 );
@@ -194,6 +196,16 @@ void CqWheelWithEngine::store( CqElement& element ) const
 	element.appendItemPointer( TAG_WHEEL, _pWheel );
 	element.appendItemPointer( TAG_MOTOR, _pMotor );
 
+}
+
+// ======================================================================
+void CqWheelWithEngine::setWheelDiameter( double diameter )
+{
+	_wheelDiameter = diameter;
+	if ( _pWheel )
+	{
+		_pWheel->setDiameter( diameter );
+	}
 }
 
 // EOF

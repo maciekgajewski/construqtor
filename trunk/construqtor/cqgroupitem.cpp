@@ -26,13 +26,13 @@ CQ_ADD_TO_FACTORY( CqGroupItem );
 
 
 // ============================== constructor =======================
-CqGroupItem::CqGroupItem( QGraphicsItem* pParent )
+CqGroupItem::CqGroupItem( CqItem* pParent )
 	: CqCompoundItem( pParent )
 {
 	init();
 }
 // ============================== constructor =======================
-CqGroupItem::CqGroupItem( QList<CqItem*> items, QGraphicsItem* pParent )
+CqGroupItem::CqGroupItem( QList<CqItem*> items, CqItem* pParent )
 	: CqCompoundItem( pParent )
 {
 	init();

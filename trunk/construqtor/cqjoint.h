@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2007 by Maciek Gajewski   *
- *   maciej.gajewski0@gmail.com   *
+ *   Copyright (C) 2007 by Maciek Gajewski                                 *
+ *   maciej.gajewski0@gmail.com                                            *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -41,8 +41,7 @@ class CqJoint : public CqItem
 	Q_OBJECT
 public:
 	// constrution / destruction
-	CqJoint( CqWorld* world = NULL );
-	CqJoint( QGraphicsItem* parent, CqWorld* world = NULL );
+	explicit CqJoint( CqItem* parent = NULL );
 	virtual ~CqJoint();
 
 	// properties
@@ -74,6 +73,8 @@ protected:
 	
 	virtual b2Joint* createJoint( CqWorld* pWorld ) = 0;
 	void destroyJoint( CqWorld* pWorld );
+	
+	void recreateJoint();			///< Called when joint params is changedm so B2D joint has to be re-created
 
 	// data
 

@@ -36,11 +36,12 @@ static const char* TAG_FLAGS	= "flags";
 
 
 // ========================== constructor ======================
-CqItem::CqItem( QGraphicsItem* parent )
+CqItem::CqItem( CqItem* parent )
 	: QObject()
-	, QGraphicsItem(parent)
+	, QGraphicsItem()
 {
 	init();
+	setPhysicalParent( parent );
 }
 
 // ========================== destructor ======================
@@ -217,7 +218,6 @@ double CqItem::mapFromWorld( double rotation )
 void CqItem::setWorld ( CqWorld* pWorld )
 {
 	_pWorld = pWorld;
-
 }
 
 // ============================== set selected =============================
@@ -315,15 +315,22 @@ void CqItem::notifyParent()
 // =============================================================
 void CqItem::setPhysicalParent( CqItem* pParent )
 {
-	// notify old parent about change
-	notifyParent();
-	
-	// set new parent
-	_pPhysicalParent = pParent;
-	setParent( pParent );		// parent QObject (owner)
-	setParentItem( pParent );	// parent item
-	
-	// TODO addto parent here?
+	if ( pParent != _pPhysicalParent ) // prevents recursion from CqCompoundItem::addChild
+	{
+		// notify old parent about upcoming change
+		notifyParent();
+		
+		// set new parent
+		_pPhysicalParent = pParent;
+		setParent( pParent );		// parent QObject (owner)
+		setParentItem( pParent );	// parent item
+		
+		CqCompoundItem* pCompoundParent = qobject_cast< CqCompoundItem* >( pParent );
+		if ( pCompoundParent )
+		{
+			pCompoundParent->addChild( this );
+		}
+	}
 }
 
 // =============================================================

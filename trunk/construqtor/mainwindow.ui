@@ -147,6 +147,13 @@
         </widget>
        </item>
        <item>
+        <widget class="QPushButton" name="buttonCylinder100" >
+         <property name="text" >
+          <string>Cylinder 100x10</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <spacer>
          <property name="orientation" >
           <enum>Qt::Vertical</enum>

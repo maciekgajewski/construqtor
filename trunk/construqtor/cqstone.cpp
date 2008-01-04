@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2007 by Maciek Gajewski   *
- *   maciej.gajewski0@gmail.com   *
+ *   Copyright (C) 2007 by Maciek Gajewski                                 *
+ *   maciej.gajewski0@gmail.com                                            *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -27,15 +27,8 @@
 CQ_ADD_TO_FACTORY( CqStone );
 
 // ================================= constructor ======================
-CqStone::CqStone(QGraphicsItem* parent, CqWorld* world)
-	: CqPolygonalBody(parent, world)
-{
-	init();
-}
-
-// ================================= constructor ======================
-CqStone::CqStone(CqWorld* world)
-	: CqPolygonalBody(world)
+CqStone::CqStone( CqItem* parent )
+	: CqPolygonalBody( parent )
 {
 	init();
 }

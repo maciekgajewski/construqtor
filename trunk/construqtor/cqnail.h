@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2007 by Maciek Gajewski   *
- *   maciej.gajewski0@gmail.com   *
+ *   Copyright (C) 2007 by Maciek Gajewski                                 *
+ *   maciej.gajewski0@gmail.com                                            *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -35,8 +35,7 @@ class CqNail : public CqFragileRevoluteJoint
 public:
 
 	// construction / destruction
-	CqNail( CqWorld* world = NULL );
-	CqNail( QGraphicsItem* parent, CqWorld* world = NULL );
+	explicit CqNail( CqItem* parent = NULL );
 	virtual ~CqNail();
 	
 	// operations 
@@ -63,7 +62,7 @@ class CqBrokenNail : public CqPhysicalBody
 	Q_OBJECT
 public:
 
-	CqBrokenNail( CqWorld* world = NULL ) : CqPhysicalBody( world ){ init(); }
+	CqBrokenNail( CqItem* parent = NULL ) : CqPhysicalBody( parent ){ init(); }
 	virtual ~CqBrokenNail(){}
 	// operations 
 	virtual void paint

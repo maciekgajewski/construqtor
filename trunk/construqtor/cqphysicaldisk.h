@@ -34,8 +34,7 @@ class CqPhysicalDisk : public CqPhysicalBody
 public:
 	
 	// construction / destruction
-	CqPhysicalDisk(QGraphicsItem* parent, CqWorld* world = NULL);
-	CqPhysicalDisk(CqWorld* world = NULL);
+	explicit CqPhysicalDisk( CqItem* parent = NULL );
 	virtual ~CqPhysicalDisk();
 
 	
