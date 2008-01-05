@@ -186,6 +186,20 @@ void CqWheelWithEngine::load( const CqElement& element )
 	_pEngine->setBrush( QColor( 0x80, 0x80, 0x80, 0x80 ) ); // semitransparent gray
 }
 
+// ===============================================================
+QString CqWheelWithEngine::description() const
+{
+	Q_ASSERT( _pMotor );
+	
+	QString d = QString("Wheel with engine, wheel %1%2cm, motor torque: %3NM, RPM: %4")
+		.arg( QChar( 0x00F8 ) )			// phi
+		.arg( 100*_pWheel->diameter() )	// wheel diameter [cm]
+		.arg( _pMotor->maxTorque() )	// motor torque [NM]
+		.arg( _pMotor->maxSpeed() / ( 2 * M_PI ) * 60 ) // motor speed [rad/s] -> [RPM]
+		;
+	return d;
+}
+
 // =========================== store =================================
 void CqWheelWithEngine::store( CqElement& element ) const
 {

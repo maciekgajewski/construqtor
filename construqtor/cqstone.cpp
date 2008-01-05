@@ -64,8 +64,8 @@ CqStone* CqStone::createRandomStone( double diameter )
 	// params
 	const double MIN_ANGLE_STEP	= 0.3;
 	const double MAX_ANGLE_STEP	= 0.5;
-	double MIN_DISTANCE = diameter * 0.2;
-	double MAX_DISTANCE = diameter * 0.9;
+	double MIN_DISTANCE = diameter * 0.35;
+	double MAX_DISTANCE = diameter * 0.65;
 	double MAX_DISTANCE_DELTA = diameter * 0.1;
 	
 	// go
@@ -92,6 +92,19 @@ CqStone* CqStone::createRandomStone( double diameter )
 	pStone->setPolygon( result );
 	
 	return pStone;
+}
+
+// ============================================================================
+QString CqStone::description() const
+{
+	double m = mass();
+	if ( m > 0.0 )
+	{
+		// mass known
+		return QString("Stone, %1kg").arg( m );
+	}
+	// mass unknown
+	return "Stone";
 }
 
 // EOF

@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2007 by Maciek Gajewski   *
- *   maciej.gajewski0@gmail.com   *
+ *   Copyright (C) 2007 by Maciek Gajewski                                 *
+ *   maciej.gajewski0@gmail.com                                            *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -84,13 +84,19 @@ public:
 	virtual void load( const CqElement& element );		///< restores item state 
 	
 	void clear();										///< Clears simulation
+	
+	// areas
+	
+	bool isInEditableArea( const QPointF& point ) const { return _editableArea.contains( point ); }
+	bool isInTargetArea( const QPointF& point ) const { return _targetArea.contains( point ); }
 
 signals:
 
 	void simulationStarted();
 	void simulationPaused();
 	
-	void simulationStep();
+	void simulationStep();	///< Called each simulation update
+	void calculationStep();	///< Called each low-level calculation step. Use to apply forces, perform calculations etc
 	
 	void motorControllerCreated( CqMotorController* );
 
@@ -108,7 +114,8 @@ private:
 	void initScene();				///< Initializes scene: ground etc
 	/// Makes sure all children have they physical counterparts created for simulation
 	void assurePhysicalObjectsCreated();
-
+	void adjustEditableAreasToGround();	///< adjust editable and result boxes to ground
+	void updateAreaItems();				///< up[dates are items to display current area shapes
 	// data
 
 	CqWorld*		_pPhysicalWorld;		///< Physical world
@@ -118,6 +125,12 @@ private:
 	QRectF			_worldRect;				///< world rectangle
 	QList<CqItem*>	_groundItems;			///< List of ground bodies
 	QPointF			_gravity;				///< Gravity vector
+	
+	QRectF			_editableArea;			///< Editable area - simple rectange for now
+	QRectF			_targetArea;			///< target area - simplerectanle for now
+	
+	QGraphicsRectItem*	_pEditableAreaItem;	///< Editable area item
+	QGraphicsRectItem*	_pTargetAreaItem;	///< Editable area item
 };
 
 #endif // CQSIMULATION_H

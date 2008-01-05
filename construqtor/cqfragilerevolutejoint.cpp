@@ -63,14 +63,12 @@ void CqFragileRevoluteJoint::init()
 
 }
 
-// ================================= simulation step ==========
-void CqFragileRevoluteJoint::simulationStep()
+// ================================= calculation step ==========
+void CqFragileRevoluteJoint::calculationStep()
 {
-	CqRevoluteJoint::simulationStep();
+	CqRevoluteJoint::calculationStep();
 	
 	Q_ASSERT( simulation() );
-	
-	double tempBefore = _temperature;
 	
 	// calculate force and torque
 	double its		= simulation()->invTimeStep();
@@ -103,15 +101,17 @@ void CqFragileRevoluteJoint::simulationStep()
 		// update last time before possible deletion
 		_temperature = 1.0;
 		update();
-		broken(); // NOTE propably deletes this (which is cool ;) )
+		broken(); // NOTE propably deletes this (which is cool, by the way ;) )
 		return;
 	}
+}
 
-	// update if temp changes significantly
-	if ( qAbs( _temperature - tempBefore ) > 0.01 )
-	{
-		update();
-	}
+
+// ================================= simulation step ==========
+void CqFragileRevoluteJoint::simulationStep()
+{
+	CqRevoluteJoint::simulationStep();
+	update();
 }
 
 // ========================== color bu temperature ======================
@@ -120,6 +120,7 @@ QColor CqFragileRevoluteJoint::colorByTemperature( double t )
 {
 	return QColor( qMin(255.0, 255.0 * t), 0, 0 );
 }
+
 // ================================= store ========================
 void CqFragileRevoluteJoint::store( CqElement& element ) const
 {

@@ -26,6 +26,11 @@
 #include "cqprismatictraslationcontroller.h"
 #include "cqsimulation.h"
 
+// param
+static const double	GAIN				= 5.0;	///< controller gain. error is scaled to trnalstion tange (0.0-1.0),
+												///< resulting speed is then scaled back from 0.0->1.0 to 0.0->maxSpeed
+static const double	PRECISION			= 0.01;	///< Desired precision
+
 // ====================================================================
 CqPrismaticTraslationController::CqPrismaticTraslationController(QObject* parent)
 	: CqMotorController(parent)
@@ -62,10 +67,9 @@ double CqPrismaticTraslationController::getCurrentForce() const
 // ====================================================================
 double CqPrismaticTraslationController::getCurrentValue() const
 {
-	if ( _pJoint && _pJoint->b2joint() )
+	if ( _pJoint )
 	{
-		b2PrismaticJoint* pJoint = (b2PrismaticJoint*)_pJoint->b2joint();
-		return pJoint->GetJointTranslation();
+		return _pJoint->translation();
 	}
 
 	return 0.0;
@@ -97,32 +101,34 @@ void CqPrismaticTraslationController::setJoint( CqPrismaticJoint* pJoint )
 }
 
 // ================================= simulation step ====================
-void CqPrismaticTraslationController::simulationStep()
+void CqPrismaticTraslationController::calculationStep()
 {
-	// TODO act!
 	if ( _pJoint )
 	{
 		b2PrismaticJoint* pJoint = (b2PrismaticJoint*)_pJoint->b2joint();
 		if ( pJoint )
 		{
-			double currentTranslation = pJoint->GetJointTranslation();
-			const double PROPORTIONAL_MARGIN = qAbs( _valueMax - _valueMin ) * 0.1; // within this margin, controller works proportionally
-			if ( ( currentTranslation - PROPORTIONAL_MARGIN ) > _desiredTranslation )
+			double currentTranslation = _pJoint->translation();
+			double range  = qAbs( _valueMax - _valueMin );
+			
+			// within precision
+			if ( qAbs( currentTranslation - _desiredTranslation ) < PRECISION * range )
 			{
-				pJoint->SetMotorSpeed( - _pJoint->maxSpeed() );
+				pJoint->SetMotorSpeed( 0 );
+				// let bodies snooze
 			}
-			else if ( ( currentTranslation + PROPORTIONAL_MARGIN ) < _desiredTranslation )
+			else 
 			{
-				pJoint->SetMotorSpeed( _pJoint->maxSpeed() );
+				double error = ( currentTranslation - _desiredTranslation ) / range; // error: 0-1
+				double speed = -GAIN * error;
+				if ( speed > 1.0 ) speed = 1.0;
+				
+				pJoint->SetMotorSpeed( _pJoint->maxSpeed() * speed );
+				_pJoint->wakeUpBodies();
 			}
-			else
-			{
-				pJoint->SetMotorSpeed
-					( -_pJoint->maxSpeed() 
-						* ( currentTranslation - _desiredTranslation ) / PROPORTIONAL_MARGIN
-					);
-			}
-			qDebug("desired: %lf, current: %lf", _desiredTranslation, currentTranslation ); // TODO remove
+			
+			// TODO remove
+			//qDebug("desired: %lf, current: %lf", _desiredTranslation, currentTranslation ); // TODO remove
 		}
 	}
 }

@@ -27,8 +27,17 @@
 CQ_ADD_TO_FACTORY( CqHydraulicCylinderMotor );
 CQ_ADD_TO_FACTORY( CqHydraulicCylinder );
 
-static const double DEFAULT_MAX_SPEED	= 5.0;		// [m/s] // TODO i'm not sure if it is m/s. look like dm/s
-static const double DEFAULT_MAX_FORCE	= 1000.0;	// [N]
+static const double DEFAULT_MAX_SPEED	= 0.5;		// [m/s] // TODO i'm not sure if it is m/s. look like dm/s
+static const double DEFAULT_MAX_FORCE	= 10000.0;	// [N]
+
+// NOTE s about these values:
+// - speed 0.5 is fast
+// - force of 1000N is small, barely enough to lift 2m girder
+
+// tags
+static const char* TAG_MOTOR	= "motor";
+static const char* TAG_BARREL	= "barrel";
+static const char* TAG_PISTON	= "piston";
 
 // ===========================================================================
 CqHydraulicCylinder::CqHydraulicCylinder( CqItem* pParent)
@@ -58,10 +67,12 @@ void CqHydraulicCylinder::init()
 	// init barrel
 	_pBarrel->setBrush( Qt::darkGray );
 	_pBarrel->setZValue( 1.1 );
+	_pBarrel->setMaterial( CqMaterial::steel() );
 	
 	// init piston
 	_pPiston->setBrush( Qt::lightGray );
-	_pBarrel->setZValue( 1.999 ); // so hopefully nothing ever gets between barrel and piston
+	_pPiston->setMaterial( CqMaterial::steel() );
+	_pPiston->setZValue( 1.0999 ); // so hopefully nothing ever gets between barrel and piston
 	
 	// init motor
 	_pMotor->setConnectedBodies( _pBarrel, _pPiston );
@@ -85,7 +96,7 @@ void CqHydraulicCylinder::setSimulation( CqSimulation* pSimulation )
 	CqCompoundItem::setSimulation( pSimulation );
 	
 	pSimulation->addController( &_controller );
-	connect( pSimulation, SIGNAL(simulationStep()), &_controller, SLOT(simulationStep()) );
+	connect( pSimulation, SIGNAL(calculationStep()), &_controller, SLOT(calculationStep()) );
 }
 
 // ===========================================================================
@@ -158,9 +169,82 @@ double CqHydraulicCylinder::maxSpeed() const
 {
 	Q_ASSERT( _pMotor );
 	
-	_pMotor->maxSpeed();
+	return _pMotor->maxSpeed();
 }
 
+// ===========================================================================
+CqPhysicalBody* CqHydraulicCylinder::bodyHere( const QPointF& worldPoint )
+{
+	Q_ASSERT( _pBarrel && _pPiston );
+	// check - if this is rightmost 10% of barrel
+	QPointF barrelPoint = _pBarrel->mapFromWorld( worldPoint );
+	if ( _pBarrel->contains( barrelPoint ) 
+		&& barrelPoint.x() < ( - _pBarrel->size().width() * 0.4 )
+		)
+	{
+		return _pBarrel;
+	}
+	
+	// check 2 - if this is rightmost 10% of piston
+	QPointF pistonPoint = _pPiston->mapFromWorld( worldPoint );
+	if ( _pPiston->contains( pistonPoint ) 
+		&& pistonPoint.x() > ( _pPiston->size().width() * 0.4 ) 
+		)
+	{
+		return _pPiston;
+	}
+	
+	return NULL;
+}
+
+// ===========================================================================
+void CqHydraulicCylinder::load( const CqElement& element )
+{
+	delete _pMotor;
+	delete _pBarrel;
+	delete _pPiston;
+	
+	CqCompoundItem::load( element );
+	
+	_pMotor		= dynamic_cast< CqHydraulicCylinderMotor* >( element.readItemPointer( TAG_MOTOR ) );
+	_pBarrel	= dynamic_cast< CqGirder* >( element.readItemPointer( TAG_BARREL ) );
+	_pPiston	= dynamic_cast< CqGirder* >( element.readItemPointer( TAG_PISTON ) );
+	
+	// test
+	if ( ! _pBarrel || ! _pPiston || ! _pMotor )
+	{
+		qFatal("cylinder elements not created properly");
+	}
+	
+	_controller.setJoint( _pMotor );
+	
+	_pBarrel->setBrush( Qt::darkGray );
+	_pPiston->setBrush( Qt::lightGray );
+	
+}
+
+// ===========================================================================
+void CqHydraulicCylinder::store( CqElement& element ) const
+{
+	CqCompoundItem::store( element );
+	 
+	 element.appendItemPointer( TAG_MOTOR, _pMotor );
+	 element.appendItemPointer( TAG_BARREL, _pBarrel );
+	 element.appendItemPointer( TAG_PISTON, _pPiston );
+}
+
+// ===============================================================
+QString CqHydraulicCylinder::description() const
+{
+	QString d = QString("Cylinder, %2 %3cm, stroke %4cm, force: %5N, speed %6m/s")
+		.arg( QChar( 0x00F8 ) )	// phui
+		.arg( 100*diameter() )	// barrel diameter
+		.arg( _length * 80 )	// stroke
+		.arg( maxForce() )		// max force
+		.arg( maxSpeed() )		// max speed
+		;
+	return d;
+}
 
 // EOF
 

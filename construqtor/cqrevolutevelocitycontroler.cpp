@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2007 by Maciek Gajewski   *
- *   maciej.gajewski0@gmail.com   *
+ *   Copyright (C) 2007 by Maciek Gajewski                                 *
+ *   maciej.gajewski0@gmail.com                                            *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -96,6 +96,7 @@ void CqRevoluteVelocityControler::setDesiredValue(double value)
 			b2RevoluteJoint* pRj = (b2RevoluteJoint*)_pJoint->b2joint();
 			pRj->SetMotorSpeed( value );
 		}
+		_pJoint->wakeUpBodies();
 	}
 }
 

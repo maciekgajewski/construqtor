@@ -60,12 +60,16 @@ public:
 	
 	// info from body
 	void breakJoint();						///< Breaks joint
+	virtual void breakConections(){ breakJoint(); }	///< breaks all conections - joints etc
 	
 	virtual int type() const;	///< RTTI
 	
 	// i/o
 	virtual void store( CqElement& element ) const;		///< stores item state 
 	virtual void load( const CqElement& element );		///< restores item state 
+	
+	// tools
+	void wakeUpBodies();					///< Wakes bodies up
 	
 protected:
 

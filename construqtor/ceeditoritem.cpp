@@ -120,8 +120,11 @@ void CeEditorItem::MoveHandler::mouseMoveEvent ( QGraphicsSceneMouseEvent * pEve
 	{
 		
 		// move object
-		_pItem->setPhysicalPos( mapToScene( pEvent->pos() ) );
-		
+		QPointF scenePos = mapToScene( pEvent->pos() );
+		if ( _pItem->canBeMovedHere( scenePos ) )
+		{
+			_pItem->setPhysicalPos( scenePos );
+		}
 		
 		pEvent->accept();
 	}

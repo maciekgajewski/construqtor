@@ -72,10 +72,11 @@ public:
 	virtual int type() const;	///< RTTI
 	
 	double mass() const;								///< Body mass [kg]
-	virtual QString description(); 						///< Object description
 	
 	// operations
 	void breakAllJoints();								///< Destroys all joints attached
+	void wakeUp();										///< wakes up from b2d-applied snooze
+	virtual void breakConections(){ breakAllJoints(); }	///< breaks all conections - joints etc
 	
 	// signals from simulation
 	

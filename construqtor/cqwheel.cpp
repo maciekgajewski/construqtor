@@ -119,5 +119,12 @@ void CqWheel::load( const CqElement& element )
 	
 }
 
+// ===============================================================
+QString CqWheel::description() const
+{
+	QString d = QString("%1, %2%3cm").arg( name() ).arg( QChar( 0x00F8 ) ).arg( 100*diameter() );
+	return d;
+}
+
 // EOF
 

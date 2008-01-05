@@ -54,7 +54,8 @@ public:
 	virtual ~CqItem();
 	
 	// signals form simulation
-	virtual void simulationStep();						///< Called after simulation step
+	virtual void simulationStep();						///< Called on simulation step
+	virtual void calculationStep(){};					///< Called on low-level box2d simulatio step
 	virtual void simulationStarted();					///< Caled when simulatio is started
 	virtual void simulationStopped();					///< Caled when simulatio is started
 	
@@ -75,7 +76,7 @@ public:
 	virtual void setSelected( bool selected );
 	bool selected() const { return _selected; }
 	
-	virtual QString description() { return _name;} 		///< Object description
+	virtual QString description() const { return _name;} 		///< Object description
 	
 	QUuid id() const { return _id; }					///< Unique id
 	void setId( const QUuid& id ) { _id = id; }			///< Sets id
@@ -98,6 +99,7 @@ public:
 	// info from editor
 	virtual void setPhysicalRotation( double radians );		///< Rotates item
 	virtual void setPhysicalPos( const QPointF& pos );		///< changes item position
+	virtual void breakConections(){};						///< breaks all conections - joints etc
 	
 	// Editability info. Reimplement only if really custom beahvior needed
 	virtual bool canBeSelected() const;

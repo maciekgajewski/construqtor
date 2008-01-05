@@ -196,17 +196,26 @@ void CqCompoundItem::updatePosToPhysical()
 	// first - update followed child (if any)
 	if ( _followedChild )
 	{
-		QPointF posBefore = _followedChild->pos(); // position before updating
-		QPointF posBeforeInParent = mapToParent( posBefore );
-		_followedChild->updatePosToPhysical();
-		QPointF posAfterInParent = mapToParent( _followedChild->pos() );
+		QPointF	posBefore	= _followedChild->pos(); // position before updating
+		double	rotBefore	= _followedChild->rotationRadians();
 		
-		QPointF diff = posAfterInParent - posBeforeInParent;
+		QPointF posBeforeInParent	= mapToParent( posBefore );
+		
+		_followedChild->updatePosToPhysical();
+		
+		QPointF posAfterInParent	= mapToParent( _followedChild->pos() );
+		double	rotAfter 			= _followedChild->rotationRadians();
+		
+		QPointF	posDiff	= posAfterInParent	- posBeforeInParent;
+		double	rotDiff	= rotAfter	- rotBefore;
+		
 		// follow child
-		moveBy( diff.x(), diff.y() );
+		moveBy( posDiff.x(), posDiff.y() );
+		setRotationRadians( rotationRadians() + rotDiff );
 		
 		// put child back on start pos
 		_followedChild->setPos( posBefore );
+		_followedChild->setRotationRadians( rotBefore );
 	}
 	
 	// update children
@@ -397,6 +406,19 @@ void CqCompoundItem::generateNewId()
 	foreach( CqItem* pChild, _children )
 	{
 		pChild->generateNewId();
+	}
+}
+
+// ========================================================================
+void CqCompoundItem::breakConections()
+{
+	// first - update joint lists - just make sure
+	updateConnectionLists();
+	
+	// break all joints connecting us wth external world
+	foreach( CqJoint* pJoint, _connectedJoints )
+	{
+		pJoint->breakJoint();
 	}
 }
 

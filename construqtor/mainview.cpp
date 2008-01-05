@@ -22,6 +22,7 @@
 #include <QMouseEvent>
 #include <QWheelEvent>
 #include <QScrollBar>
+#include <QGLWidget>
 
 // CQ
 #include "cqitem.h"
@@ -78,6 +79,7 @@ void MainView::init()
 	_pSelectedItem = NULL;
 	
 	setRenderHint( QPainter::Antialiasing, true );
+	setRenderHint( QPainter::SmoothPixmapTransform, true );
 	_pSimulation = NULL;
 	_pGroupSelection = NULL;
 	
@@ -91,6 +93,10 @@ void MainView::init()
 	_rubberbandSelection.setPen( QPen( Qt::blue, 0.0 ) ); // tiny blue frame
 	_rubberbandSelection.setBrush( QColor( 0x00, 0x00, 0xff, 0x40 ) ); // 25% opaque blue
 	_rubberbandSelection.setZValue( 4.0 );
+	
+	// use OpenGL
+	QGLWidget* pGLWidget = new QGLWidget( QGLFormat( QGL::SampleBuffers ) );
+	setViewport( pGLWidget );
 }
 
 // ========================= destructor ======================
@@ -669,18 +675,7 @@ void MainView::toolBreakSelected()
 	
 	if ( _pSelectedItem && ! _pSimulation->isRunning() )
 	{
-		// body?
-		CqPhysicalBody* pBody = dynamic_cast<CqPhysicalBody*>( _pSelectedItem );
-		if ( pBody  )
-		{
-			pBody->breakAllJoints();
-		}
-		// joint?
-		CqJoint* pJoint = dynamic_cast<CqJoint*>( _pSelectedItem );
-		if ( pJoint )
-		{
-			pJoint->breakJoint();
-		}
+		_pSelectedItem->breakConections();
 	}
 }
 

@@ -64,10 +64,13 @@ public:
 
 	double connectableDiameter() const { return _connectableDiameter; }
 	void setConnectableDiameter( double d ) { _connectableDiameter = d; }
+	
+	virtual QString description() const;
 
 	// i/o
 	virtual void store( CqElement& element ) const;		///< stores item state 
 	virtual void load( const CqElement& element );		///< restores item state 
+	
 
 private:
 

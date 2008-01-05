@@ -75,7 +75,6 @@ void CqItem::init()
 void CqItem::simulationStep()
 {
 	updatePosToPhysical();
-	// TODO split these two
 }
 
 // =========================== simulationstarted ===================

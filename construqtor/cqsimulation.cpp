@@ -112,19 +112,36 @@ double CqSimulation::invTimeStep() const
 // =========================== timer timeout =============
 void CqSimulation::simulationTimerTimeout()
 {
+	
 	// physical world simulation step
-	_pPhysicalWorld->Step( 1.0/B2D_SPS, B2D_SPS * SIMULATION_INTERVAL / 1000.0 );
+	int iterations = B2D_SPS * SIMULATION_INTERVAL / 1000.0;
+	for( int i = 0; i < iterations; i++)
+	{
+		_pPhysicalWorld->Step( 1.0/B2D_SPS, 10 ); // NOTE 10: this is experimental param value
+		
+		// update all items
+		QList< QGraphicsItem* > items = _scene.items();
+		foreach( QGraphicsItem* pItem, items )
+		{
+			CqItem* pCqItem = dynamic_cast<CqItem*>( pItem );
+			
+			if ( pCqItem && pCqItem->physicalParent() == NULL ) // only top-level items
+			{
+					pCqItem->calculationStep();
+			}
+		}
+		emit calculationStep();
+	}
 	
-	// update all shapes
-	QList< QGraphicsItem* > items = _scene.items();
-	
+	// update all items
+	QList< QGraphicsItem* > items = _scene.items(); // NOTE uses sepearte list than loop above, as the loop aboce may delete/add some items
 	foreach( QGraphicsItem* pItem, items )
 	{
-		CqItem* pBody = dynamic_cast<CqItem*>( pItem );
+		CqItem* pCqItem = dynamic_cast<CqItem*>( pItem );
 		
-		if ( pBody && pBody->physicalParent() == NULL ) // only top-level items
+		if ( pCqItem && pCqItem->physicalParent() == NULL ) // only top-level items
 		{
-			pBody->simulationStep();
+			pCqItem->simulationStep();
 		}
 	}
 	
@@ -136,6 +153,9 @@ void CqSimulation::init()
 {
 	_worldRect	= QRect( -250, -100, 500, 200 ); // 500x200 m
 	_gravity	= QPointF( 0.0, -10.0 );
+	_pEditableAreaItem	= NULL;
+	_pTargetAreaItem	= NULL;
+
 	
 	createWorld();
 	initScene();
@@ -162,10 +182,57 @@ void CqSimulation::createWorld()
 }
 
 // ============================== init scene =============================
+/// Intiialzies scene with some default values
 void CqSimulation::initScene()
 {
 	CqGroundBody *pGround = CqGroundBody::randomGround( this, 0.5 );
 	addGroundItem( pGround );
+	adjustEditableAreasToGround();
+}
+
+// =====================================================================
+void CqSimulation::adjustEditableAreasToGround()
+{
+	CqGroundBody* pGround = qobject_cast< CqGroundBody* > ( _groundItems.first() );
+	if ( pGround )
+	{
+		// assuming we are going from left to right
+		
+		double heightAtBegining = pGround->height( _worldRect.left() );
+		double heightAtEnd = pGround->height( _worldRect.right() );
+		
+		QSizeF areaSize = QSizeF( 20.0, 20.0 );	// 20x20 m. keep it in sync with value in CqGroundBody::randomGround
+	
+		_editableArea	= QRectF( QPointF( _worldRect.left() + 1.0, heightAtBegining - 1.0 ), areaSize );
+		_targetArea		= QRectF( QPointF( _worldRect.right() - 1.0 - areaSize.width(), heightAtEnd - 1.0 ), areaSize );
+	
+		updateAreaItems();
+	}
+}
+
+// =====================================================================
+void CqSimulation::updateAreaItems()
+{
+	// delete items, create new ones
+	delete _pEditableAreaItem;
+	delete _pTargetAreaItem;
+	
+	_pEditableAreaItem = _scene.addRect
+		( _editableArea
+		, QPen( QColor(10, 244, 205, 128), 0.15, Qt::DashLine )
+		//, QColor( 182, 244, 234, 64 )
+		, QBrush() // use clear brush instead of coloured - faster
+		);
+		
+	_pTargetAreaItem = _scene.addRect
+		( _targetArea
+		, QPen( QColor(80, 252, 149, 128), 0.15, Qt::DashLine )
+		//, QColor( 182, 252, 210, 64 )
+		, QBrush() // use clear brush instead of coloured - faster
+		);
+		
+	_pEditableAreaItem->setZValue( 20.0 );
+	_pTargetAreaItem->setZValue( 20.0 );
 }
 
 // =========================== assure objects created =============
@@ -236,31 +303,31 @@ bool CqSimulation::canBeSelected( const CqItem* pItem ) const
 }
 
 // ============================== can be moved ? =====================
-bool CqSimulation::canBeMoved( const CqItem* /*pItem*/ ) const
+bool CqSimulation::canBeMoved( const CqItem* pItem ) const
 {
-	// TODO 'movable' area here
-	return ! isRunning();
+	Q_ASSERT( pItem );
+	
+	return ! isRunning() && isInEditableArea( pItem->worldPos() );
 }
 
 // ============================== can be moved here ? =====================
-bool CqSimulation::canBeMovedHere( const CqItem* /*pItem*/, const QPointF& /*pos*/ ) const
+bool CqSimulation::canBeMovedHere( const CqItem* /*pItem*/, const QPointF& pos ) const
 {
-	// TODO editable region here
-	return true;
+	return isInEditableArea( pos ); // TODO check if not under ground
 }
 
 // ================================ can be rotated =======================
-bool CqSimulation::canBeRotated( const CqItem* /*pItem*/ ) const
+bool CqSimulation::canBeRotated( const CqItem* pItem ) const
 {
-	// TODO 'movable' area here
-	return ! isRunning();
+	Q_ASSERT( pItem );
+	
+	return ! isRunning() && isInEditableArea( pItem->worldPos() );
 }
 // ============================ can add here ? ======================
 // Can item be added here now?
 bool CqSimulation::canAddHere( const CqItem* /*pItem*/, const QPointF& pos ) const
 {
-	// TODO 'edit' area here
-	if ( ! isRunning() && _worldRect.contains( pos ) )
+	if ( ! isRunning() && _worldRect.contains( pos ) && isInEditableArea( pos ) )
 	{
 		// make sure it is not inside any ground body
 		foreach( CqItem* pGround, _groundItems )

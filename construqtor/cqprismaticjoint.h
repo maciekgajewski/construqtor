@@ -76,6 +76,9 @@ public:
 	virtual void store( CqElement& element ) const;		///< stores item state 
 	virtual void load( const CqElement& element );		///< restores item state 
 
+	// state
+	double translation();	///< Current ternaslation
+
 private:
 	
 	// methods

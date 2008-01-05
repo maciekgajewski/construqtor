@@ -52,5 +52,19 @@ bool CqGirder::canBeRotated() const
 	return _joints.empty()  && CqPhysicalBox::canBeRotated();
 }
 
+// =========================================================
+QString CqGirder::description() const
+{
+	double m = mass();
+	QString d = QString("%1, %2cmx%3cm").arg( name() ).arg( 100*size().width() ).arg( 100*size().height() );
+	if ( m > 0.0 )
+	{
+		// mass known
+		return QString("%1, %2kg").arg( d ).arg( m );
+	}
+	// mass unknown
+	return d;
+}
+
 // EOF
 
