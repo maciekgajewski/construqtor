@@ -76,11 +76,13 @@ cqbolt.h \
 CONFIG += debug \
 qt \
 warn_on \
-rtti
+rtti \
+opengl
 QT += core \
 gui \
 xml \
-svg
+svg \
+opengl
 TARGET = ../bin/construqtor
 
 OBJECTS_DIR = .obj

@@ -42,7 +42,8 @@ public:
 	virtual ~CqFragileRevoluteJoint();
 	
 	// info from simulatiom
-	virtual void simulationStep();						///< Called after simulation step
+	virtual void calculationStep();						///< Called on simulation step
+	virtual void simulationStep();						///< Called on simulation step
 	
 	// properties
 	double temperature() const { return _temperature; }

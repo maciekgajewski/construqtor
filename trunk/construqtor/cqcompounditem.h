@@ -70,12 +70,15 @@ public:
 	
 	// storing / reading
 	virtual void store( CqElement& element ) const;		///< stores item state 
+	virtual void load( const CqElement& element );		///< restores item state 
 	
 	// editor behavior
 	virtual bool canBeMoved() const;
 	virtual bool canBeRotated() const;
 
-	virtual void load( const CqElement& element );		///< restores item state 
+	
+	// oeprations
+	virtual void breakConections();						///< breaks all conections - joints etc
 
 protected:
 

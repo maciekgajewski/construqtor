@@ -71,6 +71,7 @@ public:
 	
 	/// Extends base implementation by adding controller to simulation
 	virtual void setSimulation( CqSimulation* pSimulation );
+	virtual QString description() const;
 
 	// properties
 	void setWheelDiameter( double diameter );

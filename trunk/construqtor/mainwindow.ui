@@ -82,91 +82,203 @@
    <item>
     <layout class="QHBoxLayout" >
      <item>
-      <layout class="QVBoxLayout" >
-       <item>
-        <widget class="QPushButton" name="buttonGirder100" >
-         <property name="text" >
-          <string>Girder 100x20</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="buttonGirder200" >
-         <property name="text" >
-          <string>Girder 200x20</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="buttonGirder300" >
-         <property name="text" >
-          <string>Girder 300x20</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="buttonWheel40" >
-         <property name="text" >
-          <string>Wheel 40</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="buttonWheel80" >
-         <property name="text" >
-          <string>Wheel 80</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="buttonWwE" >
-         <property name="text" >
-          <string>Wheel + engine</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="buttonNail" >
-         <property name="text" >
-          <string>Nail</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="buttonBolt" >
-         <property name="text" >
-          <string>Bolt</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="buttonStone" >
-         <property name="text" >
-          <string>Stone 80</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="buttonCylinder100" >
-         <property name="text" >
-          <string>Cylinder 100x10</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <spacer>
-         <property name="orientation" >
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeHint" >
-          <size>
-           <width>20</width>
-           <height>40</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-      </layout>
+      <widget class="QToolBox" name="toolBox" >
+       <property name="sizePolicy" >
+        <sizepolicy vsizetype="Preferred" hsizetype="MinimumExpanding" >
+         <horstretch>2</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="currentIndex" >
+        <number>0</number>
+       </property>
+       <widget class="QWidget" name="page" >
+        <property name="geometry" >
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>192</width>
+          <height>362</height>
+         </rect>
+        </property>
+        <attribute name="label" >
+         <string>Girders ans rods</string>
+        </attribute>
+        <layout class="QVBoxLayout" >
+         <item>
+          <widget class="QPushButton" name="buttonGirder100" >
+           <property name="text" >
+            <string>Girder 100x20</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="buttonGirder200" >
+           <property name="text" >
+            <string>Girder 200x20</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="buttonGirder300" >
+           <property name="text" >
+            <string>Girder 300x20</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer>
+           <property name="orientation" >
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" >
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="page_2" >
+        <property name="geometry" >
+         <rect>
+          <x>0</x>
+          <y>0</y>
+          <width>192</width>
+          <height>362</height>
+         </rect>
+        </property>
+        <attribute name="label" >
+         <string>Wheels</string>
+        </attribute>
+        <layout class="QVBoxLayout" >
+         <item>
+          <widget class="QPushButton" name="buttonWheel40" >
+           <property name="text" >
+            <string>Wheel 40</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="buttonWheel80" >
+           <property name="text" >
+            <string>Wheel 80</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer>
+           <property name="orientation" >
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" >
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="page_3" >
+        <attribute name="label" >
+         <string>Drives</string>
+        </attribute>
+        <layout class="QVBoxLayout" >
+         <item>
+          <widget class="QPushButton" name="buttonWwE" >
+           <property name="text" >
+            <string>Wheel + engine</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="buttonCylinder100" >
+           <property name="text" >
+            <string>Cylinder 100x10</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer>
+           <property name="orientation" >
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" >
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="page_5" >
+        <attribute name="label" >
+         <string>Joints</string>
+        </attribute>
+        <layout class="QVBoxLayout" >
+         <item>
+          <widget class="QPushButton" name="buttonNail" >
+           <property name="text" >
+            <string>Nail</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="buttonBolt" >
+           <property name="text" >
+            <string>Bolt</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer>
+           <property name="orientation" >
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" >
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="page_4" >
+        <attribute name="label" >
+         <string>Misc</string>
+        </attribute>
+        <layout class="QVBoxLayout" >
+         <item>
+          <widget class="QPushButton" name="buttonStone" >
+           <property name="text" >
+            <string>Stone 80</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer>
+           <property name="orientation" >
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" >
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </widget>
+      </widget>
      </item>
      <item>
       <widget class="MainView" name="view" >

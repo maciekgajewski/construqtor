@@ -45,7 +45,7 @@ public:
 
 public slots:
 
-	void simulationStep();	///< Hanldes controller calculations on simulatio step
+	void calculationStep();	///< Hanldes controller calculations on simulatio step
 	
 private:
 

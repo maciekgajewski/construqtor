@@ -36,6 +36,7 @@ static const char* TAG_UPPER_LIMIT		= "upperlimit";
 static const char* TAG_LOWER_LIMIT		= "lowerlimit";
 static const char* TAG_JOINT_SPEED		= "jointspeed";
 static const char* TAG_JOINT_TRANSLATION	= "jointtranslation";
+static const char* TAG_AXIS				= "axis";
 
 // ==========================================================================
 CqPrismaticJoint::CqPrismaticJoint( CqItem* parent )
@@ -86,14 +87,21 @@ b2Joint* CqPrismaticJoint::createJoint(CqWorld* pWorld)
 		QPointF a = mapToWorld( _anchorPoint );
 		jointDef.anchorPoint = b2Vec2( a.x(), a.y() );
 		
+		// calculate axis in world coordinates
+		QTransform t;
+		t.rotateRadians( worldRotation() );
+		QPointF worldAxis = t.map( _axis );
+		qDebug("world rotation: %lf", worldRotation() ); // TODO remove
+		
 		// motor
 		jointDef.enableMotor		= _enableMotor;
-		jointDef.motorSpeed			= _initialSpeed;
+		jointDef.motorSpeed			= _maxSpeed;
 		jointDef.motorForce			= _maxForce;
 		jointDef.enableLimit		= _enableLimits;
-		jointDef.upperTranslation	= _upperLimit;
-		jointDef.lowerTranslation	= _lowerLimit;
-		jointDef.axis.Set( _axis.x(), _axis.y() ); // TODO transform this to world rotatation
+		// NOTE: as there is no generic way to specifi intial trnaslation, i'll shift limits by intial translation
+		jointDef.upperTranslation	= _upperLimit - _initialTranslation;
+		jointDef.lowerTranslation	= _lowerLimit - _initialTranslation;
+		jointDef.axis.Set( worldAxis.x(), worldAxis.y() );
 		
 		b2PrismaticJoint* pJoint = (b2PrismaticJoint*)pWorld->CreateJoint( & jointDef );
 		
@@ -155,6 +163,9 @@ void CqPrismaticJoint::store( CqElement& element ) const
 		element.appendDouble( TAG_LOWER_LIMIT, _lowerLimit );
 	}
 	
+	// axis
+	element.appendPointF( TAG_AXIS, _axis );
+	
 	// store joint state
 	b2PrismaticJoint* pJoint = (b2PrismaticJoint*)b2joint();
 	if ( pJoint )
@@ -191,6 +202,9 @@ void CqPrismaticJoint::load( const CqElement& element )
 		_upperLimit = element.readDouble( TAG_UPPER_LIMIT );
 		_lowerLimit = element.readDouble( TAG_LOWER_LIMIT );
 	}
+	
+	// axis
+	_axis = element.readPointF( TAG_AXIS );
 	
 	// physical properties
 	// NOTE: assuming joint isn't created yet
@@ -231,6 +245,19 @@ void CqPrismaticJoint::setAxis( const QPointF& axis )
 {
 	_axis = axis;
 	recreateJoint();
+}
+
+// =====================================================================
+double CqPrismaticJoint::translation()
+{
+	b2PrismaticJoint* pJoint = (b2PrismaticJoint*)b2joint(); // dynamic_cast?
+	
+	if ( pJoint )
+	{
+		return pJoint->GetJointTranslation() + _initialTranslation;
+	}
+	
+	return _initialTranslation;
 }
 
 // EOF

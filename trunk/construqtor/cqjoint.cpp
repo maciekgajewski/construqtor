@@ -146,5 +146,12 @@ void CqJoint::recreateJoint()
 	}
 }
 
+// ====================================================================
+void CqJoint::wakeUpBodies()
+{
+	if ( _pBody1 ) _pBody1->wakeUp();
+	if ( _pBody2 ) _pBody2->wakeUp();
+}
+
 // EOF
 

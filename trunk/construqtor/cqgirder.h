@@ -44,6 +44,8 @@ public:
 	
 	virtual bool canConnectHere( const QPointF& /*worldPoint*/ ) { return true; } // connect on entire surface
 	
+	virtual QString description() const;
+	
 };
 
 

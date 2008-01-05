@@ -68,8 +68,14 @@ public:
 	CqHydraulicCylinder( CqItem* pParent = NULL );
 	virtual ~CqHydraulicCylinder();
 
+	// CqItem
+	
 	/// Extends base implementation by adding controller to simulation
 	virtual void setSimulation( CqSimulation* pSimulation );
+	
+	/// Returns sub-body after point, for conection purposes
+	virtual CqPhysicalBody* bodyHere( const QPointF& worldPoint );
+	virtual bool canConnectHere( const QPointF& worldPoint ) { return bodyHere( worldPoint ) != NULL; }
 	
 	// properties
 	
@@ -84,6 +90,12 @@ public:
 	
 	void setMaxSpeed( double s );
 	double maxSpeed() const;
+	
+	virtual QString description() const;
+	
+	// i/o
+	virtual void load( const CqElement& element );
+	virtual void store( CqElement& element ) const;
 
 private:
 

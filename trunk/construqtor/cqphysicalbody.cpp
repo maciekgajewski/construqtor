@@ -46,6 +46,10 @@ CqPhysicalBody::CqPhysicalBody( CqItem* parent )
 CqPhysicalBody::~CqPhysicalBody()
 {
 	breakAllJoints();
+	if ( _pBody && _pWorld )
+	{
+		destroyBody( _pWorld );
+	}
 }
 
 // =========================== init ===================================
@@ -93,8 +97,8 @@ void CqPhysicalBody::createBody( CqWorld* pWorld )
 	// TODO is this needed?
 	bodyDef.userData = this;
 	
-	// damping TODO: experimental
-	bodyDef.linearDamping	= 0.0001;
+	// damping
+	bodyDef.linearDamping	= 0.0001; // veeeery low values
 	bodyDef.angularDamping	= 0.001;
 	
 	// create body
@@ -292,13 +296,6 @@ double CqPhysicalBody::mass() const
 	return 0.0;
 }
 
-// ============================= description ====================
-/// Adds mass to description
-QString CqPhysicalBody::description()
-{
-	return QString("%1, %2kg").arg( CqItem::description() ).arg( mass() );
-}
-
 // ==============================================================
 void CqPhysicalBody::store( CqElement& element ) const
 {
@@ -346,6 +343,15 @@ void CqPhysicalBody::load( const CqElement& element )
 			_initialAngluarVelocity	= av;
 			_initialLinearVelocity	= lv;
 		}
+	}
+}
+
+// ==============================================================
+void CqPhysicalBody::wakeUp()
+{
+	if ( _pBody )
+	{
+		_pBody->WakeUp();
 	}
 }
 
