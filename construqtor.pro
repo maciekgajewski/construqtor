@@ -8,3 +8,6 @@ CONFIG += warn_on \
           qt \
           thread  \
           ordered
+win32 {
+	CONFIG += release
+}
