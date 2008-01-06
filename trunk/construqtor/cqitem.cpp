@@ -47,12 +47,15 @@ CqItem::CqItem( CqItem* parent )
 // ========================== destructor ======================
 CqItem::~CqItem()
 {
+	//qDebug("deleting item: %p (%s)", this, qPrintable( _name ) ); // TODO remover
+	
 	// remove self from parents lists
 	CqCompoundItem* pCompoundParent = dynamic_cast<CqCompoundItem*>( _pPhysicalParent );
 	if ( pCompoundParent )
 	{
 		pCompoundParent->removeChild( this );
 	}
+	
 }
 
 // ==================================== init ==================

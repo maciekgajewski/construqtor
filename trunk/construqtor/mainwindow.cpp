@@ -19,7 +19,7 @@
  ***************************************************************************/
 
 // Qt
-#include <QFile>
+#include <QFileDialog>
 
 // Cq
 #include "cqnail.h"
@@ -151,15 +151,7 @@ void MainWindow::on_buttonWheel80_clicked()
 	CqWheel* pWheel = new CqWheel();
 	pWheel->setDiameter( 0.80 );
 	// load svg
-	QFile file( "graphics/tire80.svg" );
-	if ( file.open( QIODevice::ReadOnly ) )
-	{
-		pWheel->setSvgAppearance( file.readAll() );
-	}
-	else
-	{
-		qWarning("could ot open file: %s", qPrintable( file.errorString() ) );
-	}
+	pWheel->loadSvgAppearance( ":/tire80.svg" );
 	view->toolAddObject( pWheel );
 }
 
@@ -211,13 +203,32 @@ void MainWindow::selectedDescription( const QString& description )
 // ============================== save ==============================
 void MainWindow::on_buttonSave_clicked()
 {
-	_pSimulation->saveToXml( "simulation.xml" );
+	QFileDialog dialog( this );
+	
+	dialog.setDirectory( QDir::homePath() );
+	dialog.setWindowTitle( tr("Save simulation") );
+	QStringList filters;
+	filters << tr("Construqtor files (*.construqtor)");
+	dialog.setFilters( filters );
+	dialog.setDefaultSuffix( "construqtor" );
+	dialog.setAcceptMode( QFileDialog::AcceptSave );
+	
+	if ( dialog.exec() )
+	{
+		_pSimulation->saveToXml( dialog.selectedFiles().first() );
+	}
 }
 
 // ================================= load ===========================
 void MainWindow::on_buttonLoad_clicked()
 {
-	_pSimulation->loadFromXml( "simulation.xml" );
+	QString path = QFileDialog::getOpenFileName
+		( this, tr("Load simulation"), QDir::homePath(), tr("Construqtor files (*.construqtor)\nAny files (*)") );
+	
+	if ( ! path.isNull() )
+	{
+		_pSimulation->loadFromXml( path );
+	}
 }
 
 // =================================================================

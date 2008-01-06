@@ -107,6 +107,7 @@ void CqGroupItem::removeFromGroup( CqItem* pItem )
 	double worldRotation	= pItem->worldRotation();
 	
 	removeChild( pItem );
+	pItem->setPhysicalParent( physicalParent() ); // move item back to parent
 	
 	pItem->setWorldPos( worldPos );
 	pItem->setWorldRotation( worldRotation );

@@ -651,7 +651,10 @@ void MainView::toolDeleteSelected()
 {
 	Q_ASSERT( _pSimulation );
 	
-	if ( _pSelectedItem && ! _pSimulation->isRunning()  )
+	if ( _pSelectedItem 
+		&& ! _pSimulation->isRunning()
+		&& _pSimulation->isInEditableArea( _pSelectedItem->worldPos() )
+		)
 	{
 		// delete editor
 		delete _pEditor;
@@ -673,7 +676,10 @@ void MainView::toolBreakSelected()
 {
 	Q_ASSERT( _pSimulation );
 	
-	if ( _pSelectedItem && ! _pSimulation->isRunning() )
+	if ( _pSelectedItem 
+		&& ! _pSimulation->isRunning() 
+		&& _pSimulation->isInEditableArea( _pSelectedItem->worldPos() )
+		)
 	{
 		_pSelectedItem->breakConections();
 	}

@@ -97,6 +97,9 @@ void CqPrismaticTraslationController::setJoint( CqPrismaticJoint* pJoint )
 	_valueMin = pJoint->lowerLimit();
 	_valueMax = pJoint->upperLimit();
 	
+	// also -set intial desired value at currenrt
+	_desiredTranslation = pJoint->translation();
+	
 	_pJoint = pJoint;
 }
 

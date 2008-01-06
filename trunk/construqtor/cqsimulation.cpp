@@ -39,6 +39,9 @@ static const char* ROOT_ELEMENT		= "simulaton";
 static const char* TAG_WORLD_RECT	= "worldrectangle";		///< World rectangle
 static const char* TAG_GND_ELEMENT	= "ground";				///< Ground elements
 static const char* TAG_GRAVITY		= "gravity";
+static const char* TAG_EDITABLE_AREA	= "editablearea";
+static const char* TAG_TARGET_AREA		= "targetarea";
+
 
 // ===================== constructor =================
 CqSimulation::CqSimulation(QObject* parent): QObject(parent)
@@ -51,7 +54,7 @@ CqSimulation::CqSimulation(QObject* parent): QObject(parent)
 // ======================== destructoir ==================
 CqSimulation::~CqSimulation()
 {
-	// none
+	clear(); // destroty items in civilized way
 }
 
 // ======================== start ==================
@@ -408,6 +411,8 @@ void CqSimulation::store( CqElement& element ) const
 	// store discrete items first
 	element.appendRectF( TAG_WORLD_RECT, _worldRect );
 	element.appendPointF( TAG_GRAVITY, _gravity );
+	element.appendRectF( TAG_EDITABLE_AREA, _editableArea );
+	element.appendRectF( TAG_TARGET_AREA, _targetArea );
 	
 	// ground elements
 	foreach( CqItem* pGround, _groundItems )
@@ -435,8 +440,10 @@ void CqSimulation::load( const CqElement& element )
 	clear();
 	
 	// load discrete elements
-	_worldRect = element.readRectF( TAG_WORLD_RECT );
-	_gravity = element.readPointF( TAG_GRAVITY );
+	_worldRect		= element.readRectF( TAG_WORLD_RECT );
+	_gravity		= element.readPointF( TAG_GRAVITY );
+	_editableArea	= element.readRectF( TAG_EDITABLE_AREA );
+	_targetArea		= element.readRectF( TAG_TARGET_AREA );
 	
 	// now - create world
 	createWorld();
@@ -464,6 +471,8 @@ void CqSimulation::load( const CqElement& element )
 	
 		_groundItems.append( pItem );
 	}
+	
+	updateAreaItems();
 }
 
 // =================================== clear =========================
@@ -473,7 +482,14 @@ void CqSimulation::clear()
 	QList<QGraphicsItem *> sceneItems =  _scene.items();
 	foreach( QGraphicsItem* pItem, sceneItems )
 	{
-		delete pItem;
+		CqItem* pCqItem = dynamic_cast<CqItem*>( pItem );
+		if ( pCqItem )
+		{
+			if ( ! pCqItem->physicalParent() )
+			{
+				delete pCqItem;
+			}	
+		}
 	}
 	
 	// destroy world
@@ -483,6 +499,12 @@ void CqSimulation::clear()
 	// clear lists
 	_controllers.clear();
 	_groundItems.clear();
+	
+	// clear area items (was deleted above)
+	delete _pEditableAreaItem;
+	delete _pTargetAreaItem;
+	_pEditableAreaItem = NULL;
+	_pTargetAreaItem = NULL;
 }
 
 // EOF
