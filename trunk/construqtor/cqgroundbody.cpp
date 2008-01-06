@@ -103,10 +103,10 @@ CqGroundBody* CqGroundBody::randomGround( CqSimulation* pSimulation, double maxS
 	double SLOPE_VARIATION = maxSlope * 0.3;
 	
 	// first - get random target heights at constant intervals
-	const int SLICES = 10; // 10 slices
-	double targets[ SLICES ];
+	const int SECTIONS = 10; // 10 slices
+	double targets[ SECTIONS ];
 	
-	for ( int i = 0; i < SLICES; i++ )
+	for ( int i = 0; i < SECTIONS; i++ )
 	{
 		targets[ i ] = MIN_HEIGHT + ( MAX_HEIGHT - MIN_HEIGHT ) * double(qrand()) / RAND_MAX;
 	}
@@ -127,11 +127,21 @@ CqGroundBody* CqGroundBody::randomGround( CqSimulation* pSimulation, double maxS
 	{
 		double sliceWidth = MIN_SLICE_WIDTH + ( MAX_SLICE_WIDTH - MIN_SLICE_WIDTH ) * double(qrand()) / RAND_MAX;
 		
-		// find out which slice is it
-		int slice = qRound( ( x - SAFEAREA_WIDTH ) / (( worldWidth - 2*SAFEAREA_WIDTH ) / SLICES) );
+		// find out which section is it
+		double sectionReal = ( x - SAFEAREA_WIDTH ) / ( ( worldWidth - 2*SAFEAREA_WIDTH ) / SECTIONS );
+		int closestSection = qRound( sectionReal );
+		int nextSection = ceil( sectionReal );
+		
+		// find target
 		
 		// calculate slope
-		double calculatedSlope = SLOPE_GAIN * ( targets[slice] - height );
+		double calculatedSlope = SLOPE_GAIN * ( targets[closestSection] - height );
+		
+		// apply sign based on next section pos
+		if ( ( ( targets[nextSection] - height ) * calculatedSlope ) < 0.0 )
+		{
+			calculatedSlope *= -1.0;
+		}
 		
 		// apply limit
 		if ( calculatedSlope > MAX_SLOPE ) calculatedSlope = MAX_SLOPE;

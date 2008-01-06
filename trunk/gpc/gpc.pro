@@ -7,3 +7,5 @@ TEMPLATE = lib
 CONFIG += staticlib \
 debug \
 warn_on
+DESTDIR = ../lib
+

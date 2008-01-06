@@ -185,7 +185,7 @@ void CqSimulation::createWorld()
 /// Intiialzies scene with some default values
 void CqSimulation::initScene()
 {
-	CqGroundBody *pGround = CqGroundBody::randomGround( this, 0.5 );
+	CqGroundBody *pGround = CqGroundBody::randomGround( this, 0.2 );
 	addGroundItem( pGround );
 	adjustEditableAreasToGround();
 }
