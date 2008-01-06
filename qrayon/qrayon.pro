@@ -38,8 +38,8 @@ INCLUDEPATH += ../box2d \
 ../gpc \
 ../box2d/Dynamics/ \
 ../box2d/Common/
-LIBS += ../gpc/libgpc.a \
--L../box2d \
--lbox2d
-TARGETDEPS += ../gpc/libgpc.a
-
+LIBS += ../lib/libbox2d.a \
+../lib/libgpc.a \
+-L../box2d
+TARGETDEPS += ../lib/libbox2d.a \
+../lib/libgpc.a

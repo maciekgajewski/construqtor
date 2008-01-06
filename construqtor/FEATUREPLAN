@@ -18,7 +18,7 @@ Features for 0.5 release, january 2007
 [   ] Bugfixing: problems with rubberband selection
 [50%] Bugfix: problem with invisible objects remaining after deleting (not tested throughoulty)
 [   ] Better terrain geenration,random stones
-[   ] "gameification" - controlling gameplay, leve lof difficulty, making sure that available
+[   ] "gameification" - controlling gameplay, level of difficulty, making sure that available
       elements allow for completing the game
 [ * ] Opengl antialaising
 [ * ] Some more ruber "toolbox" in current main window
@@ -26,6 +26,7 @@ Features for 0.5 release, january 2007
 [ * ] More predictable stone sizes
 [   ] SVG's into resources
 [   ] Windows(TM) build
+[   ] Open file / save file dialogs
 
 Short term goals
 [   ] selectoing connected bodies with dblckick

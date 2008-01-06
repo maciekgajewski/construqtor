@@ -97,11 +97,12 @@ CONFIG -= release
 
 INCLUDEPATH += ../box2d \
 ../gpc \
+. \
 ../box2d/Dynamics/Joints \
 ../box2d/Collision \
 ../box2d/Dynamics \
 ../box2d/Common
-LIBS += ../box2d/libbox2d.a \
-../gpc/libgpc.a
-TARGETDEPS += ../box2d/libbox2d.a \
-../gpc/libgpc.a
+LIBS += ../lib/libbox2d.a \
+../lib/libgpc.a
+TARGETDEPS += ../lib/libbox2d.a \
+../lib/libgpc.a
