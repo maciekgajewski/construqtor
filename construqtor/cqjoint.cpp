@@ -108,7 +108,7 @@ void CqJoint::breakJoint()
 	if ( _pBody2 ) _pBody2->removeJoint( this );
 	
 	// delete this
-	delete this;
+	deleteLater(); // deffered deletion, a bless!
 }
 
 // ================================= store ========================

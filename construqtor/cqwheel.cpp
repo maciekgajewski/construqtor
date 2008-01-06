@@ -18,6 +18,9 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+// Qt 
+#include <QFile>
+
 // local
 #include "cqsimulation.h"
 #include "cqwheel.h"
@@ -124,6 +127,21 @@ QString CqWheel::description() const
 {
 	QString d = QString("%1, %2%3cm").arg( name() ).arg( QChar( 0x00F8 ) ).arg( 100*diameter() );
 	return d;
+}
+
+// ===============================================================
+void CqWheel::loadSvgAppearance( const QString& path )
+{
+	// load svg
+	QFile file( path );
+	if ( file.open( QIODevice::ReadOnly ) )
+	{
+		setSvgAppearance( file.readAll() );
+	}
+	else
+	{
+		qWarning("could ot open file: %s", qPrintable( file.errorString() ) );
+	}
 }
 
 // EOF

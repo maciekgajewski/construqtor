@@ -38,7 +38,14 @@ CqCompoundItem::CqCompoundItem( CqItem *pParent )
 // =========================== destructor =====================
 CqCompoundItem::~CqCompoundItem()
 {
-	// none
+	// QGrpahicsItem destructo wil try to destroy child items, so wil QObject.
+	// So better I'll do it now, while I have thing under control
+	_underDestruction = true;
+	foreach ( CqItem* pChild, _children )
+	{
+		//qDebug("deleteing child (%s): %p", qPrintable( pChild->name() ), pChild ); // TODO remove
+		delete pChild;
+	}
 }
 
 // ================================== init =====================
@@ -47,6 +54,7 @@ void CqCompoundItem::init()
 	_followedChild = NULL;
 	_blockConnectionsUpdate	= false;
 	_conectionUpdateNeeded	= false;
+	_underDestruction = false;
 }
 
 // =============================== add child =====================
@@ -90,13 +98,14 @@ void CqCompoundItem::removeChild( CqItem* pChild )
 {
 	Q_ASSERT( pChild );
 
-	if ( ! _children.removeAll( pChild ) )
+	if ( ! _underDestruction )
 	{
-		qWarning("CqCompoundItem::removeChild: item not a child" );
+		pChild->setPhysicalParent( NULL );
+		if ( ! _children.removeAll( pChild ) )
+		{
+			qWarning("CqCompoundItem::removeChild: item not a child" );
+		}
 	}
-	
-	// return child to parent
-	pChild->setPhysicalParent( physicalParent() ); // Cq physical parenthood 
 }
 
 // =============================== set world ====================
@@ -314,6 +323,8 @@ bool CqCompoundItem::canBeRotated() const
 // =================================================================
 void CqCompoundItem::updateConnectionLists()
 {
+	if ( _underDestruction ) return; // fuse
+	
 	// first - clear the lists
 	_connectedBodies.clear();
 	_connectedJoints.clear();

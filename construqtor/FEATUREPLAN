@@ -24,9 +24,11 @@ Features for 0.5 release, january 2007
 [ * ] Some more ruber "toolbox" in current main window
 [ * ] Informative item descriptions
 [ * ] More predictable stone sizes
-[   ] SVG's into resources
-[   ] Windows(TM) build
-[   ] Open file / save file dialogs
+[ * ] SVG's into resources
+[ * ] Windows(TM) build
+[ * ] Open file / save file dialogs
+[   ] Bugfix: crash on destroying scene
+[ * ] No deleting or breaking joints outside editable area
 
 Short term goals
 [   ] selectoing connected bodies with dblckick

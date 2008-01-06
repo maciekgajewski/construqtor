@@ -102,6 +102,8 @@ private:
 	QList< CqPhysicalBody* > 	_connectedBodies;	///< List of conected bodies
 	bool	_blockConnectionsUpdate;				///< Blocks update of connection lists
 	bool	_conectionUpdateNeeded;					///< If delayed update is needed
+	
+	bool	_underDestruction;						///< HACK: flag set in destructor
 };
 
 #endif // CQCOMPOUNDITEM_H

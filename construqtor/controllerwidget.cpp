@@ -1,6 +1,6 @@
 /***************************************************************************
- *   Copyright (C) 2007 by Maciek Gajewski   *
- *   maciej.gajewski0@gmail.com   *
+ *   Copyright (C) 2007 by Maciek Gajewski                                 *
+ *   maciej.gajewski0@gmail.com                                            *
  *                                                                         *
  *   This program is free software; you can redistribute it and/or modify  *
  *   it under the terms of the GNU General Public License as published by  *
@@ -46,6 +46,17 @@ void ControllerWidget::setController( CqMotorController* pController, CqSimulati
 	connect( pSimulation, SIGNAL(simulationStep()), SLOT(simulationStep()));
 	
 	simulationStep(); // to update gauges
+	// also - set slider to current desired value
+	sliderDesiredValue->blockSignals( true );
+	sliderDesiredValue->setValue(
+		qRound( 
+			100
+			* (_pController->getDesiredValue() - _pController->getMinValue() )
+			/ ( _pController->getMaxValue() - _pController->getMinValue() ) 
+		)
+	);
+	sliderDesiredValue->blockSignals( false );
+	
 }
 
 // ========================== desired value changed ===================

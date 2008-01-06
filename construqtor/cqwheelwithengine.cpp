@@ -51,9 +51,7 @@ CqWheelWithEngine::CqWheelWithEngine( CqItem* parent )
 // =========================== destructor ====================
 CqWheelWithEngine::~CqWheelWithEngine()
 {
-	delete _pWheel;
-	delete _pEngine;
-	delete _pMotor;
+	// nope. subelements are destroyted as child items
 }
 
 // ======================== init ===================
@@ -66,11 +64,7 @@ void CqWheelWithEngine::init()
 	_pWheel->setEditorFlags( _pWheel->editorFlags() & ~Selectable );
 	_pWheel->setZValue( 0.7 );
 	// some aesthetic
-	QFile f( "graphics/tire80.svg" );	
-	if ( f.open( QIODevice::ReadOnly ) )
-	{
-		_pWheel->setSvgAppearance( f.readAll() );
-	}
+	_pWheel->loadSvgAppearance( ":/tire80.svg" );
 	
 	// init engine
 	_pEngine = new CqGirder();

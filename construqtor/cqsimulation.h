@@ -60,6 +60,9 @@ public:
 	void addGroundItem( CqItem* pItem );///< Adds ground item to simulation
 	QList<CqItem*> groundItems() const { return _groundItems; }
 	
+	// TODO
+	//QList<CqItem*> topLevelItems() const;	///< Return top-level cqitems
+	
 	
 	// editor control
 	bool canBeSelected( const CqItem* pItem ) const;	///< If itemcan be selected

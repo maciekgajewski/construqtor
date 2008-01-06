@@ -43,3 +43,5 @@ LIBS += ../lib/libbox2d.a \
 -L../box2d
 TARGETDEPS += ../lib/libbox2d.a \
 ../lib/libgpc.a
+RESOURCES += ../graphics/graphics.qrc
+

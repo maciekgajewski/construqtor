@@ -60,6 +60,7 @@ public:
 
 	// properties
 	void setSvgAppearance( const QByteArray& svg );
+	void loadSvgAppearance( const QString& path );
 	QByteArray svgApperance() const { return _svgAppearanceCode; } // TODO is this needed?
 
 	double connectableDiameter() const { return _connectableDiameter; }
