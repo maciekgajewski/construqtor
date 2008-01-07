@@ -324,7 +324,6 @@ void CqItem::setPhysicalParent( CqItem* pParent )
 		
 		// set new parent
 		_pPhysicalParent = pParent;
-		setParent( pParent );		// parent QObject (owner)
 		setParentItem( pParent );	// parent item
 		
 		CqCompoundItem* pCompoundParent = qobject_cast< CqCompoundItem* >( pParent );

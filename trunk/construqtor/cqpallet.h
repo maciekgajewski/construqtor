@@ -17,73 +17,41 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef CQPOLYGONALBODY_H
-#define CQPOLYGONALBODY_H
-
-// Qt
-#include <QPolygonF>
+#ifndef CQPALLET_H
+#define CQPALLET_H
 
 // local
 #include "cqphysicalbody.h"
 
 /**
-	This is a physical body with shape defined by polygon.
-	Polygon is spilt into triangles using GPC library.
+	Standard pallet (EURO: 800x1200x140), for transporting boxes.
 	@author Maciek Gajewski <maciej.gajewski0@gmail.com>
 */
-class CqPolygonalBody : public CqPhysicalBody
+class CqPallet : public CqPhysicalBody
 {
 	Q_OBJECT
-	Q_PROPERTY( bool connectable READ connectable WRITE setConnectable DESIGNABLE true );
-	
 public:
-	// constrution / destruction
-	explicit CqPolygonalBody( CqItem* parent = NULL );
-	virtual ~CqPolygonalBody();
+	CqPallet( CqItem* parent = NULL );
+	virtual ~CqPallet();
 	
-	// shape definition
-	void setPolygon( const QPolygonF& ploygon );		///< Sets shape
-	QPolygonF polygon() const { return _polygon; }		///< Returns shape
-	
-	// operations 
+	// body
+	virtual QList< b2ShapeDef * > createShape();
+
+	// graphics item
 	virtual void paint
 		( QPainter * painter
 		, const QStyleOptionGraphicsItem * option
 		, QWidget * widget = 0 );
 		
     virtual QRectF boundingRect() const;
-	virtual CqPhysicalBody* bodyHere( const QPointF& /*worldPoint*/ ) { return this; }
-	virtual bool canConnectHere( const QPointF& /*worldPoint*/ ) { return _connectable; }
 	
-	// storing / reading
-	virtual void store( CqElement& element ) const;		///< stores item state 
-	virtual void load( const CqElement& element );		///< restores item state 
-	
-	// properties
-	void setConnectable( bool c ) { _connectable = c; }
-	bool connectable() const { return _connectable; }
+private:
 
-protected:
-	
-	virtual QList<b2ShapeDef*> createShape();			///< Creates body shape
-	
-private:	
-
-	// methods
-	
 	void init();
-	/// Creates polygonal b2ShapeDef, based on three points
-	static b2PolyDef* createTriangleB2Shape( const QPointF& a, const QPointF& b, const QPointF& c );
-	/// Calculates cross product of two vectors
-	static double product( const QPointF& a, const QPointF& b );
-
-	// data
-	
-	QPolygonF	_polygon;		///< shape, as polygon
-	bool		_connectable;	///< If entire body is connectable
-	
 };
 
-#endif // CQPOLYGONALBODY_H
+#endif // CQPALLET_H
 
 // EOF
+
+

@@ -34,7 +34,8 @@ cqbolt.cpp \
  cqclipboard.cpp \
  cqprismaticjoint.cpp \
  cqhydrauliccylinder.cpp \
- cqprismatictraslationcontroller.cpp
+ cqprismatictraslationcontroller.cpp \
+ cqpallet.cpp
 FORMS += mainwindow.ui \
 ControllerWidget.ui
 HEADERS += mainwindow.h \
@@ -72,7 +73,8 @@ cqbolt.h \
  cqclipboard.h \
  cqprismaticjoint.h \
  cqhydrauliccylinder.h \
- cqprismatictraslationcontroller.h
+ cqprismatictraslationcontroller.h \
+ cqpallet.h
 CONFIG += debug \
 qt \
 warn_on \

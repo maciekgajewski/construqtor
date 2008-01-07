@@ -97,6 +97,26 @@ void MainView::init()
 	// use OpenGL
 	QGLWidget* pGLWidget = new QGLWidget( QGLFormat( QGL::SampleBuffers ) );
 	setViewport( pGLWidget );
+	//BEGIN attempt to turn on antialaising
+	
+	// TODO attempt one - antialiases lines, but no SVG
+	pGLWidget->makeCurrent();
+	glBlendFunc (GL_SRC_ALPHA_SATURATE, GL_ONE);
+	//glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); // NOTE this brokes
+	
+	glEnable (GL_BLEND);
+	
+	glEnable (GL_LINE_SMOOTH);
+	glEnable (GL_POLYGON_SMOOTH);
+	glEnable (GL_POINT_SMOOTH);
+	glEnable (GL_MULTISAMPLE_SGIS ); // TODO test
+	
+	glHint (GL_LINE_SMOOTH_HINT, GL_DONT_CARE);
+	glHint (GL_POLYGON_SMOOTH_HINT, GL_DONT_CARE);
+	glHint (GL_POINT_SMOOTH_HINT, GL_DONT_CARE);
+	glShadeModel(GL_SMOOTH );
+	//END
+	
 }
 
 // ========================= destructor ======================

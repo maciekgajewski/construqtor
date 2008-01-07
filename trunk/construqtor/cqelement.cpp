@@ -373,7 +373,14 @@ CqItem*	CqElement::readItemPointer( const QString& tag ) const
 CqItem*	CqElement::readItem( const QString& tag ) const
 {
 	
-	return itemFromElement( getNextElement( tag, TYPE_ITEM ) );
+	CqItem* pItem = itemFromElement( getNextElement( tag, TYPE_ITEM ) );
+	// ok, item was readed by someone, so it should not be aour child, someone will take care of him
+	if ( pItem && pItem->parent() == _pDocument )
+	{
+		pItem->setParent( NULL );
+	}
+	
+	return pItem;
 }
 
 
