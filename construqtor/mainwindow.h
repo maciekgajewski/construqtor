@@ -64,8 +64,11 @@ public slots:
 	void on_buttonWwE_clicked();
 	
 	void on_buttonStone_clicked();
+	void on_buttonPalett_clicked();
 	
 	void on_buttonCylinder100_clicked();
+	
+	void on_buttonFork_clicked();
 	
 	void scenePointerPos( double x, double y );
 	

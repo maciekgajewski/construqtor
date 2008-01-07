@@ -272,9 +272,6 @@ void CqSimulation::addItem( CqItem* pItem )
 {
 	Q_ASSERT( pItem );
 	
-	// take ownership
-	pItem->setParent( this );
-	
 	_scene.addItem( dynamic_cast<QGraphicsItem*>( pItem ) ); // TODO wild try
 	
 	pItem->setSimulation( this );
@@ -478,19 +475,21 @@ void CqSimulation::load( const CqElement& element )
 // =================================== clear =========================
 void CqSimulation::clear()
 {
-	// destroy all scene iterms
+	// destroy all top-level items
 	QList<QGraphicsItem *> sceneItems =  _scene.items();
+	QList<QGraphicsItem *> topLevelItems; 
 	foreach( QGraphicsItem* pItem, sceneItems )
 	{
-		CqItem* pCqItem = dynamic_cast<CqItem*>( pItem );
-		if ( pCqItem )
+		if ( ! pItem->parentItem() )
 		{
-			if ( ! pCqItem->physicalParent() )
-			{
-				delete pCqItem;
-			}	
+			topLevelItems.append( pItem );
 		}
 	}
+	foreach( QGraphicsItem* pItem, topLevelItems )
+	{
+		delete pItem;
+	}
+	
 	
 	// destroy world
 	delete _pPhysicalWorld;
@@ -501,8 +500,6 @@ void CqSimulation::clear()
 	_groundItems.clear();
 	
 	// clear area items (was deleted above)
-	delete _pEditableAreaItem;
-	delete _pTargetAreaItem;
 	_pEditableAreaItem = NULL;
 	_pTargetAreaItem = NULL;
 }

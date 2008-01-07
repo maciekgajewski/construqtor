@@ -24,9 +24,13 @@
 // local
 #include "cqpolygontriangulator.h"
 #include "cqpolygonalbody.h"
+#include "cqitemfactory.h"
+
+CQ_ADD_TO_FACTORY( CqPolygonalBody );
 
 // tags
-static const char* TAG_SHAPE	= "shape";
+static const char* TAG_SHAPE		= "shape";
+static const char* TAG_CONNECTABLE	= "connectable";
 
 // ============================== constructor ==========================
 CqPolygonalBody::CqPolygonalBody( CqItem* parent )
@@ -44,7 +48,7 @@ CqPolygonalBody::~CqPolygonalBody()
 // ================================= init ================================
 void CqPolygonalBody::init()
 {
-	// nope
+	_connectable = true;
 }
 
 // ================================== set polygon ============================
@@ -57,7 +61,7 @@ void CqPolygonalBody::setPolygon( const QPolygonF& ploygon )
 // ================================= create shape =========================
 QList<b2ShapeDef*> CqPolygonalBody::createShape()
 {
-	const double MIN_PRODUCT = 0.001;
+	const double MIN_PRODUCT = 0.0001;
 	
 	QList<b2ShapeDef*> list;
 	
@@ -153,6 +157,7 @@ void CqPolygonalBody::store( CqElement& element ) const
 	CqPhysicalBody::store( element );
 	
 	element.appendPolygonF( TAG_SHAPE, _polygon );
+	element.appendInt( TAG_CONNECTABLE, int( _connectable ) );
 }
 
 // ========================== load ====================
@@ -160,7 +165,8 @@ void CqPolygonalBody::load( const CqElement& element )
 {
 	CqPhysicalBody::load( element );
 	
-	_polygon = element.readPolygonF( TAG_SHAPE );
+	_polygon		= element.readPolygonF( TAG_SHAPE );
+	_connectable	= element.readInt( TAG_CONNECTABLE ) != 0;
 }
 
 // EOF

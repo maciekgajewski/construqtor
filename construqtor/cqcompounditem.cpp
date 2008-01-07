@@ -40,12 +40,15 @@ CqCompoundItem::~CqCompoundItem()
 {
 	// QGrpahicsItem destructo wil try to destroy child items, so wil QObject.
 	// So better I'll do it now, while I have thing under control
+	/*
 	_underDestruction = true;
 	foreach ( CqItem* pChild, _children )
 	{
 		//qDebug("deleteing child (%s): %p", qPrintable( pChild->name() ), pChild ); // TODO remove
 		delete pChild;
 	}
+	*/
+	// NOTE trying to get rid of this ugly hack
 }
 
 // ================================== init =====================
@@ -62,7 +65,7 @@ void CqCompoundItem::addChild( CqItem* pChild )
 {
 	Q_ASSERT( pChild );
 	
-	if ( ! _children.contains( pChild ) ) // avopids recursion from CqItem::setPhysicalParent
+	if ( ! _children.contains( pChild ) ) // avoids recursion from CqItem::setPhysicalParent
 	{
 		
 		// add to list

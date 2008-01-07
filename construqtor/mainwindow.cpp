@@ -31,6 +31,7 @@
 #include "cqstone.h"
 #include "cqclipboard.h"
 #include "cqhydrauliccylinder.h"
+#include "cqpallet.h"
 
 // local
 #include "mainwindow.h"
@@ -63,33 +64,17 @@ void MainWindow::on_buttonStop_clicked()
 // ================================= on start =============
 void MainWindow::simulationStarted()
 {
-	buttonGirder100->setEnabled(false);
-	buttonGirder200->setEnabled(false);
-	buttonGirder300->setEnabled(false);
-	buttonNail->setEnabled(false);
-	buttonWheel40->setEnabled(false);
-	buttonWheel80->setEnabled(false);
-	buttonWwE->setEnabled(false);
-	buttonBolt->setEnabled(false);
-	buttonStone->setEnabled(false);
 	buttonSave->setEnabled(false);
 	buttonLoad->setEnabled(false);
+	toolBox->setEnabled( false );
 }
 
 // =================================== on stop ============
 void MainWindow::simulationPaused()
 {
-	buttonGirder100->setEnabled(true);
-	buttonGirder200->setEnabled(true);
-	buttonGirder300->setEnabled(true);
-	buttonNail->setEnabled(true);
-	buttonWheel40->setEnabled(true);
-	buttonWheel80->setEnabled(true);
-	buttonWwE->setEnabled(true);
-	buttonBolt->setEnabled(true);
-	buttonStone->setEnabled(true);
 	buttonSave->setEnabled(true);
 	buttonLoad->setEnabled(true);
+	toolBox->setEnabled( true );
 }
 
 // =========================== pointer pos  =======================
@@ -268,6 +253,44 @@ void MainWindow::on_buttonCylinder100_clicked()
 	view->toolAddObject( pCylinder );
 }
 
+// ==================================================================
+void MainWindow::on_buttonPalett_clicked()
+{
+	CqPallet* pPallet = new CqPallet();
+	pPallet->setEditorFlags
+		( pPallet->editorFlags() | CqItem::Selectable | CqItem::Movable | CqItem::Rotatable );
+	
+	
+	view->toolAddObject( pPallet );
+}
+
+// ==================================================================
+void MainWindow::on_buttonFork_clicked()
+{
+	CqPolygonalBody* pFork = new CqPolygonalBody();
+	pFork->setName( "Fork" );
+	pFork->setMaterial( CqMaterial::steel() );
+	pFork->setEditorFlags
+		( pFork->editorFlags() | CqItem::Selectable | CqItem::Movable | CqItem::Rotatable );
+	
+	// shape definition
+	QPolygonF polygon;
+	polygon
+		<< QPointF( 0.0,	0.0 )
+		<< QPointF( 0.2,	0.0 )
+		<< QPointF( 1.1,	0.01 )
+		<< QPointF( 1.1,	0.05 )
+		<< QPointF( 0.2,	0.07 )
+		<< QPointF( 0.2,	0.2 )
+		<< QPointF( 0.0,	0.2 )
+		;
+	polygon.translate( -0.5, -0.1 );
+		
+	pFork->setPolygon( polygon );
+	pFork->setConnectable( true );
+	
+	view->toolAddObject( pFork );
+}
 
 // EOF
 
