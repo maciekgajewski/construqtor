@@ -95,6 +95,7 @@ void MainView::init()
 	_rubberbandSelection.setZValue( 4.0 );
 	
 	// use OpenGL
+	/*
 	QGLWidget* pGLWidget = new QGLWidget( QGLFormat( QGL::SampleBuffers ) );
 	setViewport( pGLWidget );
 	//BEGIN attempt to turn on antialaising
@@ -116,6 +117,7 @@ void MainView::init()
 	glHint (GL_POINT_SMOOTH_HINT, GL_DONT_CARE);
 	glShadeModel(GL_SMOOTH );
 	//END
+	*/
 	
 }
 
