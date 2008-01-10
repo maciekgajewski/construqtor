@@ -30,6 +30,7 @@
 class CqRevoluteJoint : public CqJoint
 {
 	Q_OBJECT
+	// TODO add properties
 public:
 	
 	// construction destruction
@@ -43,16 +44,19 @@ public:
 	void setAnchorPoint( const QPointF& point ) { _anchorPoint = point; }
 	/// Returns anchor point (in local coords)
 	QPointF anchorPoint() const { return _anchorPoint; }
-	/// Enables and configures motor
-	void setMotorEnabled( bool enabled, double speed, double torque );
+	/// Enables motor
+	void setMotorEnabled( bool enabled );
+	bool motorEnabled() const { return _enableMotor; }
+	
+	void setMaxTorque( double torque );
+	double maxTorque() const { return _maxTorque; }
+	
+	void setMaxSpeed( double speed );
+	double maxSpeed() const { return _maxSpeed; }
+	
 	/// Enables and configures motor limits
 	void setLimits( bool limits, double upper, double lower );
 	
-	bool motorEnabled() const { return _enableMotor; }
-	
-	double maxTorque() const { return _maxTorque; }
-	double maxSpeed() const { return _maxSpeed; }
-
 	// signal from simulation
 
 	virtual void updatePosToPhysical();		///< Updates position and rotation to physical

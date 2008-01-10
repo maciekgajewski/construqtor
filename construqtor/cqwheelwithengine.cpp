@@ -39,6 +39,7 @@ static const char* TAG_MOTOR	= "motor";
 // constants
 static const double MAX_SPEED	= 20.0;		// max speed [rad/s?] 
 static const double MAX_TORQUE	= 1000.0;	// max torque [Nm?]
+static const double WHEEL_DIAMETER	= 0.8;	//
 static const CqMaterial ENGINE_MATERIAL( 400.0, 0.2, 0.1 ); // dens, friq, restit
 
 // ======================== constructor ===================
@@ -57,10 +58,10 @@ CqWheelWithEngine::~CqWheelWithEngine()
 // ======================== init ===================
 void CqWheelWithEngine::init()
 {
-	_wheelDiameter = 1.0;
+	// _wheelDiameter = 1.0; // bailed out, stopred nside wheel
 	// init wheel
 	_pWheel = new CqWheel();
-	_pWheel->setDiameter( _wheelDiameter );
+	_pWheel->setDiameter( WHEEL_DIAMETER );
 	_pWheel->setEditorFlags( _pWheel->editorFlags() & ~Selectable );
 	_pWheel->setZValue( 0.7 );
 	// some aesthetic
@@ -68,8 +69,8 @@ void CqWheelWithEngine::init()
 	
 	// init engine
 	_pEngine = new CqGirder();
-	_pEngine->setSize( QSizeF( _wheelDiameter / 2, _wheelDiameter ) );
-	_pEngine->setPos( 0, _wheelDiameter * 0.4 );
+	_pEngine->setSize( QSizeF( WHEEL_DIAMETER / 2, WHEEL_DIAMETER ) );
+	_pEngine->setPos( 0, WHEEL_DIAMETER * 0.4 );
 	_pEngine->setMaterial( ENGINE_MATERIAL );
 	_pEngine->setZValue( 0.5 );
 	_pEngine->setName("Engine");
@@ -79,7 +80,9 @@ void CqWheelWithEngine::init()
 	_pMotor = new CqWheelWithEngineMotor();
 	_pMotor->setAnchorPoint( QPointF(0,0) );
 	_pMotor->setConnectedBodies( _pWheel,  _pEngine );
-	_pMotor->setMotorEnabled( true, MAX_SPEED, MAX_TORQUE );
+	_pMotor->setMotorEnabled( true );
+	_pMotor->setMaxSpeed( MAX_SPEED );
+	_pMotor->setMaxTorque( MAX_TORQUE );
 	_pMotor->setZValue( 0.9 );
 	
 	addChild( _pWheel );
@@ -178,6 +181,8 @@ void CqWheelWithEngine::load( const CqElement& element )
 	
 	// TODO this should be loaded
 	_pEngine->setBrush( QColor( 0x80, 0x80, 0x80, 0x80 ) ); // semitransparent gray
+	
+	// update local vars to ca
 }
 
 // ===============================================================
@@ -209,11 +214,47 @@ void CqWheelWithEngine::store( CqElement& element ) const
 // ======================================================================
 void CqWheelWithEngine::setWheelDiameter( double diameter )
 {
-	_wheelDiameter = diameter;
-	if ( _pWheel )
-	{
-		_pWheel->setDiameter( diameter );
-	}
+	Q_ASSERT( _pWheel );
+	_pWheel->setDiameter( diameter );
+	
+	// also - modofy negine
+	Q_ASSERT( _pEngine );
+	_pEngine->setSize( QSizeF( diameter / 2, diameter ) );
+	_pEngine->setPos( 0, diameter * 0.4 );
+}
+// ======================================================================
+double CqWheelWithEngine::wheelDiameter() const
+{
+	Q_ASSERT( _pWheel );
+	return _pWheel->diameter();
+}
+
+// ======================================================================
+void CqWheelWithEngine::setMaxTorque( double torque )
+{
+	Q_ASSERT( _pMotor );
+	_pMotor->setMaxTorque( torque );
+}
+
+// ======================================================================
+double CqWheelWithEngine::maxTorque() const
+{
+	Q_ASSERT( _pMotor );
+	return _pMotor->maxTorque();
+}
+
+// ======================================================================
+void CqWheelWithEngine::setMaxSpeed( double speed )
+{
+	Q_ASSERT( _pMotor );
+	_pMotor->setMaxSpeed( speed );
+}
+
+// ======================================================================
+double CqWheelWithEngine::maxSpeed() const
+{
+	Q_ASSERT( _pMotor );
+	return _pMotor->maxSpeed();
 }
 
 // EOF

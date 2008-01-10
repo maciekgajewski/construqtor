@@ -131,7 +131,7 @@ void CqPrismaticTraslationController::calculationStep()
 			}
 			
 			// TODO remove
-			qDebug("desired: %lf, current: %lf", _desiredTranslation, currentTranslation ); // TODO remove
+			//qDebug("desired: %lf, current: %lf", _desiredTranslation, currentTranslation ); // TODO remove
 		}
 	}
 }

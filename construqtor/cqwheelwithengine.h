@@ -75,7 +75,13 @@ public:
 
 	// properties
 	void setWheelDiameter( double diameter );
-	double wheelDiameter() const { return _wheelDiameter; }
+	double wheelDiameter() const;
+	
+	void setMaxTorque( double torque );
+	double maxTorque() const;
+	
+	void setMaxSpeed( double speed );
+	double maxSpeed() const;
 
 	// i/o
 	virtual void load( const CqElement& element );
@@ -95,7 +101,7 @@ private:
 	
 	CqRevoluteVelocityControler _controller;	///< Motor controller
 	
-	double _wheelDiameter;
+	//double _wheelDiameter; // TODO remove if not used
 };
 
 #endif // CQWHEELWITHENGINE_H

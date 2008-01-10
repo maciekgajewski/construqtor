@@ -77,7 +77,7 @@ public:
 	virtual void load( const CqElement& element );		///< restores item state 
 
 	// state
-	double translation();	///< Current ternaslation
+	double translation() const;	///< Current ternaslation
 
 private:
 	
