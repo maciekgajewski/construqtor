@@ -98,15 +98,15 @@
        </sizepolicy>
       </property>
       <property name="currentIndex" >
-       <number>1</number>
+       <number>3</number>
       </property>
       <widget class="QWidget" name="page" >
        <property name="geometry" >
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>116</width>
-         <height>317</height>
+         <width>186</width>
+         <height>351</height>
         </rect>
        </property>
        <attribute name="label" >
@@ -135,6 +135,27 @@
          </widget>
         </item>
         <item>
+         <widget class="QPushButton" name="buttonRod50" >
+          <property name="text" >
+           <string>Rod 50x5</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="buttonRod100" >
+          <property name="text" >
+           <string>Rod 100x5</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="buttonRod150" >
+          <property name="text" >
+           <string>Rod 150x5</string>
+          </property>
+         </widget>
+        </item>
+        <item>
          <spacer>
           <property name="orientation" >
            <enum>Qt::Vertical</enum>
@@ -150,6 +171,14 @@
        </layout>
       </widget>
       <widget class="QWidget" name="page_6" >
+       <property name="geometry" >
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>186</width>
+         <height>351</height>
+        </rect>
+       </property>
        <attribute name="label" >
         <string>Construction elements</string>
        </attribute>
@@ -181,8 +210,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>96</width>
-         <height>90</height>
+         <width>186</width>
+         <height>351</height>
         </rect>
        </property>
        <attribute name="label" >
@@ -200,6 +229,13 @@
          <widget class="QPushButton" name="buttonWheel80" >
           <property name="text" >
            <string>Wheel 80</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="buttonWheel120" >
+          <property name="text" >
+           <string>Wheel 120</string>
           </property>
          </widget>
         </item>
@@ -223,8 +259,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>128</width>
-         <height>366</height>
+         <width>186</width>
+         <height>351</height>
         </rect>
        </property>
        <attribute name="label" >
@@ -234,7 +270,21 @@
         <item>
          <widget class="QPushButton" name="buttonWwE" >
           <property name="text" >
-           <string>Wheel + engine</string>
+           <string>Whee 80 + engine</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="buttonWwE40" >
+          <property name="text" >
+           <string>Wheel 40 + engine</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="buttonWwE120" >
+          <property name="text" >
+           <string>wheel 120 + engine</string>
           </property>
          </widget>
         </item>
@@ -242,6 +292,27 @@
          <widget class="QPushButton" name="buttonCylinder100" >
           <property name="text" >
            <string>Cylinder 100x10</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="buttonCylinder50" >
+          <property name="text" >
+           <string>Cylinder 50x10</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="buttonCylinder100d15" >
+          <property name="text" >
+           <string>Cylinder 100x15</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="buttonCylinder50d15" >
+          <property name="text" >
+           <string>Cylinder 50x15</string>
           </property>
          </widget>
         </item>
@@ -265,8 +336,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>113</width>
-         <height>382</height>
+         <width>96</width>
+         <height>90</height>
         </rect>
        </property>
        <attribute name="label" >
@@ -307,8 +378,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>113</width>
-         <height>382</height>
+         <width>96</width>
+         <height>90</height>
         </rect>
        </property>
        <attribute name="label" >

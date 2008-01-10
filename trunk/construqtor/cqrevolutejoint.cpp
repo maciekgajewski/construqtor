@@ -112,11 +112,24 @@ void CqRevoluteJoint::updatePosToPhysical()
 }
 
 // ================================ set motor enabled ===========================
-void CqRevoluteJoint::setMotorEnabled( bool enabled, double speed, double torque )
+void CqRevoluteJoint::setMotorEnabled( bool enabled )
 {
 	_enableMotor	= enabled;
+	// TODO recreate joint if needed
+}
+
+// =============================================================
+void CqRevoluteJoint::setMaxTorque( double torque )
+{
+	_maxTorque		= torque;
+	// TODO recreate joint if needed
+}
+
+// =============================================================
+void CqRevoluteJoint::setMaxSpeed( double speed )
+{
 	_maxSpeed		= speed;
-	_maxTorque		= torque; // TODO stil ot sure if it is max torque
+	// TODO recreate joint if needed
 }
 
 // ================================ set limits enabled ===========================

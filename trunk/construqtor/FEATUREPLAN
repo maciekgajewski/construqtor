@@ -5,19 +5,19 @@ marked with (ff) are future feature and are not likely to be implemented.
 Features for 0.5 release, january 2007
 [ * ] Hydraulic cylinder
 [   ] Three or more cylinder sizes
-[   ] third wheel size  huge wheel
+[ * ] third wheel size  huge wheel
 [   ] Box - a "game" element, not editable
 [ * ] Pallet - for box
 [ * ] Forklift's fork - to carry pallet
 [ * ] Editable area
 [50%] Target area (present but not used)
-[   ] geometrical shape: rods - different lengths
+[ * ] geometrical shape: rods - different lengths
 [   ] geometrical shape - girder caps
 [   ] geometrical shape - triangular element
 [   ] Reset
 [   ] Bugfixing: problems with rubberband selection
-[50%] Bugfix: problem with invisible objects remaining after deleting (not tested throughoulty)
-[   ] Bugfix: problem with cylinder translation
+[ * ] Bugfix: problem with invisible objects remaining after deleting (not tested throughoulty)
+[ * ] Bugfix: problem with cylinder translation
 [   ] Better terrain geenration,random stones
 [   ] "gameification" - controlling gameplay, level of difficulty, making sure that available
       elements allow for completing the game
@@ -28,8 +28,10 @@ Features for 0.5 release, january 2007
 [ * ] SVG's into resources
 [ * ] Windows(TM) build
 [ * ] Open file / save file dialogs
-[   ] Bugfix: crash on destroying scene
+[50%] Bugfix: crash on destroying scene (some progress)
 [ * ] No deleting or breaking joints outside editable area
+[   ] Do something with cylinder piston collision
+[   ] SVG for all the wheels
 
 Short term goals
 [   ] selectoing connected bodies with dblckick

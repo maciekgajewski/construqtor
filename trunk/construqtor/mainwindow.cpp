@@ -108,6 +108,30 @@ void MainWindow::on_buttonGirder300_clicked()
 	view->toolAddObject( pGirder );
 }
 
+// =========================================================
+void MainWindow::on_buttonRod50_clicked()
+{
+	CqGirder* pGirder = new CqGirder();
+	pGirder->setSize( QSizeF( 0.5, 0.05 ) );
+	view->toolAddObject( pGirder );
+}
+
+// =========================================================
+void MainWindow::on_buttonRod100_clicked()
+{
+	CqGirder* pGirder = new CqGirder();
+	pGirder->setSize( QSizeF( 1.0, 0.05 ) );
+	view->toolAddObject( pGirder );
+}
+
+// =========================================================
+void MainWindow::on_buttonRod150_clicked()
+{
+	CqGirder* pGirder = new CqGirder();
+	pGirder->setSize( QSizeF( 1.5, 0.05 ) );
+	view->toolAddObject( pGirder );
+}
+
 // ============================ nail ==============================
 void MainWindow::on_buttonNail_clicked()
 {
@@ -127,6 +151,7 @@ void MainWindow::on_buttonWheel40_clicked()
 {
 	CqWheel* pWheel = new CqWheel();
 	pWheel->setDiameter( 0.40 );
+	// TODO add SVG
 	view->toolAddObject( pWheel );
 }
 
@@ -140,11 +165,43 @@ void MainWindow::on_buttonWheel80_clicked()
 	view->toolAddObject( pWheel );
 }
 
+// ============================ wheel 120  ==============================
+void MainWindow::on_buttonWheel120_clicked()
+{
+	CqWheel* pWheel = new CqWheel();
+	pWheel->setDiameter( 1.2 );
+	// TODO add SVG
+	view->toolAddObject( pWheel );
+}
+
 // ============================= Wheel with engine =======================
 void MainWindow::on_buttonWwE_clicked()
 {
 	CqWheelWithEngine* pWwE = new CqWheelWithEngine();
-	pWwE->setWheelDiameter( 0.80 );
+	pWwE->setWheelDiameter( 0.8 );
+	pWwE->setMaxTorque( 1000.0 );
+	pWwE->setMaxSpeed( 40 * 60 / ( 2 * M_PI ) ); // 40 RPM
+	
+	
+	view->toolAddObject( pWwE );
+	
+}
+// ============================= Wheel with engine =======================
+void MainWindow::on_buttonWwE40_clicked()
+{
+	CqWheelWithEngine* pWwE = new CqWheelWithEngine();
+	pWwE->setWheelDiameter( 0.4 );
+	pWwE->setMaxTorque( 200.0 );
+	pWwE->setMaxSpeed( 200 * 60 / ( 2 * M_PI ) ); // 200 RPM
+	view->toolAddObject( pWwE );
+}
+// ============================= Wheel with engine =======================
+void MainWindow::on_buttonWwE120_clicked()
+{
+	CqWheelWithEngine* pWwE = new CqWheelWithEngine();
+	pWwE->setWheelDiameter( 1.2 );
+	pWwE->setMaxTorque( 4000.0 );
+	pWwE->setMaxSpeed( 10 * 60 / ( 2 * M_PI ) ); // 10 RPM
 	view->toolAddObject( pWwE );
 }
 
@@ -155,8 +212,6 @@ void MainWindow::controllerCreated( CqMotorController* pCtrl )
 	boxControllers->layout()->addWidget( pCW );
 	pCW->setController( pCtrl, _pSimulation );
 	pCW->show();
-	
-	
 }
 
 // ========================== set simulation ==================================
@@ -249,6 +304,44 @@ void MainWindow::on_buttonCylinder100_clicked()
 	CqHydraulicCylinder* pCylinder = new CqHydraulicCylinder();
 	pCylinder->setLength( 1.0 );
 	pCylinder->setDiameter( 0.1 );
+	pCylinder->setMaxForce( 10000.0 );
+	pCylinder->setMaxSpeed( 0.5 );
+	
+	view->toolAddObject( pCylinder );
+}
+
+// ==================================================================
+void MainWindow::on_buttonCylinder50_clicked()
+{
+	CqHydraulicCylinder* pCylinder = new CqHydraulicCylinder();
+	pCylinder->setLength( 0.5 );
+	pCylinder->setDiameter( 0.1 );
+	pCylinder->setMaxForce( 10000.0 );
+	pCylinder->setMaxSpeed( 0.5 );
+	
+	view->toolAddObject( pCylinder );
+}
+
+// ==================================================================
+void MainWindow::on_buttonCylinder100d15_clicked()
+{
+	CqHydraulicCylinder* pCylinder = new CqHydraulicCylinder();
+	pCylinder->setLength( 1.0 );
+	pCylinder->setDiameter( 0.15 );
+	pCylinder->setMaxForce( 50000.0 );
+	pCylinder->setMaxSpeed( 0.1 );
+	
+	view->toolAddObject( pCylinder );
+}
+
+// ==================================================================
+void MainWindow::on_buttonCylinder50d15_clicked()
+{
+	CqHydraulicCylinder* pCylinder = new CqHydraulicCylinder();
+	pCylinder->setLength( 0.5 );
+	pCylinder->setDiameter( 0.15 );
+	pCylinder->setMaxForce( 50000.0 );
+	pCylinder->setMaxSpeed( 0.1 );
 	
 	view->toolAddObject( pCylinder );
 }

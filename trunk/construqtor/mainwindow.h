@@ -54,19 +54,28 @@ public slots:
 	void on_buttonGirder100_clicked();
 	void on_buttonGirder200_clicked();
 	void on_buttonGirder300_clicked();
+	void on_buttonRod50_clicked();
+	void on_buttonRod100_clicked();
+	void on_buttonRod150_clicked();
 	
 	void on_buttonWheel40_clicked();
 	void on_buttonWheel80_clicked();
+	void on_buttonWheel120_clicked();
 	
 	void on_buttonNail_clicked();
 	void on_buttonBolt_clicked();
 	
 	void on_buttonWwE_clicked();
+	void on_buttonWwE40_clicked();
+	void on_buttonWwE120_clicked();
 	
 	void on_buttonStone_clicked();
 	void on_buttonPalett_clicked();
 	
 	void on_buttonCylinder100_clicked();
+	void on_buttonCylinder50_clicked();
+	void on_buttonCylinder100d15_clicked();
+	void on_buttonCylinder50d15_clicked();
 	
 	void on_buttonFork_clicked();
 	

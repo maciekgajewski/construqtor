@@ -171,7 +171,7 @@ void CqPrismaticJoint::store( CqElement& element ) const
 	if ( pJoint )
 	{
 		element.appendDouble( TAG_JOINT_SPEED, pJoint->GetJointSpeed() );
-		element.appendDouble( TAG_JOINT_TRANSLATION, pJoint->GetJointTranslation() );
+		element.appendDouble( TAG_JOINT_TRANSLATION, translation() );
 	}
 	else
 	{
@@ -248,7 +248,7 @@ void CqPrismaticJoint::setAxis( const QPointF& axis )
 }
 
 // =====================================================================
-double CqPrismaticJoint::translation()
+double CqPrismaticJoint::translation() const
 {
 	b2PrismaticJoint* pJoint = (b2PrismaticJoint*)b2joint(); // dynamic_cast?
 	
