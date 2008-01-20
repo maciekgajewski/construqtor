@@ -38,17 +38,7 @@ CqCompoundItem::CqCompoundItem( CqItem *pParent )
 // =========================== destructor =====================
 CqCompoundItem::~CqCompoundItem()
 {
-	// QGrpahicsItem destructo wil try to destroy child items, so wil QObject.
-	// So better I'll do it now, while I have thing under control
-	/*
-	_underDestruction = true;
-	foreach ( CqItem* pChild, _children )
-	{
-		//qDebug("deleteing child (%s): %p", qPrintable( pChild->name() ), pChild ); // TODO remove
-		delete pChild;
-	}
-	*/
-	// NOTE trying to get rid of this ugly hack
+	_deleted = true; // to draw border between ou destructor, and CqItems. QObject's etc
 }
 
 // ================================== init =====================
@@ -57,7 +47,7 @@ void CqCompoundItem::init()
 	_followedChild = NULL;
 	_blockConnectionsUpdate	= false;
 	_conectionUpdateNeeded	= false;
-	_underDestruction = false;
+	_deleted = false;
 }
 
 // =============================== add child =====================
@@ -101,7 +91,7 @@ void CqCompoundItem::removeChild( CqItem* pChild )
 {
 	Q_ASSERT( pChild );
 
-	if ( ! _underDestruction )
+	if ( ! _deleted )
 	{
 		pChild->setPhysicalParent( NULL );
 		if ( ! _children.removeAll( pChild ) )
@@ -326,7 +316,7 @@ bool CqCompoundItem::canBeRotated() const
 // =================================================================
 void CqCompoundItem::updateConnectionLists()
 {
-	if ( _underDestruction ) return; // fuse
+	if ( _deleted ) return; // fuse
 	
 	// first - clear the lists
 	_connectedBodies.clear();
@@ -433,6 +423,15 @@ void CqCompoundItem::breakConections()
 	foreach( CqJoint* pJoint, _connectedJoints )
 	{
 		pJoint->breakJoint();
+	}
+}
+
+// ========================================================================
+void CqCompoundItem::childDeleted( CqItem* pChild )
+{
+	if ( ! _deleted )
+	{
+		removeChild( pChild );
 	}
 }
 

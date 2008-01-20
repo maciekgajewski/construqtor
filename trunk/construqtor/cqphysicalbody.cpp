@@ -45,9 +45,11 @@ CqPhysicalBody::CqPhysicalBody( CqItem* parent )
 // =========================== destructor ===================================
 CqPhysicalBody::~CqPhysicalBody()
 {
+	qDebug("CqPhysicalBody::~CqPhysicalBody(): body: %p, world: %p", _pBody, _pWorld);
 	breakAllJoints();
 	if ( _pBody && _pWorld )
 	{
+		qDebug("CqPhysicalBody::~CqPhysicalBody(): physical body destroyed");
 		destroyBody( _pWorld );
 	}
 }
@@ -57,7 +59,6 @@ void CqPhysicalBody::init()
 {
 	_pBody = NULL;
 	_initialAngluarVelocity = 0.0;
-	
 	// make rotatable
 	setEditorFlags( editorFlags() | Rotatable );
 }
@@ -90,6 +91,10 @@ void CqPhysicalBody::createBody( CqWorld* pWorld )
 	// add shapes to body
 	foreach( b2ShapeDef* pShape, shapes )
 	{
+		// collision
+		pShape->categoryBits	= collisionGroup();
+		pShape->maskBits		= collisionGroup();
+	
 		bodyDef.AddShape( pShape );
 	}
 	

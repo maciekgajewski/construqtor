@@ -110,6 +110,8 @@ void CqRevoluteVelocityControler::setJoint( CqRevoluteJoint* pJoint )
 	_valueMin = - pJoint->maxSpeed();
 	_valueMax = pJoint->maxSpeed();
 	
+	qDebug(" value max: %lf", _valueMax ); // TODO remove
+	
 	_pJoint = pJoint;
 }
 

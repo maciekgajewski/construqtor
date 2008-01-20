@@ -73,6 +73,7 @@ void CqHydraulicCylinder::init()
 	_pPiston->setBrush( Qt::lightGray );
 	_pPiston->setMaterial( CqMaterial::steel() );
 	_pPiston->setZValue( 1.0999 ); // so hopefully nothing ever gets between barrel and piston
+	_pPiston->setCollisionGroup( CollisionPiston );
 	
 	// init motor
 	_pMotor->setConnectedBodies( _pBarrel, _pPiston );
@@ -178,18 +179,16 @@ CqPhysicalBody* CqHydraulicCylinder::bodyHere( const QPointF& worldPoint )
 	Q_ASSERT( _pBarrel && _pPiston );
 	// check - if this is rightmost 10% of barrel
 	QPointF barrelPoint = _pBarrel->mapFromWorld( worldPoint );
-	if ( _pBarrel->contains( barrelPoint ) 
-		&& barrelPoint.x() < ( - _pBarrel->size().width() * 0.4 )
-		)
+	QPointF pistonPoint = _pPiston->mapFromWorld( worldPoint );
+	
+	// barrel if barrel
+	if ( _pBarrel->contains( barrelPoint ) )
 	{
 		return _pBarrel;
 	}
 	
-	// check 2 - if this is rightmost 10% of piston
-	QPointF pistonPoint = _pPiston->mapFromWorld( worldPoint );
-	if ( _pPiston->contains( pistonPoint ) 
-		&& pistonPoint.x() > ( _pPiston->size().width() * 0.4 ) 
-		)
+	// piston otherwise
+	if ( _pPiston->contains( pistonPoint ) )
 	{
 		return _pPiston;
 	}

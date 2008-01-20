@@ -52,6 +52,7 @@ void CqWheel::init()
 	setMaterial( CqMaterial( 100.0, 2.0, 0.3 ) );
 	
 	setName( "Wheel" );
+	setCollisionGroup( CollisionConstruction );
 }
 
 // ========================= can be moved ================

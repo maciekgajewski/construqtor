@@ -59,6 +59,7 @@ public:
 	
 	virtual void updatePhysicalPos();
 	virtual void  childChanged( CqItem* );		///< Info from child - child changed
+	virtual void childDeleted( CqItem* );		///< Info form chi;ld - deleted
 	
 	// followed child
 	void setFollowedChild( CqItem* child ){ _followedChild = child; }
@@ -103,7 +104,7 @@ private:
 	bool	_blockConnectionsUpdate;				///< Blocks update of connection lists
 	bool	_conectionUpdateNeeded;					///< If delayed update is needed
 	
-	bool	_underDestruction;						///< HACK: flag set in destructor
+	bool	_deleted;								///<  flag set in destructor
 };
 
 #endif // CQCOMPOUNDITEM_H
