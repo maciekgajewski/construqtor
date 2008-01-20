@@ -49,6 +49,18 @@ public:
 		Rotatable		=	0x4				//< Item can be rotated
 	};
 	
+	/// Collision group flag. Items collide only when have same flag set
+	enum CollisionGroup
+	{
+		CollisionConstruction1		= 0x0001,				///< construction elements - group 1
+		CollisionConstruction2		= 0x0002,				///< construction elements - group 2
+		
+		CollisionPiston				= 0x0004,				///< cylinder's piston
+		
+		CollisionConstruction		= 0x0003,				///< collides with all construction items
+		CollisionAll				= 0xffff
+	}; // TODO definde Q_FLAG
+	
 	// constrution / destruction
 	explicit CqItem( CqItem* parent = NULL );
 	virtual ~CqItem();
@@ -81,6 +93,9 @@ public:
 	QUuid id() const { return _id; }					///< Unique id
 	void setId( const QUuid& id ) { _id = id; }			///< Sets id
 	virtual void generateNewId();						///< Generates new, unique id
+	
+	void setCollisionGroup( int cd ){ _collisionGroup = cd; }
+	int collisionGroup() const { return _collisionGroup; }
 	
 	// mapping coordinates 
 	QPointF mapToWorld( const QPointF& local );			///< Maps local to physical scene
@@ -121,7 +136,8 @@ public:
 	CqItem* physicalParent(){ return _pPhysicalParent; }
 	const CqItem* physicalParent() const { return _pPhysicalParent; }
 	void setPhysicalParent( CqItem* pParent );		///< Sets physical parent
-	virtual void childChanged( CqItem* ){};		///< Info from child - child changed
+	virtual void childChanged( CqItem* ){};			///< Info from child - child changed
+	virtual void childDeleted( CqItem* ){}			///< Info form chi;ld - deleted
 	virtual void notifyParent();					///< Set info to parent
 	
 	virtual void updatePhysicalPos(){};				///< Updates physical pos to item pos/rotation
@@ -160,6 +176,8 @@ private:
 	QPointF			_center;							///< Local center, rotation axis, COG
 	QString			_name;								///< Name
 	QUuid			_id;								///< Unique ID
+
+	int			_collisionGroup;			///< Body's collision group
 
 };
 

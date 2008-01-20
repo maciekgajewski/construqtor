@@ -30,12 +30,14 @@ CqGirder::CqGirder( CqItem* parent ) : CqPhysicalBox( parent )
 {
 	setEditorFlags( editorFlags() | Selectable | Movable | Rotatable );
 	setName( "Girder" );
+	setCollisionGroup( CollisionConstruction );
 }
 
 // ============================ destructor ==================
 CqGirder::~CqGirder()
 {
 	// nope
+	qDebug("girder destroyed, qt parent: %p", parent() );
 }
 
 // ========================= can be moved ================

@@ -33,6 +33,7 @@ static const char* TAG_ZVALUE	= "zvalue";
 static const char* TAG_POSITION	= "position";
 static const char* TAG_NAME		= "name";
 static const char* TAG_FLAGS	= "flags";
+static const char* TAG_COLLISION_GROUP	= "collisiongroups";
 
 
 // ========================== constructor ======================
@@ -47,15 +48,13 @@ CqItem::CqItem( CqItem* parent )
 // ========================== destructor ======================
 CqItem::~CqItem()
 {
-	//qDebug("deleting item: %p (%s)", this, qPrintable( _name ) ); // TODO remover
-	
-	// remove self from parents lists
-	CqCompoundItem* pCompoundParent = dynamic_cast<CqCompoundItem*>( _pPhysicalParent );
-	if ( pCompoundParent )
+	if ( _pPhysicalParent )
 	{
-		pCompoundParent->removeChild( this );
+		qDebug("CqItem::~CqItem(): item with parent deleted. Qt's parent: %p", parent() ); // TODO
+		CqItem* pParent = _pPhysicalParent;
+		_pPhysicalParent = NULL;
+		pParent->childDeleted( this );
 	}
-	
 }
 
 // ==================================== init ==================
@@ -72,6 +71,8 @@ void CqItem::init()
 	_rotation = 0.0;
 	
 	_id = QUuid::createUuid(); // random id
+	_collisionGroup = CollisionAll;
+	
 }
 
 // =========================== simulation step ===================
@@ -292,6 +293,7 @@ void CqItem::store( CqElement& element ) const
 	element.appendDouble( TAG_ROTATION, _rotation );
 	element.appendInt( TAG_FLAGS, _flags );
 	element.appendDouble( TAG_ZVALUE, zValue() );
+	element.appendInt( TAG_COLLISION_GROUP, _collisionGroup );
 }
 
 // ================================ load =============================
@@ -303,6 +305,7 @@ void CqItem::load( const CqElement& element )
 	setPhysicalRotation( element.readDouble( TAG_ROTATION ) );
 	_flags = element.readInt( TAG_FLAGS );
 	setZValue( element.readDouble( TAG_ZVALUE ) );
+	_collisionGroup = element.readInt( TAG_COLLISION_GROUP );
 }
 
 // =============================================================

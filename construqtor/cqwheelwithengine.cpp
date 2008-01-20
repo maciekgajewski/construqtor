@@ -247,6 +247,7 @@ double CqWheelWithEngine::maxTorque() const
 void CqWheelWithEngine::setMaxSpeed( double speed )
 {
 	Q_ASSERT( _pMotor );
+	_controller.setJoint( _pMotor ); // update data in controller
 	_pMotor->setMaxSpeed( speed );
 }
 

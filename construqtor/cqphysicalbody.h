@@ -52,6 +52,7 @@ class CqPhysicalBody : public CqItem
 	Q_OBJECT
 public:
 	
+	
 	// constrution / destruction
 	explicit CqPhysicalBody( CqItem* parent = NULL);
 	virtual ~CqPhysicalBody();
@@ -133,7 +134,7 @@ private:
 	
 	double		_initialAngluarVelocity;	///< Initial angular velocity for created body
 	QPointF		_initialLinearVelocity;		///< Initial linear velocity
-
+	
 };
 
 #endif // CQPHYSICALBODY_H

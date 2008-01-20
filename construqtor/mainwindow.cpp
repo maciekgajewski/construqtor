@@ -180,7 +180,7 @@ void MainWindow::on_buttonWwE_clicked()
 	CqWheelWithEngine* pWwE = new CqWheelWithEngine();
 	pWwE->setWheelDiameter( 0.8 );
 	pWwE->setMaxTorque( 1000.0 );
-	pWwE->setMaxSpeed( 40 * 60 / ( 2 * M_PI ) ); // 40 RPM
+	pWwE->setMaxSpeed( 20 * ( 2 * M_PI )  / 60); // 40 RPM
 	
 	
 	view->toolAddObject( pWwE );
@@ -192,7 +192,7 @@ void MainWindow::on_buttonWwE40_clicked()
 	CqWheelWithEngine* pWwE = new CqWheelWithEngine();
 	pWwE->setWheelDiameter( 0.4 );
 	pWwE->setMaxTorque( 200.0 );
-	pWwE->setMaxSpeed( 200 * 60 / ( 2 * M_PI ) ); // 200 RPM
+	pWwE->setMaxSpeed( 80 * ( 2 * M_PI ) / 60 ); // 200 RPM
 	view->toolAddObject( pWwE );
 }
 // ============================= Wheel with engine =======================
@@ -201,7 +201,7 @@ void MainWindow::on_buttonWwE120_clicked()
 	CqWheelWithEngine* pWwE = new CqWheelWithEngine();
 	pWwE->setWheelDiameter( 1.2 );
 	pWwE->setMaxTorque( 4000.0 );
-	pWwE->setMaxSpeed( 10 * 60 / ( 2 * M_PI ) ); // 10 RPM
+	pWwE->setMaxSpeed( 5 * ( 2 * M_PI ) / 60 ); // 10 RPM
 	view->toolAddObject( pWwE );
 }
 
@@ -381,6 +381,7 @@ void MainWindow::on_buttonFork_clicked()
 		
 	pFork->setPolygon( polygon );
 	pFork->setConnectable( true );
+	pFork->setCollisionGroup( CqItem::CollisionConstruction );
 	
 	view->toolAddObject( pFork );
 }
