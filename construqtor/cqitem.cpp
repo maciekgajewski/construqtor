@@ -50,7 +50,6 @@ CqItem::~CqItem()
 {
 	if ( _pPhysicalParent )
 	{
-		qDebug("CqItem::~CqItem(): item with parent deleted. Qt's parent: %p", parent() ); // TODO
 		CqItem* pParent = _pPhysicalParent;
 		_pPhysicalParent = NULL;
 		pParent->childDeleted( this );

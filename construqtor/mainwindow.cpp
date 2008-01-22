@@ -151,7 +151,8 @@ void MainWindow::on_buttonWheel40_clicked()
 {
 	CqWheel* pWheel = new CqWheel();
 	pWheel->setDiameter( 0.40 );
-	// TODO add SVG
+	pWheel->loadSvgAppearance( ":/tire40.svg" );
+	
 	view->toolAddObject( pWheel );
 }
 
@@ -160,8 +161,8 @@ void MainWindow::on_buttonWheel80_clicked()
 {
 	CqWheel* pWheel = new CqWheel();
 	pWheel->setDiameter( 0.80 );
-	// load svg
 	pWheel->loadSvgAppearance( ":/tire80.svg" );
+	
 	view->toolAddObject( pWheel );
 }
 
@@ -170,7 +171,8 @@ void MainWindow::on_buttonWheel120_clicked()
 {
 	CqWheel* pWheel = new CqWheel();
 	pWheel->setDiameter( 1.2 );
-	// TODO add SVG
+	pWheel->loadSvgAppearance( ":/tire120.svg" );
+	
 	view->toolAddObject( pWheel );
 }
 
@@ -180,7 +182,8 @@ void MainWindow::on_buttonWwE_clicked()
 	CqWheelWithEngine* pWwE = new CqWheelWithEngine();
 	pWwE->setWheelDiameter( 0.8 );
 	pWwE->setMaxTorque( 1000.0 );
-	pWwE->setMaxSpeed( 20 * ( 2 * M_PI )  / 60); // 40 RPM
+	pWwE->setMaxSpeed( 80 * ( 2 * M_PI )  / 60);
+	pWwE->loadWheelSvgAppearance( ":/tire80.svg" );
 	
 	
 	view->toolAddObject( pWwE );
@@ -192,7 +195,9 @@ void MainWindow::on_buttonWwE40_clicked()
 	CqWheelWithEngine* pWwE = new CqWheelWithEngine();
 	pWwE->setWheelDiameter( 0.4 );
 	pWwE->setMaxTorque( 200.0 );
-	pWwE->setMaxSpeed( 80 * ( 2 * M_PI ) / 60 ); // 200 RPM
+	pWwE->setMaxSpeed( 160 * ( 2 * M_PI ) / 60 );
+	pWwE->loadWheelSvgAppearance( ":/tire40.svg" );
+	
 	view->toolAddObject( pWwE );
 }
 // ============================= Wheel with engine =======================
@@ -201,7 +206,9 @@ void MainWindow::on_buttonWwE120_clicked()
 	CqWheelWithEngine* pWwE = new CqWheelWithEngine();
 	pWwE->setWheelDiameter( 1.2 );
 	pWwE->setMaxTorque( 4000.0 );
-	pWwE->setMaxSpeed( 5 * ( 2 * M_PI ) / 60 ); // 10 RPM
+	pWwE->setMaxSpeed( 40 * ( 2 * M_PI ) / 60 );
+	pWwE->loadWheelSvgAppearance( ":/tire120.svg" );
+	
 	view->toolAddObject( pWwE );
 }
 

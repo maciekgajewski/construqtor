@@ -64,8 +64,6 @@ void CqWheelWithEngine::init()
 	_pWheel->setDiameter( WHEEL_DIAMETER );
 	_pWheel->setEditorFlags( _pWheel->editorFlags() & ~Selectable );
 	_pWheel->setZValue( 0.7 );
-	// some aesthetic
-	_pWheel->loadSvgAppearance( ":/tire80.svg" );
 	
 	// init engine
 	_pEngine = new CqGirder();
@@ -222,11 +220,33 @@ void CqWheelWithEngine::setWheelDiameter( double diameter )
 	_pEngine->setSize( QSizeF( diameter / 2, diameter ) );
 	_pEngine->setPos( 0, diameter * 0.4 );
 }
+
 // ======================================================================
 double CqWheelWithEngine::wheelDiameter() const
 {
 	Q_ASSERT( _pWheel );
 	return _pWheel->diameter();
+}
+
+// ======================================================================
+void CqWheelWithEngine::setWheelSvgAppearance( const QByteArray& svg )
+{
+	Q_ASSERT( _pWheel );
+	_pWheel->setSvgAppearance( svg );
+}
+
+// ======================================================================
+QByteArray CqWheelWithEngine::getWheelSvgAppearance() const
+{
+	Q_ASSERT( _pWheel );
+	return _pWheel->svgApperance();
+}
+
+// ======================================================================
+void CqWheelWithEngine::loadWheelSvgAppearance( const QString& svgPath )
+{
+	Q_ASSERT( _pWheel );
+	_pWheel->loadSvgAppearance( svgPath );
 }
 
 // ======================================================================
@@ -247,8 +267,8 @@ double CqWheelWithEngine::maxTorque() const
 void CqWheelWithEngine::setMaxSpeed( double speed )
 {
 	Q_ASSERT( _pMotor );
-	_controller.setJoint( _pMotor ); // update data in controller
 	_pMotor->setMaxSpeed( speed );
+	_controller.setJoint( _pMotor ); // update data in controller
 }
 
 // ======================================================================

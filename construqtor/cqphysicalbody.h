@@ -125,7 +125,6 @@ private:
 	
 	// data
 
-	QPointer< CqWorld > _pWorld;		///< World object
 	b2Body*	_pBody;						///< Body itself
 	CqMaterial	_material;				///< Material used
 	

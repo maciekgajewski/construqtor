@@ -1,5 +1,8 @@
- <!DOCTYPE RCC><RCC version="1.0">
-  <qresource>
-       <file>tire80.svg</file>
-  </qresource>
-  </RCC>
+<!DOCTYPE RCC>
+<RCC version="1.0">
+<qresource>
+	<file>tire80.svg</file>
+	<file>tire40.svg</file>
+	<file>tire120.svg</file>
+</qresource>
+</RCC>
