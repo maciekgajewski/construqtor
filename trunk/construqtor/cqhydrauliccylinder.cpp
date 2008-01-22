@@ -68,12 +68,13 @@ void CqHydraulicCylinder::init()
 	_pBarrel->setBrush( Qt::darkGray );
 	_pBarrel->setZValue( 1.1 );
 	_pBarrel->setMaterial( CqMaterial::steel() );
+	_pBarrel->setCollisionGroup( CollisionCylinder );
 	
 	// init piston
 	_pPiston->setBrush( Qt::lightGray );
 	_pPiston->setMaterial( CqMaterial::steel() );
 	_pPiston->setZValue( 1.0999 ); // so hopefully nothing ever gets between barrel and piston
-	_pPiston->setCollisionGroup( CollisionPiston );
+	_pPiston->setCollisionGroup( CollisionCylinder );
 	
 	// init motor
 	_pMotor->setConnectedBodies( _pBarrel, _pPiston );

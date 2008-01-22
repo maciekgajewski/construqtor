@@ -45,12 +45,10 @@ CqPhysicalBody::CqPhysicalBody( CqItem* parent )
 // =========================== destructor ===================================
 CqPhysicalBody::~CqPhysicalBody()
 {
-	qDebug("CqPhysicalBody::~CqPhysicalBody(): body: %p, world: %p", _pBody, _pWorld);
 	breakAllJoints();
-	if ( _pBody && _pWorld )
+	if ( _pBody && world() )
 	{
-		qDebug("CqPhysicalBody::~CqPhysicalBody(): physical body destroyed");
-		destroyBody( _pWorld );
+		destroyBody( world() );
 	}
 }
 

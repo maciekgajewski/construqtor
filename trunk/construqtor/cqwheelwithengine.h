@@ -82,6 +82,10 @@ public:
 	
 	void setMaxSpeed( double speed );
 	double maxSpeed() const;
+	
+	void setWheelSvgAppearance( const QByteArray& svg );
+	QByteArray getWheelSvgAppearance() const;
+	void loadWheelSvgAppearance( const QString& svgPath );
 
 	// i/o
 	virtual void load( const CqElement& element );

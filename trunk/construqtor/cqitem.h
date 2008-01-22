@@ -55,7 +55,7 @@ public:
 		CollisionConstruction1		= 0x0001,				///< construction elements - group 1
 		CollisionConstruction2		= 0x0002,				///< construction elements - group 2
 		
-		CollisionPiston				= 0x0004,				///< cylinder's piston
+		CollisionCylinder			= 0x0004,				///< cylinder's piston
 		
 		CollisionConstruction		= 0x0003,				///< collides with all construction items
 		CollisionAll				= 0xffff

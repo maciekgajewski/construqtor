@@ -58,8 +58,8 @@ void CqFragileRevoluteJoint::init()
 	_tolaretedForce		= 6000.0;
 	_toleratedTorque	= 6000.0;
 	
-	_heatingByTorque	= 0.00005;
-	_heatingByForce		= 0.00005;
+	_heatingByTorque	= 0.000005;
+	_heatingByForce		= 0.000005;
 
 }
 

@@ -37,7 +37,6 @@ CqGirder::CqGirder( CqItem* parent ) : CqPhysicalBox( parent )
 CqGirder::~CqGirder()
 {
 	// nope
-	qDebug("girder destroyed, qt parent: %p", parent() );
 }
 
 // ========================= can be moved ================
