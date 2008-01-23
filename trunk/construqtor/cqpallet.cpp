@@ -54,7 +54,11 @@ void CqPallet::init()
 	//setPen( QPen( QColor( "#f7aa00" ) ) ); // looks ugly
 	setPen( QPen( QColor( "#f7b21b" ) ) ); // looks ugly
 	setName( "Pallet" );
-	setMaterial( CqMaterial::wood() );
+	// use wood-like material, but with fgreater firction
+	CqMaterial m = CqMaterial::wood();
+	m.friction = 1.0;
+	
+	setMaterial( m );
 	setZValue( 2.0 );
 }
 

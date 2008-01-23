@@ -17,60 +17,38 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
-#ifndef CQGIRDER_H
-#define CQGIRDER_H
+#ifndef GAMEMANAGER_H
+#define GAMEMANAGER_H
 
 // Qt
-#include <QSvgRenderer>
+#include <QObject>
 
-// local
-#include "cqphysicalbox.h"
-
+// Cq
+class CqSimulation;
 
 /**
-	Girder is game element - nailable and breakable girder
-
+	Initializes and mabages game simulation.
 	@author Maciek Gajewski <maciej.gajewski0@gmail.com>
 */
-class CqGirder : public CqPhysicalBox
+class GameManager : public QObject
 {
-	Q_OBJECT
+Q_OBJECT
 public:
+	GameManager(QObject *parent = 0);
+	~GameManager();
+	
+public slots:
 
-	// construction / destruction 
-	explicit CqGirder( CqItem* parent = NULL );
-	virtual ~CqGirder();
-	
-	// editor flags
-	virtual bool canBeMoved() const;
-	virtual bool canBeRotated() const;
-	
-	virtual bool canConnectHere( const QPointF& /*worldPoint*/ ) { return true; } // connect on entire surface
-	
-	virtual QString description() const;
-	
-	// operations 
-	virtual void paint
-		( QPainter * painter
-		, const QStyleOptionGraphicsItem * option
-		, QWidget * widget = 0 );
-
-	// properties
-	void setSvgAppearance( const QByteArray& svg );
-	void loadSvgAppearance( const QString& path );
-	QByteArray svgApperance() const { return _svgAppearanceCode; } // TODO is this needed?
-	
-	// i/o
-	virtual void store( CqElement& element ) const;		///< stores item state 
-	virtual void load( const CqElement& element );		///< restores item state 
+	void startEasyGame( CqSimulation* pSim );
+	void startIntermediateGame( CqSimulation* pSim );
+	void startHardGame( CqSimulation* pSim );
 	
 private:
-	QByteArray		_svgAppearanceCode;		///< Source code of wheel appearance
-	QSvgRenderer	_svgAppearance;			///< Wheel appearance
+
+	void startGame( CqSimulation* pSim, double maxSlope, double stoneSize, int stones );
 };
 
-
-#endif // CQGIRDER_H
+#endif // GAMEMANAGER_H
 
 // EOF
 

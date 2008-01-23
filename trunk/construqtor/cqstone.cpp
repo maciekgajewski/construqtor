@@ -62,8 +62,8 @@ CqStone* CqStone::createRandomStone( double diameter )
 	// around desired radius
 	
 	// params
-	const double MIN_ANGLE_STEP	= 0.3;
-	const double MAX_ANGLE_STEP	= 0.5;
+	const double MIN_ANGLE_STEP	= qMin( 1.0, 0.24/diameter );
+	const double MAX_ANGLE_STEP	= MIN_ANGLE_STEP*2.0;
 	double MIN_DISTANCE = diameter * 0.35;
 	double MAX_DISTANCE = diameter * 0.65;
 	double MAX_DISTANCE_DELTA = diameter * 0.1;

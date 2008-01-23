@@ -18,12 +18,18 @@
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
 
+// Qt
+#include <QFile>
+
 // local
 #include "cqsimulation.h"
 #include "cqgirder.h"
 #include "cqitemfactory.h"
 
 CQ_ADD_TO_FACTORY( CqGirder );
+
+// tags
+static const char* TAG_SVG_APPEARANCE		= "svgappearance";
 
 // ============================== constructor ===============
 CqGirder::CqGirder( CqItem* parent ) : CqPhysicalBox( parent )
@@ -46,6 +52,22 @@ bool CqGirder::canBeMoved() const
 	return _joints.empty()  && CqPhysicalBox::canBeMoved();
 }
 
+// ==============================================================
+void CqGirder::paint
+	( QPainter * pPainter
+	, const QStyleOptionGraphicsItem * option
+	, QWidget * widget )
+{
+	if ( _svgAppearance.isValid() )
+	{
+		_svgAppearance.render( pPainter, boundingRect() );
+	}
+	else
+	{
+		CqPhysicalBox::paint( pPainter, option, widget );
+	}
+}
+
 // ========================= can be rotated ================
 bool CqGirder::canBeRotated() const
 {
@@ -65,6 +87,50 @@ QString CqGirder::description() const
 	}
 	// mass unknown
 	return d;
+}
+
+// ===============================================================
+void CqGirder::loadSvgAppearance( const QString& path )
+{
+	// load svg
+	QFile file( path );
+	if ( file.open( QIODevice::ReadOnly ) )
+	{
+		setSvgAppearance( file.readAll() );
+	}
+	else
+	{
+		qWarning("CqGirder: could ot open file: %s", qPrintable( file.errorString() ) );
+	}
+}
+
+// ==============================================================
+void CqGirder::setSvgAppearance( const QByteArray& svg )
+{
+	_svgAppearanceCode = svg;
+	_svgAppearance.load( svg );
+	
+	if ( ! _svgAppearance.isValid() )
+	{
+		qWarning("CqGirder: invalid SVG loaded");
+	}
+}
+
+// ==============================================================
+void CqGirder::store( CqElement& element ) const
+{
+	CqPhysicalBox::store( element );
+	
+	element.appendData( TAG_SVG_APPEARANCE, _svgAppearanceCode );
+}
+
+// ==============================================================
+void CqGirder::load( const CqElement& element )
+{
+	CqPhysicalBox::load( element );
+	
+	setSvgAppearance( element.readData( TAG_SVG_APPEARANCE ) );
+	
 }
 
 // EOF

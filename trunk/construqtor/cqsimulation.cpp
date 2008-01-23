@@ -115,6 +115,7 @@ double CqSimulation::invTimeStep() const
 // =========================== timer timeout =============
 void CqSimulation::simulationTimerTimeout()
 {
+	Q_ASSERT( _pPhysicalWorld );
 	
 	// physical world simulation step
 	int iterations = B2D_SPS * SIMULATION_INTERVAL / 1000.0;
@@ -188,14 +189,18 @@ void CqSimulation::createWorld()
 /// Intiialzies scene with some default values
 void CqSimulation::initScene()
 {
+	/* TODO moved out, to game manager
 	CqGroundBody *pGround = CqGroundBody::randomGround( this, 0.2 );
 	addGroundItem( pGround );
 	adjustEditableAreasToGround();
+	*/
 }
 
 // =====================================================================
 void CqSimulation::adjustEditableAreasToGround()
 {
+	//TODO remove
+	/*
 	CqGroundBody* pGround = qobject_cast< CqGroundBody* > ( _groundItems.first() );
 	if ( pGround )
 	{
@@ -211,6 +216,7 @@ void CqSimulation::adjustEditableAreasToGround()
 	
 		updateAreaItems();
 	}
+	*/
 }
 
 // =====================================================================
@@ -241,6 +247,8 @@ void CqSimulation::updateAreaItems()
 // =========================== assure objects created =============
 void CqSimulation::assurePhysicalObjectsCreated()
 {
+	Q_ASSERT( _pPhysicalWorld );
+	
 	// TODO suboptimal - maintain separate list of bodyless-objects
 	QList< QGraphicsItem* > items = _scene.items();
 	
@@ -251,6 +259,7 @@ void CqSimulation::assurePhysicalObjectsCreated()
 		
 		if ( pBody )
 		{
+			pBody->setWorld( _pPhysicalWorld );
 			pBody->assureBodyCreated();
 		}
 	}
@@ -262,6 +271,7 @@ void CqSimulation::assurePhysicalObjectsCreated()
 		
 		if ( pJoint )
 		{
+			pJoint->setWorld( _pPhysicalWorld );
 			pJoint->assureJointCreated();
 		}
 	}
@@ -502,6 +512,52 @@ void CqSimulation::clear()
 	// clear area items (was deleted above)
 	_pEditableAreaItem = NULL;
 	_pTargetAreaItem = NULL;
+}
+// =================================== run =========================
+/// Runs - synchronously and at full processor speed - specified simulation time.
+void CqSimulation::run( double timeSpan )
+{
+	int steps = timeSpan * invTimeStep();
+	
+	// prepare
+	if ( ! _pPhysicalWorld )
+	{
+		createWorld();
+	}
+	
+	assurePhysicalObjectsCreated();
+	
+	// tell everyone simulation will start
+	QList< QGraphicsItem* > items = _scene.items();
+	
+	foreach( QGraphicsItem* pItem, items )
+	{
+		CqItem* pBody = dynamic_cast<CqItem*>( pItem );
+		
+		if ( pBody )
+		{
+			pBody->simulationStarted();
+		}
+	}
+	
+	// simualate
+	for( int i =0; i < steps; i++ )
+	{
+		simulationTimerTimeout();
+	}
+	
+	// tell everyone simulation has stopped
+	items = _scene.items();
+	foreach( QGraphicsItem* pItem, items )
+	{
+		CqItem* pBody = dynamic_cast<CqItem*>( pItem );
+		
+		if ( pBody )
+		{
+			pBody->simulationStopped();
+		}
+	}
+	
 }
 
 // EOF

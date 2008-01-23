@@ -84,7 +84,7 @@ QList<b2ShapeDef*> CqPolygonalBody::createShape()
 		}
 		else
 		{
-			qWarning("CqPolygonalBody::createShape: ignored triangle");
+			//qWarning("CqPolygonalBody::createShape: ignored triangle (%lf)", p);
 		}
 		
 		if ( pTriangle ) // NOTE: triangle could have been igored in if/else above!

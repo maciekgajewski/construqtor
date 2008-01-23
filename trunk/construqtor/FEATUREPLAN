@@ -18,20 +18,19 @@ Features for 0.5 release, january 2007
 [   ] Bugfixing: problems with rubberband selection
 [ * ] Bugfix: problem with invisible objects remaining after deleting (not tested throughoulty)
 [ * ] Bugfix: problem with cylinder translation
-[   ] Better terrain geenration,random stones
+[ * ] Better terrain geenration,random stones
 [   ] "gameification" - controlling gameplay, level of difficulty, making sure that available
       elements allow for completing the game
-[50%] Opengl antialaising (at least i know it can be done)
 [ * ] Some more ruber "toolbox" in current main window
 [ * ] Informative item descriptions
 [ * ] More predictable stone sizes
 [ * ] SVG's into resources
 [ * ] Windows(TM) build
 [ * ] Open file / save file dialogs
-[50%] Bugfix: crash on destroying scene (some progress)
+[90%] Bugfix: crash on destroying scene (good progress)
 [ * ] No deleting or breaking joints outside editable area
-[   ] Do something with cylinder piston collision
-[   ] SVG for all the wheels
+[ * ] Do something with cylinder piston collision
+[ * ] SVG for all the wheels
 
 Short term goals
 [   ] selectoing connected bodies with dblckick
@@ -47,6 +46,7 @@ Editor
 [ * ] Scrolling by dragging
 [   ] Ground editor - possinbly separate application (low)
 [ * ] Scorrling/zooming limited to world boundaries
+[50%] Opengl antialaising (at least i know it can be done)
 
 Elements
 [75%] Wheel + engine - different sizes [missing different sizes]
