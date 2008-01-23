@@ -52,6 +52,7 @@ public:
 	void start();			///< starts simulation
 	void stop();			///< Stops simulation
 	bool isRunning() const;	///< Is simulation running?
+	void run( double timeSpan );	///< Runs synchronously simulation for specified time span [seconds]
 	
 	QGraphicsScene* scene() { return &_scene; };
 	const QGraphicsScene* scene() const { return &_scene; };
@@ -75,7 +76,15 @@ public:
 	
 	void addController( CqMotorController* pController );	///< adds controler ot controller list
 	
+	// properties
 	QRectF worldRect() const { return _worldRect; }
+	void setWorldRect( const QRectF& rect ) { _worldRect = rect; }
+	
+	QRectF targetArea() const { return _targetArea; }
+	void setTargetArea( const QRectF& rect ) { _targetArea = rect; updateAreaItems(); }
+	
+	QRectF editableArea() const { return _editableArea; }
+	void setEditableArea( const QRectF& rect ) { _editableArea = rect; updateAreaItems(); }
 	
 	double invTimeStep() const;						///< Returns time step [1/s]
 	

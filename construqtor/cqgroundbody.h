@@ -44,7 +44,7 @@ public:
 	void setHeightmap( const QPolygonF& heightMap );	///< Sets heightmap
 	
 	/// Creates random ground for specified simulation
-	static CqGroundBody* randomGround( CqSimulation* pSimulation, double maxSlope );
+	static CqGroundBody* randomGround( const QRectF& rect, double maxSlope );
 	
 	// operations 
 	virtual void paint

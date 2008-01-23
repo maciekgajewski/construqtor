@@ -81,13 +81,12 @@ void CqGroundBody::setHeightmap( const QPolygonF& heightMap )
 
 // =============================== random ground =======================
 /// Creates random ground for specified simulation
-CqGroundBody* CqGroundBody::randomGround( CqSimulation* pSimulation, double maxSlope )
+CqGroundBody* CqGroundBody::randomGround( const QRectF& rect, double maxSlope )
 {
-	Q_ASSERT( pSimulation );
 	
 	// cache
-	double worldHeight = pSimulation->worldRect().height();
-	double worldWidth = pSimulation->worldRect().width();
+	double worldHeight = rect.height();
+	double worldWidth = rect.width();
 	
 	// params / constants
 	double MAX_HEIGHT = worldHeight * 0.9; // fit between 10% and 90%

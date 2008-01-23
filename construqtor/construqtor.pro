@@ -35,9 +35,12 @@ cqbolt.cpp \
  cqprismaticjoint.cpp \
  cqhydrauliccylinder.cpp \
  cqprismatictraslationcontroller.cpp \
- cqpallet.cpp
+ cqpallet.cpp \
+ gamemanager.cpp \
+ difficultyselector.cpp
 FORMS += mainwindow.ui \
-ControllerWidget.ui
+ControllerWidget.ui \
+difficultyselector.ui
 HEADERS += mainwindow.h \
 cqworld.h \
 cqsimulation.h \
@@ -74,7 +77,9 @@ cqbolt.h \
  cqprismaticjoint.h \
  cqhydrauliccylinder.h \
  cqprismatictraslationcontroller.h \
- cqpallet.h
+ cqpallet.h \
+ gamemanager.h \
+ difficultyselector.h
 CONFIG += debug \
 qt \
 warn_on \
