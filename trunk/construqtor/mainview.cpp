@@ -558,7 +558,7 @@ void MainView::showEvent( QShowEvent* /*pEvent*/ )
 			{
 				QRectF worldRect = _pSimulation->worldRect();
 				double startHeight = pGround->height( worldRect.left() );
-				ensureVisible( worldRect.left() + 2, startHeight - 5, 12, 12 );
+				ensureVisible( worldRect.left() + 20, startHeight - 5, 12, 12 );
 				_viewportInitialized = true;
 			}
 		}
