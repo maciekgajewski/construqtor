@@ -35,27 +35,25 @@ int main(int argc, char *argv[])
 	GameManager manager;
 	DifficultySelector selector;
 	
+	manager.setSimulation( &simulation );
 	// select difficulty
 	int d = selector.execute();
 	switch( d )
 	{
 		case 1:
-			manager.startEasyGame( &simulation );
+			manager.startEasyGame();
 			break;
 		case 2:
-			manager.startIntermediateGame( &simulation );
+			manager.startIntermediateGame();
 			break;
 		case 3:
-			manager.startHardGame( &simulation );
+			manager.startHardGame();
 			break;
 		
 		default:
 		// bye
 			return 0;
 	}
-	
-	// init simulation
-	manager.startEasyGame( &simulation );
 	
 	window.setSimulation( &simulation );
 	

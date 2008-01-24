@@ -25,6 +25,8 @@
 
 // Cq
 class CqSimulation;
+class CqItem;
+class QGraphicsItem;
 
 /**
 	Initializes and mabages game simulation.
@@ -37,15 +39,25 @@ public:
 	GameManager(QObject *parent = 0);
 	~GameManager();
 	
+	void setSimulation( CqSimulation* pSim );
+	
 public slots:
 
-	void startEasyGame( CqSimulation* pSim );
-	void startIntermediateGame( CqSimulation* pSim );
-	void startHardGame( CqSimulation* pSim );
-	
+	void startEasyGame();
+	void startIntermediateGame();
+	void startHardGame();
+
+private slots:
+
+	void simulationStep();
+
 private:
 
 	void startGame( CqSimulation* pSim, double maxSlope, double stoneSize, int stones );
+	
+	CqSimulation*	_pSim;
+	CqItem*			_pBox;
+	QGraphicsItem*	_pInstructions;
 };
 
 #endif // GAMEMANAGER_H

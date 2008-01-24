@@ -17,7 +17,11 @@
  *   Free Software Foundation, Inc.,                                       *
  *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
  ***************************************************************************/
+// Qt
+#include <QGraphicsSvgItem>
+#include <QMessageBox>
 
+// local
 #include "gamemanager.h"
 
 // Cq
@@ -31,7 +35,9 @@
 GameManager::GameManager(QObject *parent)
  : QObject(parent)
 {
-	// nope
+	_pSim			= NULL;
+	_pBox			= NULL;
+	_pInstructions	= NULL;
 }
 
 // ========================================================
@@ -41,21 +47,24 @@ GameManager::~GameManager()
 }
 
 // ========================================================
-void GameManager::startEasyGame( CqSimulation* pSim )
+void GameManager::startEasyGame()
 {
-	startGame( pSim, 0.2, 0.1, 80 );
+	Q_ASSERT( _pSim );
+	startGame( _pSim, 0.2, 0.1, 80 );
 }
 
 // ========================================================
-void GameManager::startIntermediateGame( CqSimulation* pSim )
+void GameManager::startIntermediateGame()
 {
-	startGame( pSim, 0.3, 0.2, 80 );
+	Q_ASSERT( _pSim );
+	startGame( _pSim, 0.3, 0.2, 80 );
 }
 
 // ========================================================
-void GameManager::startHardGame( CqSimulation* pSim )
+void GameManager::startHardGame()
 {
-	startGame( pSim, 0.4, 0.3, 80 );
+	Q_ASSERT( _pSim );
+	startGame( _pSim, 0.4, 0.4, 80 );
 }
 
 
@@ -120,14 +129,64 @@ void GameManager::startGame( CqSimulation* pSim, double maxSlope, double stoneSi
 	pBox->loadSvgAppearance( ":/KDE_logo.svg" );
 	pBox->setPhysicalPos( QPointF( boxX, boxY + 0.8 ) );
 	pBox->setEditorFlags( CqItem::Selectable );
-	
+	pBox->setCollisionGroup( CqItem::CollisionAll );
+
 	pSim->addItem( pPallet );
 	pSim->addItem( pBox );
 	
+	// Add instructions item
+	QGraphicsSvgItem* pInstructions = new QGraphicsSvgItem( ":/instructions.svg", NULL );
+	QRectF defaultRect = pInstructions->boundingRect();
+	pInstructions->scale( 10.0 / defaultRect.width(), -10.0 / defaultRect.height() );
+	pSim->scene()->addItem( pInstructions );
+	pInstructions->setPos( boxX - 2.0, boxY + 10.0 );
+	pInstructions->show();
+	pInstructions->setZValue( 20.0 );
 	
 	// run for 5 seconds, to lest stone settle
 	pSim->run( 5.0 );
 	
+	// set these pointers after sim is pre-run
+	_pInstructions = pInstructions;
+	_pBox = pBox;
+	
+}
+// ===========================================================================
+void GameManager::setSimulation( CqSimulation* pSim )
+{
+	if ( pSim )
+	{
+		connect( pSim, SIGNAL(simulationStep()), SLOT(simulationStep()) );
+	}
+	if ( _pSim )
+	{
+		disconnect( _pSim, 0, this, 0 );
+	}
+	_pSim = pSim;
+}
+
+// ===========================================================================
+void GameManager::simulationStep()
+{
+	if ( _pInstructions )
+	{
+		delete _pInstructions;
+		_pInstructions = NULL;
+	}
+	
+	if ( _pBox && _pSim )
+	{
+		// TODO don't know why this workaround is needed. It's too late now to fight it
+		QRectF ta = _pSim->targetArea();
+		QPointF p = _pBox->worldPos();
+		if ( ta.contains( p ) )
+		//if ( _pSim->isInTargetArea( _pBox->worldPos() ) );
+		{
+			qDebug("success!");
+			_pBox = NULL;
+			QMessageBox::information( NULL, "Success!", "You managed to deliver the package, congratulations!" );
+		}
+	}
 }
 
 // EOF
