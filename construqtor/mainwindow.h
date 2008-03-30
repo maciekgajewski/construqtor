@@ -24,6 +24,7 @@
 #include "cqsimulation.h"
 #include "ui_mainwindow.h"
 class CqMotorController;
+class GameManager;
 
 class MainWindow: public QWidget, public Ui::MainWindow
 {
@@ -31,7 +32,7 @@ Q_OBJECT
 public:
 	MainWindow( QWidget *parent = 0 );
 	
-	void setSimulation( CqSimulation* pSimulation );
+	void setGame( GameManager* pManager );
 	
 public slots:
 	
@@ -78,6 +79,13 @@ public slots:
 	void on_buttonCylinder50d15_clicked();
 	
 	void on_buttonFork_clicked();
+	void on_buttonCap20_clicked();
+	void on_buttonAngle4020_clicked();
+	void on_buttonTriangle4040_clicked();
+	
+	void on_buttonWeight90_clicked();
+	void on_buttonWeight360_clicked();
+	void on_buttonWeight810_clicked();
 	
 	void scenePointerPos( double x, double y );
 	
@@ -89,7 +97,8 @@ public slots:
 	void selectedDescription( const QString& description );
 	
 private:
-	CqSimulation* _pSimulation;
+	CqSimulation*	_pSimulation;
+	GameManager*	_pGameManager;
 };
 
 #endif

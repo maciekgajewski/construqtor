@@ -39,7 +39,7 @@ public:
 	CqMaterial( double d = 50.0, double f = 0.9, double r = 0.1){ density = d; friction = f; restitution = r; type=Custom; }
 	~CqMaterial(){}
 
-	enum Type { Custom, Steel, Rubber, Wood };
+	enum Type { Custom, Steel, Rubber, Wood, Lead };
 	
 	Type type;					/// Well known material type
 	
@@ -85,6 +85,18 @@ public:
 		m.density		= 100.0;
 		m.friction		= 0.7;
 		m.restitution	= 0.1;
+		
+		m.type = Wood;
+		
+		return m;
+	}
+	/// LEad definition
+	inline static CqMaterial lead()
+	{
+		CqMaterial m;
+		m.density		= 1000.0;
+		m.friction		= 0.9;
+		m.restitution	= 0.02;
 		
 		m.type = Wood;
 		

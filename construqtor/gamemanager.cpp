@@ -30,6 +30,14 @@
 #include "cqstone.h"
 #include "cqpallet.h"
 #include "cqgirder.h"
+#include "cqdocument.h"
+#include "cqelement.h"
+
+// tags
+static const char*	TAG_GAME			= "game";	// root element
+static const char* 	TAG_SIMULATION		= "simulation";
+static const char* 	TAG_INSTRUCTIONS	= "instructions";
+static const char* 	TAG_BOX				= "box";;
 
 // ========================================================
 GameManager::GameManager(QObject *parent)
@@ -186,6 +194,46 @@ void GameManager::simulationStep()
 			_pBox = NULL;
 			QMessageBox::information( NULL, "Success!", "You managed to deliver the package, congratulations!" );
 		}
+	}
+}
+
+// ===========================================================================
+void GameManager::loadGame( const QString& path )
+{
+	if ( _pSim )
+	{
+		CqDocument doc;
+		doc.loadFromFile( path );
+		
+		CqElement root = doc.readElement( TAG_GAME );
+		
+		CqElement simulation = root.readElement( TAG_SIMULATION );
+		_pSim->load( simulation );
+		
+		_pInstructions = NULL; // TODO create CqSvgItem, read it
+		_pBox = root.readItemPointer( TAG_BOX );
+	}
+}
+
+// ===========================================================================
+void GameManager::saveGame( const QString& path )
+{
+	if ( _pSim )
+	{
+		CqDocument doc;
+		CqElement root = doc.createElement();
+		
+		CqElement simulation = doc.createElement();
+		_pSim->store( simulation );
+		
+		root.appendElement( TAG_SIMULATION, simulation );
+		if ( _pBox )
+		{
+			root.appendItemPointer( TAG_BOX, _pBox );
+		}
+		
+		doc.appenElement( TAG_GAME, root );
+		doc.saveToFile( path );
 	}
 }
 

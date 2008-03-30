@@ -127,6 +127,9 @@ public:
 	QPointF center() const { return _center; }			///< Local center
 	void setCenter( const QPointF& c ){ _center = c; }
 	
+	QPointF centerRotated() const;						//!< Local center ,rotated y rotation	
+	void setCenterRotated( const QPointF& c );			//!< Sets center in rotated coords
+	
 	/// If connection (nail/bolt/...) can be attached at this point
 	virtual bool canConnectHere( const QPointF& /*worldPoint*/ ) { return false; }
 	/// Physical body connected to joint in this location

@@ -115,6 +115,22 @@ void CqPolygonalBody::paint
 	pPainter->setBrush( b );
 	
 	pPainter->drawPolygon( _polygon );
+	
+	//debugDrawCollision( pPainter ); // TODO debug
+}
+
+// ========================= can be moved ================
+bool CqPolygonalBody::canBeMoved() const
+{
+	// if there is no joins, then yes
+	return _joints.empty()  && CqPhysicalBody::canBeMoved();
+}
+
+// ========================= can be rotated ================
+bool CqPolygonalBody::canBeRotated() const
+{
+	// if there is no joins, then yes
+	return _joints.empty()  && CqPhysicalBody::canBeRotated();
 }
 
 // ========================== bounding rect ==============================
@@ -167,6 +183,7 @@ void CqPolygonalBody::load( const CqElement& element )
 	
 	_polygon		= element.readPolygonF( TAG_SHAPE );
 	_connectable	= element.readInt( TAG_CONNECTABLE ) != 0;
+	
 }
 
 // EOF

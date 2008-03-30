@@ -54,6 +54,8 @@ public:
     virtual QRectF boundingRect() const;
 	virtual CqPhysicalBody* bodyHere( const QPointF& /*worldPoint*/ ) { return this; }
 	virtual bool canConnectHere( const QPointF& /*worldPoint*/ ) { return _connectable; }
+	virtual bool canBeMoved() const;
+	virtual bool canBeRotated() const;
 	
 	// storing / reading
 	virtual void store( CqElement& element ) const;		///< stores item state 

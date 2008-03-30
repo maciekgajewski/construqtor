@@ -428,7 +428,10 @@ CqItem*	CqElement::itemFromElement( const QDomElement& element ) const
 // ==================================================================
 CqElement CqElement::readElement( const QString& tag  ) const
 {
-	return getNextElement( tag );
+	CqElement element = getNextElement( tag );
+	element.setDocument( document() );
+	
+	return element;
 }
 
 // ==================================================================
