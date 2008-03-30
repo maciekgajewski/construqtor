@@ -40,12 +40,16 @@ public:
 	~GameManager();
 	
 	void setSimulation( CqSimulation* pSim );
+	CqSimulation* simulation() const { return _pSim; }
 	
 public slots:
 
 	void startEasyGame();
 	void startIntermediateGame();
 	void startHardGame();
+	
+	void loadGame( const QString& path );
+	void saveGame( const QString& path );
 
 private slots:
 

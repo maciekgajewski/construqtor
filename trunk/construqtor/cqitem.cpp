@@ -342,6 +342,26 @@ void CqItem::generateNewId()
 	_id = QUuid::createUuid();
 }
 
+// =============================================================
+QPointF CqItem::centerRotated() const
+{
+	QTransform t;
+	t.rotateRadians( _rotation );
+	
+	return t.map( center() );
+}
+
+// =============================================================
+void CqItem::setCenterRotated( const QPointF& c )
+{
+	QTransform t;
+	t.rotateRadians( - _rotation );
+
+	setCenter( t.map( c ) );
+
+	qDebug("set center rotated: %lf,%lf -> %lf,%lf", c.x(), c.y(), _center.x(), _center.y() ); // TODO
+}
+
 // EOF
 
 

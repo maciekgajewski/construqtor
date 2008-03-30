@@ -75,7 +75,7 @@ void CqWheel::setSvgAppearance( const QByteArray& svg )
 	_svgAppearanceCode = svg;
 	_svgAppearance.load( svg );
 	
-	if ( ! _svgAppearance.isValid() )
+	if ( ! _svgAppearance.isValid() && ! svg.isEmpty() )
 	{
 		qWarning("invalid SVG loaded");
 	}

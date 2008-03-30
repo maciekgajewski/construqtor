@@ -109,6 +109,7 @@ void CqPhysicalBody::createBody( CqWorld* pWorld )
 	
 	// get center pos
 	b2Vec2 cog = _pBody->GetCenterPosition();
+	//setCenterRotated( QPointF( cog.x, cog.y ) ); // NOTE this is not rotated value
 	setCenter( QPointF( cog.x, cog.y ) );
 	
 	// set body position
@@ -134,7 +135,7 @@ void CqPhysicalBody::updatePosToPhysical()
 		b2Vec2		b2pos		= _pBody->GetCenterPosition();
 		double		b2rotation	= _pBody->GetRotation();
 		
-		setWorldPos( QPointF( b2pos.x, b2pos.y ) - center() ); // correct pos by COG
+		setWorldPos( QPointF( b2pos.x, b2pos.y ) - centerRotated() ); // correct pos by COG
 		setWorldRotation( b2rotation );
 		
 	}
@@ -151,6 +152,7 @@ void CqPhysicalBody::assureBodyCreated()
 	if ( ! _pBody )
 	{
 		createBody(world());
+		
 	}
 }
 
@@ -191,7 +193,7 @@ void CqPhysicalBody::updatePhysicalPos()
 	CqItem::updatePhysicalPos();
 	if ( _pBody )
 	{
-		QPointF pp	= worldPos() + center(); // correct physical pos by COG shift
+		QPointF pp	= worldPos() + centerRotated(); // correct physical pos by COG shift
 		double r	= worldRotation();
 		
 		_pBody->SetCenterPosition( b2Vec2( pp.x(), pp.y() ), r );
@@ -263,15 +265,22 @@ void CqPhysicalBody::debugDrawCollision( QPainter* pPainter )
 			}
 			
 			// translate to body-local centroid
+			QPointF c = centerRotated();
+			//QPointF c = center();	// NOTE also not rtated
 			shape.translate
-				( pPolyShape->m_localCentroid.x + center().x()
-				, pPolyShape->m_localCentroid.y + center().y()
+				( pPolyShape->m_localCentroid.x + c.x()
+				, pPolyShape->m_localCentroid.y + c.y()
 				);
 			
 			pPainter->drawPolygon( shape );
 		}
 		// TODO other shape types
 	}
+	
+	//draw center rotated
+	QPointF c = centerRotated();
+	pPainter->drawLine( QLineF( c.x() - 0.1, c.y(), c.x() + 0.1, c.y() ) );
+	pPainter->drawLine( QLineF( c.x(), c.y() - 0.1, c.x(), c.y() + 0.1 ) );
 	
 	pPainter->restore();
 }

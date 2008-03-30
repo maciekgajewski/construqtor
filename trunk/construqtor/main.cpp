@@ -55,7 +55,7 @@ int main(int argc, char *argv[])
 			return 0;
 	}
 	
-	window.setSimulation( &simulation );
+	window.setGame( &manager );
 	
 	// configure view
 	window.view->setSimulation( &simulation );

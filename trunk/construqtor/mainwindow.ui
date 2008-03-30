@@ -98,15 +98,15 @@
        </sizepolicy>
       </property>
       <property name="currentIndex" >
-       <number>3</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="page" >
        <property name="geometry" >
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>186</width>
-         <height>351</height>
+         <width>174</width>
+         <height>302</height>
         </rect>
        </property>
        <attribute name="label" >
@@ -175,7 +175,7 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>186</width>
+         <width>192</width>
          <height>351</height>
         </rect>
        </property>
@@ -187,6 +187,27 @@
          <widget class="QPushButton" name="buttonFork" >
           <property name="text" >
            <string>Fork</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="buttonCap20" >
+          <property name="text" >
+           <string>Girder Cap 20</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="buttonAngle4020" >
+          <property name="text" >
+           <string>Grider Angle 40x20</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="buttonTriangle4040" >
+          <property name="text" >
+           <string>Triangle 50x50</string>
           </property>
          </widget>
         </item>
@@ -210,7 +231,7 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>186</width>
+         <width>192</width>
          <height>351</height>
         </rect>
        </property>
@@ -259,7 +280,7 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>186</width>
+         <width>192</width>
          <height>351</height>
         </rect>
        </property>
@@ -268,13 +289,6 @@
        </attribute>
        <layout class="QVBoxLayout" >
         <item>
-         <widget class="QPushButton" name="buttonWwE" >
-          <property name="text" >
-           <string>Whee 80 + engine</string>
-          </property>
-         </widget>
-        </item>
-        <item>
          <widget class="QPushButton" name="buttonWwE40" >
           <property name="text" >
            <string>Wheel 40 + engine</string>
@@ -282,9 +296,16 @@
          </widget>
         </item>
         <item>
+         <widget class="QPushButton" name="buttonWwE" >
+          <property name="text" >
+           <string>Whee 80 + engine</string>
+          </property>
+         </widget>
+        </item>
+        <item>
          <widget class="QPushButton" name="buttonWwE120" >
           <property name="text" >
-           <string>wheel 120 + engine</string>
+           <string>Wheel 120 + engine</string>
           </property>
          </widget>
         </item>
@@ -336,8 +357,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>96</width>
-         <height>90</height>
+         <width>174</width>
+         <height>302</height>
         </rect>
        </property>
        <attribute name="label" >
@@ -373,13 +394,54 @@
         </item>
        </layout>
       </widget>
+      <widget class="QWidget" name="page_7" >
+       <attribute name="label" >
+        <string>Counterweights</string>
+       </attribute>
+       <layout class="QVBoxLayout" >
+        <item>
+         <widget class="QPushButton" name="buttonWeight90" >
+          <property name="text" >
+           <string>90 kg</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="buttonWeight360" >
+          <property name="text" >
+           <string>360 kg</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="buttonWeight810" >
+          <property name="text" >
+           <string>810 kg</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer>
+          <property name="orientation" >
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" >
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </widget>
       <widget class="QWidget" name="page_4" >
        <property name="geometry" >
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>96</width>
-         <height>90</height>
+         <width>192</width>
+         <height>351</height>
         </rect>
        </property>
        <attribute name="label" >

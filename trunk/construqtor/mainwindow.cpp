@@ -35,6 +35,7 @@
 
 // local
 #include "mainwindow.h"
+#include "gamemanager.h"
 
 // =========================== cosntructor =======================
 MainWindow::MainWindow(QWidget *parent)
@@ -221,14 +222,17 @@ void MainWindow::controllerCreated( CqMotorController* pCtrl )
 	pCW->show();
 }
 
-// ========================== set simulation ==================================
-void MainWindow::setSimulation( CqSimulation* pSimulation )
+// ========================== set game ==================================
+void MainWindow::setGame( GameManager* pGame )
 {
-	Q_ASSERT( pSimulation );
+	Q_ASSERT( pGame );
 	
-	_pSimulation = pSimulation;
+	_pGameManager	= pGame;
+	_pSimulation 	= pGame->simulation();
 	
-	connect( pSimulation
+	Q_ASSERT( _pSimulation );
+	
+	connect( _pSimulation
 		, SIGNAL(motorControllerCreated(CqMotorController*))
 		, SLOT(controllerCreated(CqMotorController*))
 		);
@@ -262,7 +266,7 @@ void MainWindow::on_buttonSave_clicked()
 	
 	if ( dialog.exec() )
 	{
-		_pSimulation->saveToXml( dialog.selectedFiles().first() );
+		_pGameManager->saveGame( dialog.selectedFiles().first() );
 	}
 }
 
@@ -274,7 +278,7 @@ void MainWindow::on_buttonLoad_clicked()
 	
 	if ( ! path.isNull() )
 	{
-		_pSimulation->loadFromXml( path );
+		_pGameManager->loadGame( path );
 	}
 }
 
@@ -311,7 +315,7 @@ void MainWindow::on_buttonCylinder100_clicked()
 	CqHydraulicCylinder* pCylinder = new CqHydraulicCylinder();
 	pCylinder->setLength( 1.0 );
 	pCylinder->setDiameter( 0.1 );
-	pCylinder->setMaxForce( 10000.0 );
+	pCylinder->setMaxForce( 100000.0 );
 	pCylinder->setMaxSpeed( 0.5 );
 	
 	view->toolAddObject( pCylinder );
@@ -323,7 +327,7 @@ void MainWindow::on_buttonCylinder50_clicked()
 	CqHydraulicCylinder* pCylinder = new CqHydraulicCylinder();
 	pCylinder->setLength( 0.5 );
 	pCylinder->setDiameter( 0.1 );
-	pCylinder->setMaxForce( 10000.0 );
+	pCylinder->setMaxForce( 100000.0 );
 	pCylinder->setMaxSpeed( 0.5 );
 	
 	view->toolAddObject( pCylinder );
@@ -335,7 +339,7 @@ void MainWindow::on_buttonCylinder100d15_clicked()
 	CqHydraulicCylinder* pCylinder = new CqHydraulicCylinder();
 	pCylinder->setLength( 1.0 );
 	pCylinder->setDiameter( 0.15 );
-	pCylinder->setMaxForce( 50000.0 );
+	pCylinder->setMaxForce( 500000.0 );
 	pCylinder->setMaxSpeed( 0.1 );
 	
 	view->toolAddObject( pCylinder );
@@ -347,7 +351,7 @@ void MainWindow::on_buttonCylinder50d15_clicked()
 	CqHydraulicCylinder* pCylinder = new CqHydraulicCylinder();
 	pCylinder->setLength( 0.5 );
 	pCylinder->setDiameter( 0.15 );
-	pCylinder->setMaxForce( 50000.0 );
+	pCylinder->setMaxForce( 500000.0 );
 	pCylinder->setMaxSpeed( 0.1 );
 	
 	view->toolAddObject( pCylinder );
@@ -391,6 +395,122 @@ void MainWindow::on_buttonFork_clicked()
 	pFork->setCollisionGroup( CqItem::CollisionConstruction );
 	
 	view->toolAddObject( pFork );
+}
+	
+// ==================================================================
+void MainWindow::on_buttonCap20_clicked()
+{
+	CqPolygonalBody* pElement = new CqPolygonalBody();
+	pElement->setName( "Grider Cap" );
+	pElement->setMaterial( CqMaterial::steel() );
+	pElement->setEditorFlags
+		( pElement->editorFlags() | CqItem::Selectable | CqItem::Movable | CqItem::Rotatable );
+	
+	// shape definition
+	QPolygonF polygon;
+	polygon
+		<< QPointF( 0.0,	0.0 )
+		<< QPointF( 0.2,	0.0 )
+		<< QPointF( 0.6,	0.1 )
+		<< QPointF( 0.2,	0.2 )
+		<< QPointF( 0.0,	0.2 )
+		;
+	polygon.translate( -0.3, -0.1 );
+		
+	pElement->setPolygon( polygon );
+	pElement->setConnectable( true );
+	pElement->setCollisionGroup( CqItem::CollisionConstruction );
+	
+	view->toolAddObject( pElement );
+}
+
+// ==================================================================
+void MainWindow::on_buttonAngle4020_clicked()
+{
+	CqPolygonalBody* pElement = new CqPolygonalBody();
+	pElement->setName( "Girder Angle" );
+	pElement->setMaterial( CqMaterial::steel() );
+	pElement->setEditorFlags
+		( pElement->editorFlags() | CqItem::Selectable | CqItem::Movable | CqItem::Rotatable );
+	
+	// shape definition
+	QPolygonF polygon;
+	polygon
+		<< QPointF( 0.0,	0.0 )
+		<< QPointF( 0.2,	0.0 )
+		<< QPointF( 0.2,	0.2 )
+		<< QPointF( 0.4,	0.2 )
+		<< QPointF( 0.4,	-0.2 )
+		<< QPointF( 0.0,	-0.2 )
+		;
+	polygon.translate( -0.3, 0.1 );
+		
+	pElement->setPolygon( polygon );
+	pElement->setConnectable( true );
+	pElement->setCollisionGroup( CqItem::CollisionConstruction );
+	
+	view->toolAddObject( pElement );
+}
+
+// ==================================================================
+void MainWindow::on_buttonTriangle4040_clicked()
+{
+	CqPolygonalBody* pElement = new CqPolygonalBody();
+	pElement->setName( "Triangle 50" );
+	pElement->setMaterial( CqMaterial::steel() );
+	pElement->setEditorFlags
+		( pElement->editorFlags() | CqItem::Selectable | CqItem::Movable | CqItem::Rotatable );
+	
+	// shape definition
+	QPolygonF polygon;
+	polygon
+		<< QPointF( 0.05,	0.0 )
+		<< QPointF( 0.45,	0.0 )
+		<< QPointF( 0.5,	0.05 )
+		<< QPointF( 0.05,	0.5 )
+		<< QPointF( 0.0,	0.45 )
+		<< QPointF( 0.0,	0.05 )
+		;
+	polygon.translate( -0.2, -0.2 );
+		
+	pElement->setPolygon( polygon );
+	pElement->setConnectable( true );
+	pElement->setCollisionGroup( CqItem::CollisionConstruction );
+	
+	view->toolAddObject( pElement );
+}
+
+// ==================================================================
+void MainWindow::on_buttonWeight90_clicked()
+{
+	CqGirder* pGirder = new CqGirder(); // 30x30cm
+	pGirder->setSize( QSizeF( 0.3, 0.3 ) );
+	pGirder->setName( "Counterweight" );
+	pGirder->setMaterial( CqMaterial::lead() );
+	pGirder->setBrush( Qt::darkGray );
+	view->toolAddObject( pGirder );
+}
+
+// ==================================================================
+void MainWindow::on_buttonWeight360_clicked()
+{
+	CqGirder* pGirder = new CqGirder();
+	pGirder->setSize( QSizeF( 0.6, 0.6 ) );
+	pGirder->setName( "Counterweight" );
+	pGirder->setMaterial( CqMaterial::lead() );
+	pGirder->setBrush( Qt::darkGray );
+	view->toolAddObject( pGirder );
+}
+
+// ==================================================================
+void MainWindow::on_buttonWeight810_clicked()
+{
+	CqGirder* pGirder = new CqGirder();
+	pGirder->setSize( QSizeF( 0.9, 0.9 ) );
+	pGirder->setName( "Counterweight" );
+	pGirder->setMaterial( CqMaterial::lead() );
+	pGirder->setBrush( Qt::darkGray );
+	view->toolAddObject( pGirder );
 }
 
 // EOF
