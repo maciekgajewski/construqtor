@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://web.resource.org/cc/"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   height="35433.07"
+   width="35433.07"
+   id="svg2"
+   sodipodi:version="0.32"
+   inkscape:version="0.45.1"
+   version="1.0"
+   sodipodi:docbase="/home/maciek/projekty/construqtor/graphics"
+   sodipodi:docname="instructions.svg"
+   inkscape:output_extension="org.inkscape.output.svg.inkscape">
+  <defs
+     id="defs4" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:cx="17716.535"
+     inkscape:cy="13833.459"
+     inkscape:zoom="0.020602223"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     width="1000cm"
+     height="1000cm"
+     units="cm"
+     inkscape:window-width="1280"
+     inkscape:window-height="924"
+     inkscape:window-x="0"
+     inkscape:window-y="30" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:groupmode="layer"
+     inkscape:label="Warstwa 1"
+     id="layer1">
+    <path
+       style="fill:#e9ac68;fill-rule:evenodd;stroke:#e98116;stroke-width:35.43307087;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;fill-opacity:1;stroke-miterlimit:4;stroke-dasharray:none"
+       d="M 28443.533,35238.917 L 14124.69,34850.609 L 14076.151,35287.455 L 9901.8443,34365.224 L 13979.074,33054.686 L 13930.536,33637.148 L 28540.61,33006.148 L 28443.533,35238.917 z "
+       id="path5126" />
+    <path
+       style="fill:#33de38;fill-rule:evenodd;stroke:#2e9b2a;stroke-width:35.43307087;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;fill-opacity:1;stroke-miterlimit:4;stroke-dasharray:none"
+       d="M 13833.459,21745.227 L 13687.844,26453.457 L 31549.994,24706.072 L 31501.456,27181.533 L 34802.07,24269.226 L 30918.994,20143.458 L 30967.533,22521.842 L 13833.459,21745.227 z "
+       id="path4147" />
+    <path
+       style="fill:#94f4ea;fill-opacity:1;fill-rule:evenodd;stroke:#20ddcf;stroke-width:35.43307114;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 1990.0765,8979.6137 L 6892.4602,3543.307 L 7038.0756,7426.3832 L 16066.228,4708.2298 L 14901.305,12328.767 L 7280.7678,10872.614 L 7329.3063,13493.69 L 1990.0765,8979.6137 z "
+       id="path2178"
+       sodipodi:nodetypes="cccccccc" />
+    <text
+       xml:space="preserve"
+       style="font-size:680.27801514px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+       x="5631.7671"
+       y="8953.4248"
+       id="text2180"><tspan
+         sodipodi:role="line"
+         x="5631.7671"
+         y="8953.4248"
+         id="tspan2184">You can create and </tspan><tspan
+         sodipodi:role="line"
+         x="5631.7671"
+         y="9803.7723"
+         id="tspan6103">edit machines in this box</tspan></text>
+    <path
+       style="fill:#6482e6;fill-opacity:1;fill-rule:evenodd;stroke:#0b1de1;stroke-width:35.43307114;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       d="M 5678.9989,30142.379 L 1456.1536,26307.841 L 5047.9991,26453.457 L 291.2307,18056.304 L 11940.459,18007.766 L 7377.8448,26162.226 L 11018.228,26162.226 L 5678.9989,30142.379 z "
+       id="path3158" />
+    <text
+       xml:space="preserve"
+       style="font-size:680.27801514px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+       x="1806.7662"
+       y="19098.203"
+       id="text4129"><tspan
+         sodipodi:role="line"
+         x="1806.7662"
+         y="19098.203"
+         id="tspan6097">This is important package </tspan><tspan
+         sodipodi:role="line"
+         x="1806.7662"
+         y="19948.551"
+         id="tspan6107">you have to deliver</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:680.27801514px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+       x="14717.996"
+       y="23757.893"
+       id="text4139"><tspan
+         sodipodi:role="line"
+         x="14717.996"
+         y="23757.893"
+         id="tspan4143">Transport the package  to the other side of the map</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:442.32888794px;font-style:normal;font-weight:normal;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Bitstream Vera Sans"
+       x="15564.848"
+       y="33809.652"
+       id="text5118"><tspan
+         sodipodi:role="line"
+         x="15564.848"
+         y="33809.652"
+         id="tspan5120">The package is on the pallet. You may use a fork to build</tspan><tspan
+         sodipodi:role="line"
+         x="15564.848"
+         y="34362.563"
+         id="tspan5122">a forklift to handle, but you can also move the package</tspan><tspan
+         sodipodi:role="line"
+         x="15564.848"
+         y="34915.475"
+         id="tspan5124"> any way you like.</tspan></text>
+  </g>
+</svg>
