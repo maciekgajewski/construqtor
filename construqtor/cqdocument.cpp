@@ -156,7 +156,8 @@ void CqDocument::preCreateItems()
 			}
 			
 			// take ownership of the item
-			pItem->setParent( this );
+			// TODO removed. experimental
+			//pItem->setParent( this );
 			
 			// store created element in dictionary
 			QUuid id( strId );

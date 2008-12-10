@@ -485,7 +485,13 @@ void CqSimulation::load( const CqElement& element )
 // =================================== clear =========================
 void CqSimulation::clear()
 {
+	// TODO why not use _scene.clear() ?
+	
+	
+	_scene.clear();
+	
 	// destroy all top-level items
+	/*
 	QList<QGraphicsItem *> sceneItems =  _scene.items();
 	QList<QGraphicsItem *> topLevelItems; 
 	foreach( QGraphicsItem* pItem, sceneItems )
@@ -499,6 +505,7 @@ void CqSimulation::clear()
 	{
 		delete pItem;
 	}
+	*/
 	
 	
 	// destroy world

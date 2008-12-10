@@ -107,6 +107,10 @@ void CqJoint::breakJoint()
 	if ( _pBody1 ) _pBody1->removeJoint( this );
 	if ( _pBody2 ) _pBody2->removeJoint( this );
 	
+	// forget attached bodies, so they will be never referenced again.
+	_pBody1 = NULL;
+	_pBody2 = NULL;
+	
 	// delete this
 	deleteLater(); // deffered deletion, a bless!
 }

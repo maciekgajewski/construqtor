@@ -45,6 +45,7 @@ void SceneController::setTool( Tool tool )
 // ========================= point drawed ====================
 void SceneController::pointDrawed( const QPointF& point )
 {
+	Q_UNUSED(point)
 	// TODO
 }
 

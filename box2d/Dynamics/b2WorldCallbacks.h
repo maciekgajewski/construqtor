@@ -51,7 +51,7 @@ public:
 	// body pointer.
 	virtual b2BoundaryResponse NotifyBoundaryViolated(b2Body* body)
 	{
-		NOT_USED(body);
+		(void)body;
 		return b2_freezeBody;
 	}
 };

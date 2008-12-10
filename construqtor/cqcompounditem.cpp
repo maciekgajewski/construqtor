@@ -38,6 +38,7 @@ CqCompoundItem::CqCompoundItem( CqItem *pParent )
 // =========================== destructor =====================
 CqCompoundItem::~CqCompoundItem()
 {
+	// TODO this frightenes me. It shouldn't exists.
 	_deleted = true; // to draw border between ou destructor, and CqItems. QObject's etc
 }
 
@@ -126,7 +127,7 @@ void CqCompoundItem::setSelected( bool selected )
 }
 
 // =============================== paint ============================
-void CqCompoundItem::paint( QPainter* p, const QStyleOptionGraphicsItem*, QWidget* )
+void CqCompoundItem::paint( QPainter* , const QStyleOptionGraphicsItem*, QWidget* )
 {
 	// no painting
 	

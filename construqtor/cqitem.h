@@ -44,9 +44,9 @@ public:
 
 	/// Flags describing editing this item
 	enum EditorFlag {
-		Selectable		=	0x1,			//< Item can be selected
-		Movable			=	0x2,			//< Item can be moved
-		Rotatable		=	0x4				//< Item can be rotated
+		Selectable		=	0x1,			///< Item can be selected
+		Movable			=	0x2,			///< Item can be moved
+		Rotatable		=	0x4				///< Item can be rotated
 	};
 	
 	/// Collision group flag. Items collide only when have same flag set
@@ -64,6 +64,10 @@ public:
 	// constrution / destruction
 	explicit CqItem( CqItem* parent = NULL );
 	virtual ~CqItem();
+	
+	
+	/// Blocks access to underlying QObject::setParent()
+	void setParent( QObject* ){Q_ASSERT(false);}
 	
 	// signals form simulation
 	virtual void simulationStep();						///< Called on simulation step
