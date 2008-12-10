@@ -34,7 +34,7 @@
 	This is a core of CQ I/O system. Document is a storage facility, which holds tree of elements,
 	and within each element it holds values of different types, identified ith string key.
 	Current implemebntation is wrpper around Qt's XML DOM classes, but I dont see why another
-	couldn;t by ysed - i.e. binary for fast network transfer.
+	couldn't be used - i.e. binary for fast network transfer.
 	@author Maciek Gajewski <maciej.gajewski0@gmail.com>
 */
 class CqDocument : public QObject

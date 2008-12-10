@@ -55,7 +55,9 @@ Dynamics/Joints/b2RevoluteJoint.h
 TEMPLATE = lib
 
 CONFIG += debug \
-warn_on \
-staticlib
+staticlib \
+ warn_off
 DESTDIR = ../lib
 
+CONFIG -= release \
+warn_on

@@ -23,6 +23,7 @@
 // local
 #include "cqfragilerevolutejoint.h"
 #include "cqphysicalbody.h"
+#include "cqitemfactory.h"
 
 /**
 	Bolt is a revolute jont, similar to nail, but disallowing rotations.
@@ -59,6 +60,7 @@ private:
 ///\internal
 class CqBrokenBolt : public CqPhysicalBody
 {
+	Q_OBJECT
 public:
 
 	CqBrokenBolt( CqItem* parent = NULL ) : CqPhysicalBody( parent ){ init(); }

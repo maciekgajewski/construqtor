@@ -249,7 +249,7 @@ void MainView::addObject( const QPointF& point, CqItem* pObject )
 	if ( pGroupItem )
 	{
 		pGroupItem->clearGroupContent();
-		delete pGroupItem; // TOD Odangerous, caller may need to use it. Consider using deleteLater()
+		delete pGroupItem; // TODO dangerous, caller may need to use it. Consider using deleteLater()
 	}
 	
 }

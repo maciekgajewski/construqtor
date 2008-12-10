@@ -85,7 +85,7 @@ CqItem* CqClipboard::get() const
 		CqItem* pItem =  e.readItem();
 		if ( pItem )
 		{
-			// take the item from document, so it wont be destroyed when this scope is leaved
+			// take the item from document, so it wont be destroyed when this scope is left
 			pItem->setParent( NULL );
 			// sleect new, randon id fro item, so it is unique
 			pItem->generateNewId();

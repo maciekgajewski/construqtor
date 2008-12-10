@@ -26,6 +26,7 @@
 #include "cqpolygonalbody.h"
 #include "cqitemfactory.h"
 
+// add to factory
 CQ_ADD_TO_FACTORY( CqPolygonalBody );
 
 // tags

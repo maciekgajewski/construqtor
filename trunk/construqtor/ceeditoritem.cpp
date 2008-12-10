@@ -99,6 +99,9 @@ CeEditorItem::MoveHandler::MoveHandler( CqItem* pItem, CeEditorItem* parent )
 // ==================================== move handler paint ============================
 void CeEditorItem::MoveHandler::paint ( QPainter * pPainter, const QStyleOptionGraphicsItem * option, QWidget * widget )
 {
+	Q_UNUSED( option );
+	Q_UNUSED( widget );
+	
 	QRectF rect(- SIZE/2.0, -SIZE/2.0, SIZE, SIZE ); 
 	pPainter->setPen( Qt::red );
 	pPainter->setBrush( QColor( 0xff, 0xff, 0x00, 0x80 ) ); // 50% transparent yellow
@@ -174,7 +177,7 @@ void CeEditorItem::RotateHandler::adjustPosToAngle()
 {
 	Q_ASSERT( _pItem );
 	
-	double angle = _pItem->rotationRadians();
+	//double angle = _pItem->rotationRadians();
 	
 	setPos( CeEditorItem::SIZE / 2.0, 0 );
 }
